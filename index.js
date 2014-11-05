@@ -20,6 +20,8 @@ var OAuth = require('oauth').OAuth,
   transactionsCollection = require('./collections/transactionsCollection.js'),
   usersCollection = require('./collections/transactionsCollection.js');
 
+var data = require('../league-transactions.json');
+
 function YahooFantasy(consumerKey, consumerSecret) {
   var oauth = new OAuth(
     'https://api.login.yahoo.com/oauth/v2/get_request_token',
@@ -122,31 +124,35 @@ YahooFantasy.prototype.api = function(url) {
   var self = this;
   var deferred = Q.defer();
 
-  this.oauth.get(
-    url,
-    self.yuser.token,
-    self.yuser.secret,
-    function(e, data, resp) {
-      if (e) {
-        console.log(e);
-        if (401 == e.statusCode) {
-          // need to re-authorize the user token
+  setTimeout(function() {
+    deferred.resolve(data);
+  }, 10);
 
-        } else {
-          defer.reject(e);
-        }
-      } else {
-        try {
-          data = JSON.parse(data);
-        } catch (er) {
-          console.log(er);
-          deferred.reject(er);
-        }
+  // this.oauth.get(
+  //   url,
+  //   self.yuser.token,
+  //   self.yuser.secret,
+  //   function(e, data, resp) {
+  //     if (e) {
+  //       console.log(e);
+  //       if (401 == e.statusCode) {
+  //         // need to re-authorize the user token
 
-        deferred.resolve(data);
-      }
-    }
-  );
+  //       } else {
+  //         defer.reject(e);
+  //       }
+  //     } else {
+  //       try {
+  //         data = JSON.parse(data);
+  //       } catch (er) {
+  //         console.log(er);
+  //         deferred.reject(er);
+  //       }
+
+  //       deferred.resolve(data);
+  //     }
+  //   }
+  // );
 
   return deferred.promise;
 };
@@ -228,19 +234,23 @@ YahooFantasy.prototype.helperScoreboardMap = function(scoreboard) {
         // wtf is "roster adds" object?
         clinched_playoffs: t[12].clinched_playoffs,
         managers: _.map(t[13].managers, function(mgr) {
-          return mgr.manager; // managers still may not be right
+          return mgr.manager;
         })
       };
-    }); // good, but ugly...
+    }); // good, but ugly (codewise)...
 
     var scoring_data = _.map(teams_data, function(t) { return t.team[1]; });
 
     var team_points = _.map(scoring_data, function(s) { return s.team_points; });
 
+    // y so ugly
     var team_stats = _.map(scoring_data, function(s) { return s.team_stats; });
-    var stats = _.map(team_stats.stats, function(s) { console.log(s.stat); return s.stat; });
+    var stats = _.map(team_stats, function(s) { return s.stats });
+    stats[0] = _.map(stats[0], function(stat) { return stat.stat; });
+    stats[1] = _.map(stats[1], function(stat) { return stat.stat; });
 
-    console.log(stats);
+    team_stats[0].stats = stats[0];
+    team_stats[1].stats = stats[1];
 
     // remove ugly data;
     delete matchup[0];
@@ -259,5 +269,42 @@ YahooFantasy.prototype.helperScoreboardMap = function(scoreboard) {
     });
   });
 
-  return matchups;
+  return {
+    matchups: matchups,
+    week: scoreboard.week
+  };
+};
+
+// this map is re-used pretty much everywhere (to start, at least)
+YahooFantasy.prototype.helperTransactionMap = function(transactions) {
+  // count actually useful here...
+  var count = transactions.count;
+
+  var transactions = _.filter(transactions, function(t) { return typeof(t) == 'object'; });
+  transactions = _.map(transactions, function(t) { return t.transaction; });
+
+  var transactionPlayerHelper = function(data) {
+    var players = _.filter(data, function(t) { return typeof(t) == 'object'; });
+    players = _.map(players, function(p) { return p.player; });
+    players = _.map(players, function(p) {
+      return {
+        player_key: p[0][0].player_key,
+        player_id: p[0][1].player_id,
+        name: p[0][2].name,
+        editorial_team_abbr: p[0][3].editorial_team_abbr,
+        display_position: p[0][4].display_position,
+        position_type: p[0][5].position_type,
+        transaction_data: p[1].transaction_data[0]
+      }
+    });
+
+    return players;
+  };
+
+  transactions = _.map(transactions, function(t) {
+    t.players = _.isEmpty(t[1]) ? [] : transactionPlayerHelper(t[1].players);
+    return t;
+  });
+
+  return transactions;
 };

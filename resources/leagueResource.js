@@ -40,24 +40,26 @@ exports.standings = function(leagueKey, cb) {
 
 
 exports.scoreboard = function(leagueKey, cb) {
+  // h2h only?
   var scoreboardHelper = this.helperScoreboardMap;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
     .then(function(data) {
+      var week = data.fantasy_content.league[1].scoreboard.week;
       var scoreboard = scoreboardHelper(data.fantasy_content.league[1].scoreboard[0].matchups);
-      // var league = data.fantasy_content.league[0];
+      var league = data.fantasy_content.league[0];
+
+      scoreboard.week = week;
+      scoreboard.league = league;
 
       // make sense to bring back 1 scoreboard, with all the matchups?
+      // could mess up the consolation thing
 
       // scoreboard
         // matchups[]
           // teams[]
           // ??? -- seems better
-
-      // scoreboard.matchups = matchups;
-      // scoreboard.matchups.week = data.fantasy_content[1].scoreboard.week;
-      // scoreboard.league = league;
 
       cb(scoreboard);
     });
@@ -70,6 +72,7 @@ exports.teams = function(leagueKey, cb) {
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
     .then(function(data) {
       var teams = teamHelper(data.fantasy_content.league[1].teams);
+      var league = data.fantasy_content.league[0];
 
       cb(teams);
     });
@@ -93,17 +96,23 @@ exports.draft_results = function(leagueKey, cb) {
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json')
     .then(function(data) {
       var draft = draftHelper(data.fantasy_content.league[1].draft_results);
+      var league = data.fantasy_content.league[0];
 
       cb(draft);
     });
 };
 
 exports.transactions = function(leagueKey, cb) {
+  var transactionHelper = this.helperTransactionMap;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json')
     .then(function(data) {
-      var draft = data.fantasy_content.league[1].draft_results;
+      var transactions = transactionHelper(data.fantasy_content.league[1].transactions);
+      var league = data.fantasy_content.league[0];
 
-      cb(draft);
+      transactions.league = league;
+
+      cb(transactions);
     });
 };
