@@ -1,3 +1,5 @@
+var playerHelper = require('../helpers/playerHelper.js');
+
 /*
  * Includes player key, id, name, editorial information, image, eligible positions, etc.
 */
@@ -5,7 +7,8 @@ exports.meta = function(playerKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json')
     .then(function(data) {
-      var meta = data.fantasy_content;
+      // var meta = data.fantasy_content.player;
+      var meta = playerHelper.mapPlayer(data.player[0]);
 
       cb(meta);
     });

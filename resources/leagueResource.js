@@ -1,4 +1,4 @@
-var teamHelper = require('../helpers/teamHelper.js');
+var leagueHelper = require('../helpers/leagueHelper.js');
 
 exports.meta = function(leagueKey, cb) {
   this
@@ -14,7 +14,7 @@ exports.settings = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json')
     .then(function(data) {
-      var settings = teamHelper.settingsMap(data.fantasy_content.league[1].settings[0]);
+      var settings = leagueHelper.settingsMap(data.fantasy_content.league[1].settings[0]);
       var league = data.fantasy_content.league[0];
 
       settings.league = league;
@@ -27,7 +27,7 @@ exports.standings = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
     .then(function(data) {
-      var standings = teamHelper.teamMap(data.fantasy_content.league[1].standings[0].teams);
+      var standings = leagueHelper.teamMap(data.fantasy_content.league[1].standings[0].teams);
       var league = data.fantasy_content.league[0];
 
       standings.league = league;
@@ -43,7 +43,7 @@ exports.scoreboard = function(leagueKey, cb) {
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
     .then(function(data) {
       var week = data.fantasy_content.league[1].scoreboard.week;
-      var scoreboard = teamHelper.scoreboardMap(data.fantasy_content.league[1].scoreboard[0].matchups);
+      var scoreboard = leagueHelper.scoreboardMap(data.fantasy_content.league[1].scoreboard[0].matchups);
       var league = data.fantasy_content.league[0];
 
       scoreboard.week = week;
@@ -65,7 +65,7 @@ exports.teams = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
     .then(function(data) {
-      var teams = teamHelper.teamMap(data.fantasy_content.league[1].teams);
+      var teams = leagueHelper.teamMap(data.fantasy_content.league[1].teams);
       var league = data.fantasy_content.league[0];
 
       cb(teams);
@@ -87,7 +87,7 @@ exports.draft_results = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json')
     .then(function(data) {
-      var draft = teamHelper.draftMap(data.fantasy_content.league[1].draft_results);
+      var draft = leagueHelper.draftMap(data.fantasy_content.league[1].draft_results);
       var league = data.fantasy_content.league[0];
 
       cb(draft);
@@ -98,7 +98,7 @@ exports.transactions = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json')
     .then(function(data) {
-      var transactions = teamHelper.transactionMap(data.fantasy_content.league[1].transactions);
+      var transactions = leagueHelper.transactionMap(data.fantasy_content.league[1].transactions);
       var league = data.fantasy_content.league[0];
 
       transactions.league = league;

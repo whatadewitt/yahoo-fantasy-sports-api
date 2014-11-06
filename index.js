@@ -20,7 +20,7 @@ var OAuth = require('oauth').OAuth,
   transactionsCollection = require('./collections/transactionsCollection.js'),
   usersCollection = require('./collections/transactionsCollection.js');
 
-var data = require('../league-transactions.json');
+var data = require('../player.json');
 
 function YahooFantasy(consumerKey, consumerSecret) {
   var oauth = new OAuth(
