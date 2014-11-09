@@ -24,6 +24,7 @@
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
     "lodash": "^2.4.1",
+    "oauth": "^0.9.12",
     "q": "^1.0.1"
   }
 }
