@@ -3,7 +3,7 @@ var _ = require('lodash');
 /*
  * Helper function to map data to a "team"
  */
-exports.teamMap = function(teams) {
+exports.teamsMap = function(teams) {
   teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
   teams = _.map(teams, function(t) { return t.team[0]; });
   teams = _.map(teams, function(t) {

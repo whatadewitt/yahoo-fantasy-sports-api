@@ -1,6 +1,12 @@
 var _ = require('lodash');
 
 exports.mapPlayer = function(player) {
+  // why this is necessary i will never understand
+  var offset = 0;
+  if ( 15 < player.length ) {
+    offset = 1;
+  }
+
   return {
     player_key: player[0].player_key,
     player_id: player[1].player_id,
@@ -11,10 +17,10 @@ exports.mapPlayer = function(player) {
     editorial_team_abbr: player[6].editorial_team_abbr,
     uniform_number: player[7].uniform_number,
     display_position: player[8].display_position,
-    headshot: player[9].headshot.url,
-    is_undroppable: player[10].is_undroppable,
-    position_type: player[11].position_type,
-    eligible_positions: _.map(player[12].eligible_positions, function(p) { return p.position; })
+    headshot: player[9 + offset].headshot.url,
+    is_undroppable: player[10 + offset].is_undroppable,
+    position_type: player[11 + offset].position_type,
+    eligible_positions: _.map(player[12 + offset].eligible_positions, function(p) { return p.position; })
   };
 };
 

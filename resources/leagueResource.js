@@ -27,7 +27,8 @@ exports.standings = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
     .then(function(data) {
-      var standings = leagueHelper.teamMap(data.fantasy_content.league[1].standings[0].teams);
+      // todo: ensure order here...
+      var standings = leagueHelper.teamsMap(data.fantasy_content.league[1].standings[0].teams);
       var league = data.fantasy_content.league[0];
 
       standings.league = league;
@@ -65,7 +66,7 @@ exports.teams = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
     .then(function(data) {
-      var teams = leagueHelper.teamMap(data.fantasy_content.league[1].teams);
+      var teams = leagueHelper.teamsMap(data.fantasy_content.league[1].teams);
       var league = data.fantasy_content.league[0];
 
       cb(teams);

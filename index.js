@@ -20,8 +20,6 @@ var OAuth = require('oauth').OAuth,
   transactionsCollection = require('./collections/transactionsCollection.js'),
   usersCollection = require('./collections/transactionsCollection.js');
 
-var data = require('../fantasy/game-roster-positions.json');
-
 function YahooFantasy(consumerKey, consumerSecret) {
   var oauth = new OAuth(
     'https://api.login.yahoo.com/oauth/v2/get_request_token',
@@ -124,35 +122,31 @@ YahooFantasy.prototype.api = function(url) {
   var self = this;
   var deferred = Q.defer();
 
-  setTimeout(function() {
-    deferred.resolve(data);
-  }, 10);
+  this.oauth.get(
+    url,
+    self.yuser.token,
+    self.yuser.secret,
+    function(e, data, resp) {
+      if (e) {
+        console.log(e);
+        if (401 == e.statusCode) {
+          // need to re-authorize the user token
 
-  // this.oauth.get(
-  //   url,
-  //   self.yuser.token,
-  //   self.yuser.secret,
-  //   function(e, data, resp) {
-  //     if (e) {
-  //       console.log(e);
-  //       if (401 == e.statusCode) {
-  //         // need to re-authorize the user token
+        } else {
+          defer.reject(e);
+        }
+      } else {
+        try {
+          data = JSON.parse(data);
+        } catch (er) {
+          console.log(er);
+          deferred.reject(er);
+        }
 
-  //       } else {
-  //         defer.reject(e);
-  //       }
-  //     } else {
-  //       try {
-  //         data = JSON.parse(data);
-  //       } catch (er) {
-  //         console.log(er);
-  //         deferred.reject(er);
-  //       }
-
-  //       deferred.resolve(data);
-  //     }
-  //   }
-  // );
+        deferred.resolve(data);
+      }
+    }
+  );
 
   return deferred.promise;
 };
