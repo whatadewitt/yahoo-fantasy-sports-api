@@ -8,8 +8,7 @@ exports.meta = function(playerKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json')
     .then(function(data) {
-      var meta = playerHelper.mapPlayer(data.fantasy_content.player);
-      // var meta = playerHelper.mapPlayer(data.player[0]);
+      var meta = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
       cb(meta);
     });

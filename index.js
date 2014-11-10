@@ -128,7 +128,6 @@ YahooFantasy.prototype.api = function(url) {
     self.yuser.secret,
     function(e, data, resp) {
       if (e) {
-        console.log(e);
         if (401 == e.statusCode) {
           // need to re-authorize the user token
 

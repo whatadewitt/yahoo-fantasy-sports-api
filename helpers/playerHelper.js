@@ -24,6 +24,17 @@ exports.mapPlayer = function(player) {
   };
 };
 
+exports.transactionPlayerMap = function(player) {
+  return {
+    player_key: player[0].player_key,
+    player_id: player[1].player_id,
+    name: player[2].name,
+    editorial_team_abbr: player[3].editorial_team_abbr,
+    display_position: player[4].display_position,
+    position_type: player[5].position_type
+  };
+};
+
 exports.mapStats = function(stats) {
   var coverage_type = stats[0].coverage_type;
   return {
