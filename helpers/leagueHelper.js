@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var transactionHelper = require('./transactionHelper.js');
 
 /*
  * Helper function to map data to a "team"
@@ -123,31 +124,18 @@ exports.transactionMap = function(transactions) {
   // count actually useful here...
   var count = transactions.count;
 
+  debugger;
+
   var transactions = _.filter(transactions, function(t) { return typeof(t) == 'object'; });
   transactions = _.map(transactions, function(t) { return t.transaction; });
 
-  var transactionPlayerHelper = function(data) {
-    var players = _.filter(data, function(t) { return typeof(t) == 'object'; });
-    players = _.map(players, function(p) { return p.player; });
-    players = _.map(players, function(p) {
-      return {
-        player_key: p[0][0].player_key,
-        player_id: p[0][1].player_id,
-        name: p[0][2].name,
-        editorial_team_abbr: p[0][3].editorial_team_abbr,
-        display_position: p[0][4].display_position,
-        position_type: p[0][5].position_type,
-        transaction_data: p[1].transaction_data[0]
-      }
-    });
-
-    return players;
-  };
-
   transactions = _.map(transactions, function(t) {
-    t.players = _.isEmpty(t[1]) ? [] : transactionPlayerHelper(t[1].players);
-    return t;
+    t[0].players = _.isEmpty(t[1]) ? [] : transactionHelper.mapTransactionPlayers(t[1].players);
+    delete t[1];
+    return t[0];
   });
+
+  transactions.count = count;
 
   return transactions;
 };
