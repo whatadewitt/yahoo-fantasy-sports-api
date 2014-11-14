@@ -27,11 +27,10 @@ exports.standings = function(leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
     .then(function(data) {
-      // todo: ensure order here...
       var standings = leagueHelper.teamsMap(data.fantasy_content.league[1].standings[0].teams);
       var league = data.fantasy_content.league[0];
 
-      standings.league = league;
+      league.standings = standings;
 
       cb(league);
     });
@@ -69,7 +68,9 @@ exports.teams = function(leagueKey, cb) {
       var teams = leagueHelper.teamsMap(data.fantasy_content.league[1].teams);
       var league = data.fantasy_content.league[0];
 
-      cb(teams);
+      league.teams = teams;
+
+      cb(league);
     });
 };
 
@@ -91,7 +92,9 @@ exports.draft_results = function(leagueKey, cb) {
       var draft = leagueHelper.draftMap(data.fantasy_content.league[1].draft_results);
       var league = data.fantasy_content.league[0];
 
-      cb(draft);
+      league.draft_results = draft;
+
+      cb(league);
     });
 };
 
@@ -102,8 +105,8 @@ exports.transactions = function(leagueKey, cb) {
       var transactions = leagueHelper.transactionMap(data.fantasy_content.league[1].transactions);
       var league = data.fantasy_content.league[0];
 
-      transactions.league = league;
+      league.transactions = transactions;
 
-      cb(transactions);
+      cb(league);
     });
 };

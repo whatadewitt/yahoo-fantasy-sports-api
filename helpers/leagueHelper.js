@@ -31,13 +31,14 @@ exports.settingsMap = function(settings) {
   settings.stat_categories = _.map(
     settings.stat_categories.stats,
     function(s) {
+      s.stat.stat_position_types = _.map(s.stat.stat_position_types, 'stat_position_type');
       return s.stat;
     });
 
   settings.roster_positions = _.map(
     settings.roster_positions,
     function(p) {
-      return p.roster_positions;
+      return p.roster_position;
     });
 
   return settings;

@@ -99,8 +99,8 @@ exports.position_types = function(gameKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json')
     .then(function(data) {
-      var position_types = gameHelper.positionTypesMap(data.game[1].position_types);
-      var game = data.game[0];
+      var position_types = gameHelper.positionTypesMap(data.fantasy_content.game[1].position_types);
+      var game = data.fantasy_content.game[0];
 
       game.position_types = position_types;
 
@@ -116,8 +116,8 @@ exports.roster_positions = function(gameKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json')
     .then(function(data) {
-      var roster_positions = gameHelper.rosterPositionsMap(data.game[1].roster_positions);
-      var game = data.game[0];
+      var roster_positions = gameHelper.rosterPositionsMap(data.fantasy_content.game[1].roster_positions);
+      var game = data.fantasy_content.game[0];
 
       game.roster_positions = roster_positions;
 
