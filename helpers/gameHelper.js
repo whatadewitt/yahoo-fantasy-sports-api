@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var playerHelper = require('./playerHelper.js');
 
 exports.leaguesMap = function(leagues) {
   leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
@@ -10,7 +11,7 @@ exports.leaguesMap = function(leagues) {
 // todo: again, this should be more re-usable
 exports.playersMap = function(players) {
   players = _.filter(players, function(p) { return typeof(p) == 'object'; });
-  players = _.map(players, function(p) { return p.player[0]; });
+  players = _.map(players, function(p) { return playerHelper.mapPlayer(p.player[0]); });
 
   return players;
 };

@@ -59,7 +59,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.game.meta = _.bind(this.game.meta, this);
   this.game.leagues = _.bind(this.game.leagues, this);
   this.game.players = _.bind(this.game.players, this);
-  this.game.weeks = _.bind(this.game.weeks, this);
+  this.game.game_weeks = _.bind(this.game.game_weeks, this);
   this.game.stat_categories = _.bind(this.game.stat_categories, this);
   this.game.position_types = _.bind(this.game.position_types, this);
   this.game.roster_positions = _.bind(this.game.roster_positions, this);
@@ -130,15 +130,14 @@ YahooFantasy.prototype.api = function(url) {
       if (e) {
         if (401 == e.statusCode) {
           // need to re-authorize the user token
-
+          // todo: not done yet.
         } else {
-          defer.reject(e);
+          deferred.reject(JSON.parse(data));
         }
       } else {
         try {
           data = JSON.parse(data);
         } catch (er) {
-          console.log(er);
           deferred.reject(er);
         }
 
@@ -148,4 +147,10 @@ YahooFantasy.prototype.api = function(url) {
   );
 
   return deferred.promise;
+};
+
+YahooFantasy.prototype.err = function(e, cb) {
+  cb({
+    error: e.error.description
+  });
 };
