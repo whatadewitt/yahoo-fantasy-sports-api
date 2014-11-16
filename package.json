@@ -1,5 +1,5 @@
 {
-  "name": "yahoo-fantasy-api",
+  "name": "node-yahoo-fantasy-api",
   "version": "0.0.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
@@ -12,9 +12,9 @@
   },
   "keywords": [
     "yahoo",
-    "fantasy",
+    "fantasy sports",
     "sports",
-    "sports"
+    "fantasy"
   ],
   "author": "Luke DeWitt <dewittl@gmail.com> (http://www.whatadewitt.ca/)",
   "license": "MIT",
