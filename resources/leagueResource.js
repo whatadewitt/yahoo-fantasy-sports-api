@@ -1,16 +1,22 @@
 var leagueHelper = require('../helpers/leagueHelper.js');
 
 exports.meta = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json')
     .then(function(data) {
       var meta = data.fantasy_content.league[0];
 
       cb(meta);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 exports.settings = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json')
     .then(function(data) {
@@ -20,24 +26,33 @@ exports.settings = function(leagueKey, cb) {
       settings.league = league;
 
       cb(settings);
+    }, function(e) {
+      self.err(e, cb);
     });
 }
 
 exports.standings = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
     .then(function(data) {
-      var standings = leagueHelper.teamsMap(data.fantasy_content.league[1].standings[0].teams);
+      var standings = leagueHelper.mapStandings(data.fantasy_content.league[1].standings[0].teams);
       var league = data.fantasy_content.league[0];
 
+      // todo: do i want the stats for each category as well?
       league.standings = standings;
 
       cb(league);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 
 exports.scoreboard = function(leagueKey, cb) {
+  var self = this;
+
   // h2h only?
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
@@ -46,8 +61,10 @@ exports.scoreboard = function(leagueKey, cb) {
       var scoreboard = leagueHelper.scoreboardMap(data.fantasy_content.league[1].scoreboard[0].matchups);
       var league = data.fantasy_content.league[0];
 
-      scoreboard.week = week;
-      scoreboard.league = league;
+      console.log(scoreboard);
+
+      league.scoreboard = scoreboard;
+      league.scoreboard.week = week;
 
       // make sense to bring back 1 scoreboard, with all the matchups?
       // could mess up the consolation thing
@@ -57,11 +74,15 @@ exports.scoreboard = function(leagueKey, cb) {
           // teams[]
           // ??? -- seems better
 
-      cb(scoreboard);
+      cb(league);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 exports.teams = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
     .then(function(data) {
@@ -71,21 +92,29 @@ exports.teams = function(leagueKey, cb) {
       league.teams = teams;
 
       cb(league);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 // not quite sure how to wrap this yet...
 exports.players = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json')
     .then(function(data) {
       var players = data.fantasy_content.league[1].players;
 
       cb(players);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 exports.draft_results = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json')
     .then(function(data) {
@@ -95,10 +124,14 @@ exports.draft_results = function(leagueKey, cb) {
       league.draft_results = draft;
 
       cb(league);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 exports.transactions = function(leagueKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json')
     .then(function(data) {
@@ -108,5 +141,7 @@ exports.transactions = function(leagueKey, cb) {
       league.transactions = transactions;
 
       cb(league);
+    }, function(e) {
+      self.err(e, cb);
     });
 };

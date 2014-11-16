@@ -1,32 +1,27 @@
 var _ = require('lodash');
 var transactionHelper = require('./transactionHelper.js');
+var teamHelper = require('./teamHelper.js');
 
 /*
  * Helper function to map data to a "team"
  */
 exports.teamsMap = function(teams) {
+  // todo: use team helper
   teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
-  teams = _.map(teams, function(t) { return t.team[0]; });
-  teams = _.map(teams, function(t) {
-    return {
-      team_key: t[0].team_key,
-      team_id: t[1].team_id,
-      name: t[2].name,
-      is_owned_by_current_login: t[3].is_owned_by_current_login,
-      url: t[4].url,
-      team_logo: t[5].team_logos[0].team_logo.url,
-      waiver_priority: t[7].waiver_priority,
-      number_of_moves: t[9].number_of_moves,
-      number_of_trades: t[10].number_of_trades,
-      // wtf is "roster adds" object?
-      clinched_playoffs: t[12].clinched_playoffs,
-      managers: _.map(t[13].managers, function(m) {
-        return m.manager;
-      })
-    };
-  });
+  teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
   return teams;
 };
+
+exports.mapStandings = function(teams) {
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) {
+    var team = teamHelper.mapTeam(t.team[0]);
+    team.standings = t.team[2].team_standings;
+    return team;
+  });
+
+  return teams;
+}
 
 exports.settingsMap = function(settings) {
   settings.stat_categories = _.map(
@@ -123,8 +118,6 @@ exports.scoreboardMap = function(scoreboard) {
 exports.transactionMap = function(transactions) {
   // count actually useful here...
   var count = transactions.count;
-
-  debugger;
 
   var transactions = _.filter(transactions, function(t) { return typeof(t) == 'object'; });
   transactions = _.map(transactions, function(t) { return t.transaction; });

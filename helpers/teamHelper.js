@@ -2,7 +2,7 @@ var _ = require('lodash');
 var playerHelper = require('./playerHelper.js');
 
 // todo: use this where possible...
-exports.teamMap = function(t) {
+exports.mapTeam = function(t) {
   return {
     team_key: t[0].team_key,
     team_id: t[1].team_id,
@@ -21,19 +21,15 @@ exports.teamMap = function(t) {
   };
 };
 
-exports.rosterMap = function(roster) {
+exports.mapRoster = function(roster) {
   var players = roster[0].players;
-
-  delete roster[0];
 
   // todo: look at chaining in lodash... and/or "reduce"
   players = _.filter(players, function(p) { return typeof(p) == 'object'; });
   players = _.map(players, function(p) { return p.player[0]; });
   players = _.map(players, function(p) { return playerHelper.mapPlayer(p); });
 
-  roster.players = players;
-
-  return roster;
+  return players;
 };
 
 exports.statsMap = function(stats) {

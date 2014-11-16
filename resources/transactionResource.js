@@ -1,6 +1,8 @@
 var transactionHelper = require('../helpers/transactionHelper.js');
 
 exports.meta = function(transactionKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/transaction/' + transactionKey + '/players?format=json')
     .then(function(data) {
@@ -12,13 +14,13 @@ exports.meta = function(transactionKey, cb) {
       meta.players = players;
 
       cb(meta);
-    }, function(data) {
-      cb(data);
+    }, function(e) {
+      self.err(e, cb);
     });
 };
 
 exports.players = function(transactionKey, cb) {
-  // same as meta?? just with the players...
+  // same as meta?? just with the players... which we want...
   this.transaction.meta(transactionKey, cb);
 };
 
