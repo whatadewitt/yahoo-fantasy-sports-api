@@ -3,7 +3,13 @@ Yahoo! Fantasy API Node Module
 
 This is a node module created to wrap the Yahoo! Fantasy Sports API ([link](https://developer.yahoo.com/fantasysports/guide/index.html)). At the moment, not all subresources are available, nor are any of the 'collection' elements. I do hope to add them, and they have been added to the code, but as of now this project is very much in an open beta phase.
 
-The API is designed to act as a helper for those interacting with the Y! Fantasy API. The goal is for ease of use for the user, both in terms of querying endpoints and parsing responses. I've noticed that in working with the API, the data is not always the easiest, so hopefully what I have created here will make things easier.
+The API is designed to act as a helper for those interacting with the Y! Fantasy API. The goal is for ease of use for the user, both in terms of querying endpoints and parsing responses. I've noticed that in working with the API, the data is not always the easiest to understand, so hopefully what I have created here will help people out.
+
+Installation
+-------
+You can install the module via npm by running:
+
+    $ npm install yahoo-fantasy
 
 Usage Note
 -------
@@ -19,7 +25,7 @@ More complete documentation can be found using the application sandbox. This san
 
 The API can be used by simply importing the module and querying data
 
-    var YahooFantasy = require('YahooFantasy');
+    var YahooFantasy = require('yahoo-fantasy');
     // you can get an application key/secret by creating a new application on Yahoo!
     var yf = new YahooFantasy(
       Y!APPLICATION_KEY,
