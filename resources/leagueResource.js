@@ -1,6 +1,14 @@
 var leagueHelper = require('../helpers/leagueHelper.js');
 
-exports.meta = function(leagueKey, cb) {
+module.exports = function() {
+  return new LeagueResource();
+};
+
+function LeagueResource() {
+  return this;
+};
+
+LeagueResource.prototype.meta = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -14,7 +22,7 @@ exports.meta = function(leagueKey, cb) {
     });
 };
 
-exports.settings = function(leagueKey, cb) {
+LeagueResource.prototype.settings = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -31,7 +39,7 @@ exports.settings = function(leagueKey, cb) {
     });
 }
 
-exports.standings = function(leagueKey, cb) {
+LeagueResource.prototype.standings = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -50,7 +58,7 @@ exports.standings = function(leagueKey, cb) {
 };
 
 
-exports.scoreboard = function(leagueKey, cb) {
+LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
   var self = this;
 
   // h2h only?
@@ -61,9 +69,7 @@ exports.scoreboard = function(leagueKey, cb) {
       var scoreboard = leagueHelper.scoreboardMap(data.fantasy_content.league[1].scoreboard[0].matchups);
       var league = data.fantasy_content.league[0];
 
-      console.log(scoreboard);
-
-      league.scoreboard = scoreboard;
+    league.scoreboard = scoreboard;
       league.scoreboard.week = week;
 
       // make sense to bring back 1 scoreboard, with all the matchups?
@@ -80,7 +86,7 @@ exports.scoreboard = function(leagueKey, cb) {
     });
 };
 
-exports.teams = function(leagueKey, cb) {
+LeagueResource.prototype.teams = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -98,7 +104,7 @@ exports.teams = function(leagueKey, cb) {
 };
 
 // not quite sure how to wrap this yet...
-exports.players = function(leagueKey, cb) {
+LeagueResource.prototype.players = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -112,7 +118,7 @@ exports.players = function(leagueKey, cb) {
     });
 };
 
-exports.draft_results = function(leagueKey, cb) {
+LeagueResource.prototype.draft_results = function(leagueKey, cb) {
   var self = this;
 
   this
@@ -129,7 +135,7 @@ exports.draft_results = function(leagueKey, cb) {
     });
 };
 
-exports.transactions = function(leagueKey, cb) {
+LeagueResource.prototype.transactions = function(leagueKey, cb) {
   var self = this;
 
   this

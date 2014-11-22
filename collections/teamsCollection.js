@@ -1,6 +1,14 @@
 var _ = require('lodash');
 
-exports.fetch = function(teamKeys, resources, cb) {
+module.exports = function() {
+  return new TeamsCollection();
+};
+
+function TeamsCollection() {
+  return this;
+};
+
+TeamsCollection.prototype.fetch = function(teamKeys, resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
 
   if ( _.isString(teamKeys) ) {
@@ -28,7 +36,7 @@ exports.fetch = function(teamKeys, resources, cb) {
   });
 };
 
-exports.leagueFetch = function(leagueKeys, resources, cb) {
+TeamsCollection.prototype.leagueFetch = function(leagueKeys, resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
@@ -57,7 +65,7 @@ exports.leagueFetch = function(leagueKeys, resources, cb) {
   });
 };
 
-exports.usersFetch = function(resources, cb) {
+TeamsCollection.prototype.usersFetch = function(resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
 
   if ( !( _.isEmpty(resources) )  ) {
@@ -79,7 +87,7 @@ exports.usersFetch = function(resources, cb) {
   });
 };
 
-exports.gameFetch = function(gameKeys, resources, cb) {
+TeamsCollection.prototype.gameFetch = function(gameKeys, resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {

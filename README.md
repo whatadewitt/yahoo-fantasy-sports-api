@@ -54,5 +54,8 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.1.1
+  * Refactored module to fix a bug where user sessions were not necessarily unique because of require caching.
+
 #### 0.1
   * Initial release.

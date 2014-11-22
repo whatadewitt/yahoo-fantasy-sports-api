@@ -1,6 +1,14 @@
 var util = require('util');
 
-exports.fetch = function(resources, cb) {
+module.exports = function() {
+  return new UsersCollection();
+};
+
+function UsersCollection() {
+  return this;
+};
+
+UsersCollection.prototype.fetch = function(resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
   if ( util.isArray(resources) ) {

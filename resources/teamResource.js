@@ -1,6 +1,14 @@
 var teamHelper = require('../helpers/teamHelper.js');
 
-exports.meta = function(teamKey, cb) {
+module.exports = function() {
+  return new TeamResource();
+};
+
+function TeamResource() {
+  return this;
+};
+
+TeamResource.prototype.meta = function(teamKey, cb) {
   var self = this;
 
   this
@@ -14,13 +22,12 @@ exports.meta = function(teamKey, cb) {
     });
 };
 
-exports.stats = function(teamKey, cb) {
+TeamResource.prototype.stats = function(teamKey, cb) {
   var self = this;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json')
     .then(function(data) {
-      console.log(data);
       var stats = teamHelper.statsMap(data.fantasy_content.team[1]);
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
@@ -32,7 +39,7 @@ exports.stats = function(teamKey, cb) {
     });
 };
 
-exports.standings = function(teamKey, cb) {
+TeamResource.prototype.standings = function(teamKey, cb) {
   var self = this;
 
   this
@@ -50,7 +57,7 @@ exports.standings = function(teamKey, cb) {
 };
 
 // todo: needs to be tested
-exports.roster = function(teamKey, cb) { // (teamKey, week, cb)
+TeamResource.prototype.roster = function(teamKey, cb) { // (teamKey, week, cb)
   var self = this;
 
   // 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster;weeks=' + weeks.split(',') + '?format=json'
@@ -62,7 +69,6 @@ exports.roster = function(teamKey, cb) { // (teamKey, week, cb)
       var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
 
       team.roster = roster;
-      console.log(team);
 
       cb(team);
     }, function(e) {
@@ -71,7 +77,7 @@ exports.roster = function(teamKey, cb) { // (teamKey, week, cb)
 };
 
 
-exports.draft_results = function(teamKey, cb) {
+TeamResource.prototype.draft_results = function(teamKey, cb) {
   var self = this;
 
   this
@@ -89,7 +95,7 @@ exports.draft_results = function(teamKey, cb) {
 };
 
 // todo: this
-exports.matchups = function(teamKey, weeks, cb) {
+TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
   var self = this;
 
   this
