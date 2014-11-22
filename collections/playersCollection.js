@@ -1,6 +1,14 @@
 var _ = require('lodash');
 
-exports.fetch = function(playerKeys, resources, filters, cb) {
+module.exports = function() {
+  return new PlayersCollection();
+};
+
+function PlayersCollection() {
+  return this;
+};
+
+PlayersCollection.prototype.fetch = function(playerKeys, resources, filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys='
 
   if ( _.isString(playerKeys) ) {
@@ -35,7 +43,7 @@ exports.fetch = function(playerKeys, resources, filters, cb) {
 };
 
 // ignoring the single b/c filters
-exports.leagueFetch = function(leagueKeys, resources, filters, cb) {
+PlayersCollection.prototype.leagueFetch = function(leagueKeys, resources, filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys='
 
   if ( _.isString(leagueKeys) ) {
@@ -70,7 +78,7 @@ exports.leagueFetch = function(leagueKeys, resources, filters, cb) {
   });
 };
 
-exports.teamFetch = function(teamKeys, resources, filters, cb) {
+PlayersCollection.prototype.teamFetch = function(teamKeys, resources, filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys='
 
   if ( _.isString(teamKeys) ) {

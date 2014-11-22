@@ -1,6 +1,14 @@
 var transactionHelper = require('../helpers/transactionHelper.js');
 
-exports.meta = function(transactionKey, cb) {
+module.exports = function() {
+  return new TransactionResource();
+};
+
+function TransactionResource() {
+  return this;
+};
+
+TransactionResource.prototype.meta = function(transactionKey, cb) {
   var self = this;
 
   this
@@ -19,7 +27,7 @@ exports.meta = function(transactionKey, cb) {
     });
 };
 
-exports.players = function(transactionKey, cb) {
+TransactionResource.prototype.players = function(transactionKey, cb) {
   // same as meta?? just with the players... which we want...
   this.transaction.meta(transactionKey, cb);
 };

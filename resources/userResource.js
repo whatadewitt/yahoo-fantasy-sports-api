@@ -1,7 +1,15 @@
 var _ = require('lodash');
 var userHelper = require('../helpers/userHelper.js');
 
-exports.games = function(cb) {
+module.exports = function() {
+  return new UserResource();
+};
+
+function UserResource() {
+  return this;
+};
+
+UserResource.prototype.games = function(cb) {
   var self = this;
 
   this
@@ -18,7 +26,7 @@ exports.games = function(cb) {
     });
 };
 
-exports.game_leagues = function(gameKeys, cb) {
+UserResource.prototype.game_leagues = function(gameKeys, cb) {
   var self = this;
   // todo: get stats from other users...
   if ( !_.isArray(gameKeys) ) {
@@ -39,7 +47,7 @@ exports.game_leagues = function(gameKeys, cb) {
     });
 };
 
-exports.game_teams = function(gameKeys, cb) {
+UserResource.prototype.game_teams = function(gameKeys, cb) {
   var self = this;
 
   if ( !_.isArray(gameKeys) ) {

@@ -1,6 +1,14 @@
 var _ = require('lodash');
 
-exports.fetch = function(gameKeys, filters, cb) {
+module.exports = function() {
+  return new GamesCollection();
+};
+
+function GamesCollection() {
+  return this;
+};
+
+GamesCollection.prototype.fetch = function(gameKeys, filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -26,7 +34,7 @@ exports.fetch = function(gameKeys, filters, cb) {
     });
 };
 
-exports.user = function(filters, cb) {
+GamesCollection.prototype.user = function(filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
 
   if ( !( _.isEmpty(filters) )  ) {
@@ -46,7 +54,7 @@ exports.user = function(filters, cb) {
     });
 };
 
-exports.userFetch = function(filters, cb) {
+GamesCollection.prototype.userFetch = function(filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {

@@ -32,10 +32,7 @@ exports.mapUserTeams = function(games) {
   games = _.map(games, function(g) {
     var teams = g[1].teams;
     teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
-    console.log(teams);
-    debugger;
     teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
-    console.log(teams);
     g[0].teams = teams;
     return g[0];
   });

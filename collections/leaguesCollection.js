@@ -1,6 +1,14 @@
 var _ = require('lodash');
 
-exports.fetch = function(leagueKeys, resources, cb) {
+module.exports = function() {
+  return new LeaguesCollection();
+};
+
+function LeaguesCollection() {
+  return this;
+};
+
+LeaguesCollection.prototype.fetch = function(leagueKeys, resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues/;league_keys=';
 
   if ( _.isString(leagueKeys) ) {

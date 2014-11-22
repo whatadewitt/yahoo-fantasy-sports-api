@@ -1,8 +1,16 @@
 var _ = require('lodash');
 var gameHelper = require('../helpers/gameHelper.js');
 
+module.exports = function() {
+  return new GameResource();
+};
+
+function GameResource() {
+  return this;
+};
+
 /* gameKey can be game_key or league (ie/ nfl, mlb) */
-exports.meta = function(gameKey, cb) {
+GameResource.prototype.meta = function(gameKey, cb) {
   var self = this;
 
   this
@@ -17,7 +25,7 @@ exports.meta = function(gameKey, cb) {
 };
 
 /* league key can be an array of keys */
-exports.leagues = function(gameKey, leagueKey, cb) {
+GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
   var self = this;
 
   if ( _.isString(leagueKey) ) {
@@ -38,7 +46,7 @@ exports.leagues = function(gameKey, leagueKey, cb) {
     });
 };
 
-exports.players = function(gameKey, playerKey, cb) {
+GameResource.prototype.players = function(gameKey, playerKey, cb) {
   var self = this;
 
   if ( _.isString(playerKey) ) {
@@ -59,7 +67,7 @@ exports.players = function(gameKey, playerKey, cb) {
     });
 };
 
-exports.game_weeks = function(gameKey, cb) {
+GameResource.prototype.game_weeks = function(gameKey, cb) {
   var self = this;
 
   this
@@ -76,7 +84,7 @@ exports.game_weeks = function(gameKey, cb) {
     });
 };
 
-exports.stat_categories = function(gameKey, cb) {
+GameResource.prototype.stat_categories = function(gameKey, cb) {
   var self = this;
 
   this
@@ -93,7 +101,7 @@ exports.stat_categories = function(gameKey, cb) {
     });
 };
 
-exports.position_types = function(gameKey, cb) {
+GameResource.prototype.position_types = function(gameKey, cb) {
   var self = this;
 
   this
@@ -110,7 +118,7 @@ exports.position_types = function(gameKey, cb) {
     });
 };
 
-exports.roster_positions = function(gameKey, cb) {
+GameResource.prototype.roster_positions = function(gameKey, cb) {
   var self = this;
 
   this

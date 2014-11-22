@@ -1,10 +1,18 @@
 var playerHelper = require('../helpers/playerHelper.js');
 var leagueHelper = require('../helpers/leagueHelper.js');
 
+module.exports = function() {
+  return new PlayerResource();
+};
+
+function PlayerResource() {
+  return this;
+};
+
 /*
  * Includes player key, id, name, editorial information, image, eligible positions, etc.
 */
-exports.meta = function(playerKey, cb) {
+PlayerResource.prototype.meta = function(playerKey, cb) {
   var self = this;
 
   this
@@ -21,7 +29,7 @@ exports.meta = function(playerKey, cb) {
 /*
  * Player stats and points (if in a league context).
  */
-exports.stats = function(playerKey, cb) {
+PlayerResource.prototype.stats = function(playerKey, cb) {
   var self = this;
 
   // todo: can get this by week and/or by season...
@@ -31,7 +39,6 @@ exports.stats = function(playerKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json')
     .then(function(data) {
-      console.log(data.fantasy_content.player[1].player_stats);
       var stats = playerHelper.mapStats(data.fantasy_content.player[1].player_stats);
       var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
@@ -46,7 +53,7 @@ exports.stats = function(playerKey, cb) {
 /*
  * Data about ownership percentage of the player
  */
-exports.percent_owned = function(playerKey, cb) {
+PlayerResource.prototype.percent_owned = function(playerKey, cb) {
   var self = this;
 
   this
@@ -69,7 +76,7 @@ exports.percent_owned = function(playerKey, cb) {
 /*
  * The player ownership status within a league (whether they're owned by a team, on waivers, or free agents). Only relevant within a league.
  */
-exports.ownership = function(playerKey, leagueKey, cb) {
+PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
   var self = this;
 
   this
@@ -100,7 +107,7 @@ exports.ownership = function(playerKey, leagueKey, cb) {
 /*
  * Average pick, Average round and Percent Drafted.
  */
-exports.draft_analysis = function(playerKey, cb) {
+PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
   var self = this;
 
   this

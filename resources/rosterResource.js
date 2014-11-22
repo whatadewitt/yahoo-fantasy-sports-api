@@ -1,6 +1,14 @@
 var teamHelper = require('../helpers/teamHelper.js');
 
-exports.players = function(teamKey, cb) {
+module.exports = function() {
+  return new RosterResource();
+};
+
+function RosterResource() {
+  return this;
+};
+
+RosterResource.prototype.players = function(teamKey, cb) {
   var self = this;
 
   this
