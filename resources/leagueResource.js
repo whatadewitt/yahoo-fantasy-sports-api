@@ -57,11 +57,11 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
     });
 };
 
-
+// h2h only
+// todo: add weeks param
 LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
   var self = this;
 
-  // h2h only?
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
     .then(function(data) {
@@ -69,16 +69,8 @@ LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
       var scoreboard = leagueHelper.scoreboardMap(data.fantasy_content.league[1].scoreboard[0].matchups);
       var league = data.fantasy_content.league[0];
 
-    league.scoreboard = scoreboard;
+      league.scoreboard = scoreboard;
       league.scoreboard.week = week;
-
-      // make sense to bring back 1 scoreboard, with all the matchups?
-      // could mess up the consolation thing
-
-      // scoreboard
-        // matchups[]
-          // teams[]
-          // ??? -- seems better
 
       cb(league);
     }, function(e) {
