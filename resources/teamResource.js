@@ -94,16 +94,20 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
     });
 };
 
-// todo: this
-TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
+// h2h leagues only
+// todo: add weeks param
+TeamResource.prototype.matchups = function(teamKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups;weeks=' + weeks.split(',') + '?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups?format=json')
     .then(function(data) {
-      var matchups = data.fantasy_content;
+      var matchups = teamHelper.mapMatchups(data.fantasy_content.team[1].matchups);
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      cb(matchups);
+      team.matchups = matchups;
+
+      cb(team);
     }, function(e) {
       self.err(e, cb);
     });

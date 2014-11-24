@@ -54,6 +54,11 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.1.2
+  * Added 'Team Matchups' subresource
+  * Added 'League Scoreboard' subresource
+  * Minor code cleanup and improvements
+
 #### 0.1.1
   * Refactored module to fix a bug where user sessions were not necessarily unique because of require caching.
 

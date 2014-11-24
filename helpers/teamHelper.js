@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var playerHelper = require('./playerHelper.js');
+var leagueHelper = require('./leagueHelper.js');
 
 // todo: use this where possible...
 exports.mapTeam = function(t) {
@@ -45,3 +46,29 @@ exports.draftMap = function(draft) {
 
   return draft;
 };
+
+// todo: this gotta be cleaned up
+exports.mapMatchups = function(matchups) {
+  var self = this;
+
+  matchups = _.filter(matchups, function(m) { return typeof(m) == 'object'; });
+  matchups = _.map(matchups, function(m) { return m.matchup; });
+  debugger;
+  matchups = _.map(matchups, function(m) {
+    var teams = _.filter(m[0].teams, function(t) { return typeof(t) == 'object'; });
+
+    m.teams = _.map(teams, function(t) {
+      var team = self.mapTeam(t.team[0]);
+
+      team.points = t.team[1].team_points;
+      team.stats = leagueHelper.mapStats(t.team[1].team_stats.stats);
+
+      return team;
+    });
+
+    delete m[0];
+    return m;
+  });
+
+  return matchups;
+}
