@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var gameHelper = require('../helpers/gameHelper.js');
 
 module.exports = function() {
   return new GamesCollection();
@@ -8,7 +9,34 @@ function GamesCollection() {
   return this;
 };
 
-GamesCollection.prototype.fetch = function(gameKeys, filters, cb) {
+// params: game keys, subresources (optional), filters (optional), callback
+GamesCollection.prototype.fetch = function() {
+  var gameKeys = arguments[0],
+    subresources = '',
+    filters = {},
+    cb = arguments[arguments.length - 1];
+
+  switch ( arguments.length ) {
+    case 3 :
+      if ( _.isArray(arguments[1]) ) {
+        // subresources are the param
+        subresources = arguments[1];
+      } else if ( _.isObject(arguments[1]) ) {
+        filters = arguments[1];
+      }
+      break;
+
+    case 4 :
+      subresources = arguments[1];
+      filters = arguments[2];
+
+      break;
+
+    default:
+    // todo: throw error
+      break;
+  }
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -16,6 +44,12 @@ GamesCollection.prototype.fetch = function(gameKeys, filters, cb) {
   }
 
   url += gameKeys.join(',');
+
+  if ( _.isString(subresources) ) {
+    subresources = [subresources];
+  }
+
+  url += ';out=' + subresources.join(',');
 
   if ( !( _.isEmpty(filters) )  ) {
     _.each(Object.keys(filters), function(key) {
@@ -28,9 +62,9 @@ GamesCollection.prototype.fetch = function(gameKeys, filters, cb) {
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var games = gameHelper.parseCollection(data.fantasy_content.games, subresources);
 
-      cb(meta);
+      cb(games);
     });
 };
 
