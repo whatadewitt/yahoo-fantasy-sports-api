@@ -11,50 +11,43 @@ function GamesCollection() {
 
 // params: game keys, subresources (optional), filters (optional), callback
 GamesCollection.prototype.fetch = function() {
-  var gameKeys = arguments[0],
+  var gameKeys = '', //arguments[0],
     subresources = '',
     filters = {},
     cb = arguments[arguments.length - 1];
 
-  switch ( arguments.length ) {
-    case 3 :
-      if ( _.isArray(arguments[1]) ) {
-        // subresources are the param
-        subresources = arguments[1];
-      } else if ( _.isObject(arguments[1]) ) {
-        filters = arguments[1];
-      }
-      break;
-
-    case 4 :
-      subresources = arguments[1];
-      filters = arguments[2];
-
-      break;
-
-    default:
-    // todo: throw error
-      break;
+  if ( _.isObject(arguments[0]) ) {
+    // filters
+    filters = arguments[0];
+  } else {
+    // game key(s)
+    gameKeys = arguments[0];
   }
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=';
+  subresources = arguments[1];
 
-  if ( _.isString(gameKeys) ) {
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games';
+
+  if ( _.isString(gameKeys)  && !_.isEmpty(gameKeys) ) {
     gameKeys = [gameKeys];
   }
 
-  url += gameKeys.join(',');
-
-  if ( _.isString(subresources) ) {
-    subresources = [subresources];
+  if ( !(_.isEmpty(gameKeys)) ) {
+    url += ';game_keys=' + gameKeys.join(',');
   }
-
-  url += ';out=' + subresources.join(',');
 
   if ( !( _.isEmpty(filters) )  ) {
     _.each(Object.keys(filters), function(key) {
       url += ';' + key + '=' + filters[key];
     });
+  }
+
+  if ( _.isString(subresources) && !_.isEmpty(subresources) ) {
+    subresources = [subresources];
+  }
+
+  if ( !(_.isEmpty(subresources)) ) {
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json';

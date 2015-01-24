@@ -24,3 +24,6 @@ RosterResource.prototype.players = function(teamKey, cb) {
       self.err(e, cb);
     });
 };
+
+// todo: need to add date, week
+// https://developer.yahoo.com/fantasysports/guide/roster-resource.html#roster-resource-desc
