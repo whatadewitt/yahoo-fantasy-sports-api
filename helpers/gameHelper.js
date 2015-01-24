@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var playerHelper = require('./playerHelper.js');
+var teamHelper = require('./teamHelper.js');
 
 exports.mapLeagues = function(leagues) {
   leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
@@ -56,6 +57,13 @@ exports.mapRosterPositions = function(positions) {
   return positions;
 };
 
+exports.mapTeams = function(teams) {
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
+
+  return teams;
+};
+
 exports.parseCollection = function(games, subresources) {
   var self = this;
 
@@ -67,11 +75,11 @@ exports.parseCollection = function(games, subresources) {
     _.forEach(subresources, function(resource, idx) {
       switch (resource) {
         case 'leagues':
-          game.leagues = self.mapWeeks(g[idx + 1].leagues);
+          game.leagues = self.mapLeagues(g[idx + 1].leagues);
           break;
 
         case 'players':
-          game.players = self.mapWeeks(g[idx + 1].players);
+          game.players = self.mapPlayers(g[idx + 1].players);
           break;
 
         case 'game_weeks':
@@ -79,7 +87,7 @@ exports.parseCollection = function(games, subresources) {
           break;
 
         case 'stat_categories':
-          game.stat_categories = self.mapStatCategories(g[idx + 1].stat_categories);
+          game.stat_categories = self.mapStatCategories(g[idx + 1].stat_categories.stats);
           break;
 
         case 'position_types':
@@ -91,7 +99,7 @@ exports.parseCollection = function(games, subresources) {
           break;
 
         case 'teams':
-          game.teams = self.mapWeeks(g[idx + 1].teams);
+          game.teams = self.mapTeams(g[idx + 1].teams);
           break;
 
         default:
