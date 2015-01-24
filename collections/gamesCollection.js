@@ -117,7 +117,12 @@ GamesCollection.prototype.user = function() {
     });
 };
 
-GamesCollection.prototype.userFetch = function(filters, cb) {
+GamesCollection.prototype.userFetch = function() {
+  // no filters...
+  var gameKeys = arguments[0],
+    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -126,19 +131,18 @@ GamesCollection.prototype.userFetch = function(filters, cb) {
 
   url += gameKeys.join(',');
 
-  if ( !( _.isEmpty(filters) )  ) {
-    _.each(Object.keys(filters), function(key) {
-      url += ';' + key + '=' + filters[key];
-    });
+  if ( !(_.isEmpty(subresources)) ) {
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json';
 
+  console.log(url);
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-      cb(meta);
+      cb(games);
     });
 };
