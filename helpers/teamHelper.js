@@ -39,7 +39,7 @@ exports.statsMap = function(stats) {
   return stats;
 };
 
-exports.draftMap = function(draft) {
+exports.mapDraft = function(draft) {
   draft = _.filter(draft, function(d) { return typeof(d) == 'object'; });
   draft = _.map(draft, function(d) { return d.draft_result; });
   draft = _.sortBy(draft, 'round');

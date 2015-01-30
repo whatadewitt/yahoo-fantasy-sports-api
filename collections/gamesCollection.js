@@ -110,7 +110,6 @@ GamesCollection.prototype.user = function() {
   this
     .api(url)
     .then(function(data) {
-      // var user = data.fantasy_content.users[0].user[0]; // do i want to return user here? i'm already logged in...
       var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
       cb(games);
@@ -141,7 +140,7 @@ GamesCollection.prototype.userFetch = function() {
   this
     .api(url)
     .then(function(data) {
-      var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
+      var games = gameHelper.parseCollection(data.fantasy_content.leagues, subresources);
 
       cb(games);
     });

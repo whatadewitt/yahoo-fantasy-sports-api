@@ -59,13 +59,13 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json')
     .then(function(data) {
-      var ownership = data.fantasy_content.player[1].percent_owned[1];
+      var percent_owned = data.fantasy_content.player[1].percent_owned[1];
       var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
       // todo: do we need coverage type and/or delta????
       // wtf are those about?!?
 
-      player.ownership = ownership;
+      player.percent_owned = percent_owned;
 
       cb(player);
     }, function(e) {

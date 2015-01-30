@@ -5,7 +5,7 @@ var teamHelper = require('./teamHelper.js');
 /*
  * Helper function to map data to a "team"
  */
-exports.teamsMap = function(teams) {
+exports.mapTeams = function(teams) {
   teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
   teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
   return teams;
@@ -22,7 +22,7 @@ exports.mapStandings = function(teams) {
   return teams;
 }
 
-exports.settingsMap = function(settings) {
+exports.mapSettings = function(settings) {
   settings.stat_categories = _.map(
     settings.stat_categories.stats,
     function(s) {
@@ -39,14 +39,14 @@ exports.settingsMap = function(settings) {
   return settings;
 };
 
-exports.draftMap = function(draft) {
+exports.mapDraft = function(draft) {
   draft = _.filter(draft, function(d) { return typeof(d) == 'object'; });
   draft = _.map(draft, function(d) { return d.draft_result; })
 
   return draft;
 };
 
-exports.scoreboardMap = function(scoreboard) {
+exports.mapScoreboard = function(scoreboard) {
   var self = this;
   // is this only for h2h? what about roto, and points?
   var matchups = _.filter(scoreboard, function(s) { return typeof(s) == 'object'; });
@@ -75,7 +75,7 @@ exports.scoreboardMap = function(scoreboard) {
   };
 };
 
-exports.transactionMap = function(transactions) {
+exports.mapTransactions = function(transactions) {
   var transactions = _.filter(transactions, function(t) { return typeof(t) == 'object'; });
   transactions = _.map(transactions, function(t) { return t.transaction; });
 
@@ -93,4 +93,49 @@ exports.mapStats = function(stats) {
   stats = _.map(stats, function(s) { return s.stat; });
 
   return stats;
+};
+
+exports.parseCollection = function(leagues, subresources) {
+  var self = this;
+
+  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.map(leagues, function(l) { return l.league; });
+  leagues = _.map(leagues, function(l) {
+    var league = l[0];
+
+    _.forEach(subresources, function(resource, idx) {
+      switch (resource) {
+        case 'settings':
+          league.settings = self.mapSettings(l[idx + 1].settings[0]);
+          break;
+
+        case 'standings':
+          league.standings = self.mapStandings(l[idx + 1].standings[0].teams);
+          break;
+
+        case 'scoreboard':
+          league.scoreboard = self.mapScoreboard(l[idx + 1].scoreboard[0].matchups);
+          break;
+
+        case 'teams':
+          league.teams = self.mapTeams(l[idx + 1].teams);
+          break;
+
+        case 'draftresults':
+          league.draftresults = self.mapDraft(l[idx + 1].draft_results);
+          break;
+
+        case 'transactions':
+          league.transactions = self.mapTransactions(l[idx + 1].transactions);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return league;
+  });
+
+  return leagues;
 };

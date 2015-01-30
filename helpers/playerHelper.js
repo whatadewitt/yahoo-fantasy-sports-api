@@ -51,4 +51,38 @@ exports.mapDraftAnalysis = function(da) {
     average_cost: da[2].average_cost,
     percent_drafted: da[3].percent_drafted
   }
-}
+};
+
+exports.parseCollection = function(players, subresources) {
+  var self = this;
+
+  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.map(players, function(p) { return p.player; });
+  players = _.map(players, function(p) {
+    var player = self.mapPlayer(p[0]);
+
+    _.forEach(subresources, function(resource, idx) {
+      switch (resource) {
+        case 'stats':
+          player.stats = self.mapStats(p[idx + 1].player_stats);
+          break;
+
+        case 'percent_owned': // todo: clean this up and in resource
+          player.percent_owned = p[idx + 1].percent_owned;
+          break;
+
+        case 'draft_analysis':
+          console.log(p[idx + 1]);
+          player.draft_analysis = self.mapDraftAnalysis(p[idx + 1].draft_analysis);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return player;
+  });
+
+  return players;
+};

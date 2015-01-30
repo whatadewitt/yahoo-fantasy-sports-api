@@ -83,7 +83,7 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json')
     .then(function(data) {
-      var draft_results = teamHelper.draftMap(data.fantasy_content.team[1].draft_results);
+      var draft_results = teamHelper.mapDraft(data.fantasy_content.team[1].draft_results);
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
       team.draft_results = draft_results;
