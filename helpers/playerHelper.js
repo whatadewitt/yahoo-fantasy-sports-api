@@ -2,27 +2,22 @@ var _ = require('lodash');
 var teamHelper = require('./teamHelper.js');
 
 exports.mapPlayer = function(player) {
-  // why this is necessary i will never understand
-  var offset = 0;
-  if ( 15 < player.length ) {
-    offset = 1;
-  }
+  var playerObj = {};
+  var key;
 
-  return {
-    player_key: player[0].player_key,
-    player_id: player[1].player_id,
-    name: player[2].name,
-    editorial_player_key: player[3].editorial_player_key,
-    editorial_team_key: player[4].editorial_team_key,
-    editorial_team_full_name: player[5].editorial_team_full_name,
-    editorial_team_abbr: player[6].editorial_team_abbr,
-    uniform_number: player[7].uniform_number,
-    display_position: player[8].display_position,
-    headshot: player[9 + offset].headshot.url,
-    is_undroppable: player[10 + offset].is_undroppable,
-    position_type: player[11 + offset].position_type,
-    eligible_positions: _.map(player[12 + offset].eligible_positions, function(p) { return p.position; })
-  };
+  _.forEach(player, function(obj) {
+    key = _.keys(obj)[0];
+    if ( !_.isUndefined(key) ) {
+      playerObj[key] = obj[key];
+    }
+  });
+
+  playerObj.eligible_positions = _.map(
+    playerObj.eligible_positions,
+    function(p) { return p.position; }
+  );
+
+  return playerObj;
 };
 
 exports.transactionPlayerMap = function(player) {
@@ -56,8 +51,6 @@ exports.mapDraftAnalysis = function(da) {
 
 exports.parseCollection = function(players, subresources) {
   var self = this;
-
-  console.log(players);
 
   players = _.filter(players, function(p) { return typeof(p) == 'object'; });
   players = _.map(players, function(p) { return p.player; });

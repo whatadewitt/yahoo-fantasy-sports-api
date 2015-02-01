@@ -28,7 +28,7 @@ TeamResource.prototype.stats = function(teamKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json')
     .then(function(data) {
-      var stats = teamHelper.statsMap(data.fantasy_content.team[1]);
+      var stats = teamHelper.mapStats(data.fantasy_content.team[1]);
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
       team.stats = stats;

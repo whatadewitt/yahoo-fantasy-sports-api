@@ -1,6 +1,6 @@
 var _ = require('lodash');
-var playerHelper = require('./playerHelper.js');
 var leagueHelper = require('./leagueHelper.js');
+var playerHelper = require('./playerHelper.js');
 
 // todo: use this where possible...
 exports.mapTeam = function(t) {
@@ -33,7 +33,7 @@ exports.mapRoster = function(roster) {
   return players;
 };
 
-exports.statsMap = function(stats) {
+exports.mapStats = function(stats) {
   stats.stats = _.map(stats.stats, function(s) { return s.stat; });
 
   return stats;
@@ -47,13 +47,11 @@ exports.mapDraft = function(draft) {
   return draft;
 };
 
-// todo: this gotta be cleaned up
 exports.mapMatchups = function(matchups) {
   var self = this;
 
   matchups = _.filter(matchups, function(m) { return typeof(m) == 'object'; });
   matchups = _.map(matchups, function(m) { return m.matchup; });
-  debugger;
   matchups = _.map(matchups, function(m) {
     var teams = _.filter(m[0].teams, function(t) { return typeof(t) == 'object'; });
 
@@ -72,3 +70,75 @@ exports.mapMatchups = function(matchups) {
 
   return matchups;
 }
+
+exports.parseCollection = function(teams, subresources) {
+  var self = this;
+
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) { return t.team; });
+  teams = _.map(teams, function(t) {
+    var team = self.mapTeam(t[0]);
+
+    _.forEach(subresources, function(resource, idx) {
+      switch (resource) {
+        case 'stats':
+          team.stats = self.mapStats(t[idx + 1].team_stats);
+          break;
+
+        case 'standings':
+          team.standings = t[idx + 1].team_standings;
+          break;
+
+        case 'roster':
+          console.log(team);
+          team.roster = self.mapRoster(t[idx + 1].roster);
+          break;
+
+        case 'draftresults':
+          team.draftresults = self.mapDraft(t[idx + 1].draft_results);
+          break;
+
+        case 'matchups':
+          team.matchups = self.mapMatchups(t[idx + 1].matchups);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return team;
+  });
+
+  return teams;
+};
+
+exports.parseLeagueCollection = function(leagues, subresources) {
+  var self = this;
+
+  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.map(leagues, function(l) { return l.league; });
+  leagues = _.map(leagues, function(l) {
+    var league = l[0];
+    league.teams = self.parseCollection(l[1].teams, subresources);
+
+    return league;
+  });
+
+  return leagues;
+};
+
+exports.parseTeamCollection = function(teams, subresources) {
+  var self = this;
+
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) { return t.team; });
+  teams = _.map(teams, function(t) {
+    var team = teamHelper.mapTeam(t[0]);
+    team.players = self.parseCollection(t[1].players, subresources);
+
+    return team;
+  });
+
+  return teams;
+};

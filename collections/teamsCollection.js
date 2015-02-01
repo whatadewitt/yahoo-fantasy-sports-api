@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var teamHelper = require('../helpers/teamHelper.js');
 
 module.exports = function() {
   return new TeamsCollection();
@@ -8,21 +9,25 @@ function TeamsCollection() {
   return this;
 };
 
-TeamsCollection.prototype.fetch = function(teamKeys, resources, cb) {
+TeamsCollection.prototype.fetch = function() {
+  var teamKeys = arguments[0],
+    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
 
   if ( _.isString(teamKeys) ) {
-    teamKeys = [teamKeys]
+    teamKeys = teamKeys.split(',');
   }
 
   url += teamKeys.join(',');
 
-  if ( !( _.isEmpty(resources) )  ) {
-    if ( _.isString(resources) ) {
-      resources = [resources];
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
     }
 
-    url += ';out=' + resources.join(',');
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json'
@@ -30,13 +35,17 @@ TeamsCollection.prototype.fetch = function(teamKeys, resources, cb) {
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
 
-    cb(meta);
+    cb(teams);
   });
 };
 
-TeamsCollection.prototype.leagueFetch = function(leagueKeys, resources, cb) {
+TeamsCollection.prototype.leagues = function() {
+  var leagueKeys = arguments[0],
+    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
@@ -46,12 +55,12 @@ TeamsCollection.prototype.leagueFetch = function(leagueKeys, resources, cb) {
   url += leagueKeys.join(',');
   url += '/teams';
 
-  if ( !( _.isEmpty(resources) )  ) {
-    if ( _.isString(resources) ) {
-      resources = [resources];
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
     }
 
-    url += ';out=' + resources.join(',');
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json'
@@ -59,13 +68,13 @@ TeamsCollection.prototype.leagueFetch = function(leagueKeys, resources, cb) {
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
-    cb(meta);
+    cb(leagues);
   });
 };
 
-TeamsCollection.prototype.usersFetch = function(resources, cb) {
+TeamsCollection.prototype.userFetch = function(resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
 
   if ( !( _.isEmpty(resources) )  ) {
@@ -87,7 +96,7 @@ TeamsCollection.prototype.usersFetch = function(resources, cb) {
   });
 };
 
-TeamsCollection.prototype.gameFetch = function(gameKeys, resources, cb) {
+TeamsCollection.prototype.games = function(gameKeys, resources, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -115,5 +124,3 @@ TeamsCollection.prototype.gameFetch = function(gameKeys, resources, cb) {
     cb(meta);
   });
 };
-
-
