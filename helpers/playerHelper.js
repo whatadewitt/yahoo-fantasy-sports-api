@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var teamHelper = require('./teamHelper.js');
 
 exports.mapPlayer = function(player) {
   // why this is necessary i will never understand
@@ -56,6 +57,8 @@ exports.mapDraftAnalysis = function(da) {
 exports.parseCollection = function(players, subresources) {
   var self = this;
 
+  console.log(players);
+
   players = _.filter(players, function(p) { return typeof(p) == 'object'; });
   players = _.map(players, function(p) { return p.player; });
   players = _.map(players, function(p) {
@@ -71,8 +74,11 @@ exports.parseCollection = function(players, subresources) {
           player.percent_owned = p[idx + 1].percent_owned;
           break;
 
+        case 'ownership':
+          player.ownership = p[idx + 1].ownership;
+          break;
+
         case 'draft_analysis':
-          console.log(p[idx + 1]);
           player.draft_analysis = self.mapDraftAnalysis(p[idx + 1].draft_analysis);
           break;
 
@@ -85,4 +91,34 @@ exports.parseCollection = function(players, subresources) {
   });
 
   return players;
+};
+
+exports.parseLeagueCollection = function(leagues, subresources) {
+  var self = this;
+
+  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.map(leagues, function(l) { return l.league; });
+  leagues = _.map(leagues, function(l) {
+    var league = l[0];
+    league.players = self.parseCollection(l[1].players, subresources);
+
+    return league;
+  });
+
+  return leagues;
+};
+
+exports.parseTeamCollection = function(teams, subresources) {
+  var self = this;
+
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) { return t.team; });
+  teams = _.map(teams, function(t) {
+    var team = teamHelper.mapTeam(t[0]);
+    team.players = self.parseCollection(t[1].players, subresources);
+
+    return team;
+  });
+
+  return teams;
 };

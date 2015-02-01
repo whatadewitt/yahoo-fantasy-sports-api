@@ -104,7 +104,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
 
   this.players.fetch = _.bind(this.players.fetch, this);
   this.players.leagues = _.bind(this.players.leagues, this);
-  this.players.teams = _.bind(this.players.leagues, this);
+  this.players.teams = _.bind(this.players.teams, this);
 
   this.transactions.fetch = _.bind(this.transactions.fetch, this);
   this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);

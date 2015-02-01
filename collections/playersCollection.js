@@ -43,10 +43,9 @@ PlayersCollection.prototype.fetch = function() {
 
 // ignoring the single b/c filters
 PlayersCollection.prototype.leagues = function() {
-  console.log(arguments);
-  var playerKeys = arguments[0],
-    filters = {},
-    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+  var leagueKeys = arguments[0],
+    filters = ( arguments.length > 3 ) ? arguments[1] : ( arguments.length > 2 && _.isObject( arguments[1]) ) ? arguments[1] : {},
+    subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
     cb = arguments[arguments.length - 1];
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys='
@@ -77,13 +76,19 @@ PlayersCollection.prototype.leagues = function() {
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    console.log(data.fantasy_content);
+    var leagues = playerHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
-    cb(meta);
+    cb(leagues);
   });
 };
 
-PlayersCollection.prototype.team = function(teamKeys, resources, filters, cb) {
+PlayersCollection.prototype.teams = function() {
+  var teamKeys = arguments[0],
+    filters = ( arguments.length > 3 ) ? arguments[1] : ( arguments.length > 2 && _.isObject( arguments[1]) ) ? arguments[1] : {},
+    subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys='
 
   if ( _.isString(teamKeys) ) {
@@ -93,12 +98,12 @@ PlayersCollection.prototype.team = function(teamKeys, resources, filters, cb) {
   url += teamKeys.join(',');
   url += '/players';
 
-  if ( !( _.isEmpty(resources) )  ) {
-    if ( _.isString(resources) ) {
-      resources = [resources];
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
     }
 
-    url += ';out=' + resources.join(',');
+    url += ';out=' + subresources.join(',');
   }
 
   if ( !( _.isEmpty(filters) )  ) {
@@ -112,8 +117,8 @@ PlayersCollection.prototype.team = function(teamKeys, resources, filters, cb) {
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    var teams = playerHelper.parseTeamCollection(data.fantasy_content.teams, subresources);
 
-    cb(meta);
+    cb(teams);
   });
 };
