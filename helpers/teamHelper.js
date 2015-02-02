@@ -77,6 +77,10 @@ exports.parseCollection = function(teams, subresources) {
   teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
   teams = _.map(teams, function(t) { return t.team; });
   teams = _.map(teams, function(t) {
+    // this is only here because user games collection is adding an extra null
+    // and I cannot for the life of me figure out why.
+    _.remove(t, function(o) { return _.isNull(o); });
+
     var team = self.mapTeam(t[0]);
 
     _.forEach(subresources, function(resource, idx) {
@@ -107,6 +111,7 @@ exports.parseCollection = function(teams, subresources) {
       }
     });
 
+    console.log(team);
     return team;
   });
 
@@ -141,4 +146,19 @@ exports.parseTeamCollection = function(teams, subresources) {
   });
 
   return teams;
+};
+
+exports.parseGameCollection = function(games, subresources) {
+  var self = this;
+
+  games = _.filter(games, function(g) { return typeof(g) == 'object'; });
+  games = _.map(games, function(g) { return g.game; });
+  games = _.map(games, function(g) {
+    var game = g[0];
+    game.teams = self.parseCollection(g[1].teams, subresources);
+
+    return game;
+  });
+
+  return games;
 };

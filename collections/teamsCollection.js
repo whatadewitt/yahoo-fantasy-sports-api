@@ -30,7 +30,7 @@ TeamsCollection.prototype.fetch = function() {
     url += ';out=' + subresources.join(',');
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
   this
   .api(url)
@@ -63,7 +63,7 @@ TeamsCollection.prototype.leagues = function() {
     url += ';out=' + subresources.join(',');
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
   this
   .api(url)
@@ -74,29 +74,38 @@ TeamsCollection.prototype.leagues = function() {
   });
 };
 
-TeamsCollection.prototype.userFetch = function(resources, cb) {
+TeamsCollection.prototype.userFetch = function() {
+  var subresources = ( arguments.length > 1 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
 
-  if ( !( _.isEmpty(resources) )  ) {
-    if ( _.isString(resources) ) {
-      resources = [resources];
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
     }
 
-    url += ';out=' + resources.join(',');
+    url += ';out=' + subresources.join(',');
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
+  console.log(url);
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    console.log(data);
+    var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(meta);
+    cb(games);
   });
 };
 
-TeamsCollection.prototype.games = function(gameKeys, resources, cb) {
+TeamsCollection.prototype.games = function() {
+  var gameKeys = arguments[0],
+    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -106,21 +115,21 @@ TeamsCollection.prototype.games = function(gameKeys, resources, cb) {
   url += gameKeys.join(',');
   url += '/teams';
 
-  if ( !( _.isEmpty(resources) )  ) {
-    if ( _.isString(resources) ) {
-      resources = [resources];
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
     }
 
-    url += ';out=' + resources.join(',');
+    url += ';out=' + subresources.join(',');
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
   this
   .api(url)
   .then(function(data) {
-    var meta = data.fantasy_content;
+    var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(meta);
+    cb(games);
   });
 };
