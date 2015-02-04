@@ -1,4 +1,5 @@
-var util = require('util');
+var _ = require('lodash');
+var userHelper = require('../helpers/userHelper.js');
 
 module.exports = function() {
   return new UsersCollection();
@@ -8,13 +9,19 @@ function UsersCollection() {
   return this;
 };
 
-UsersCollection.prototype.fetch = function(resources, cb) {
+// this doesn't seem super useful...
+UsersCollection.prototype.fetch = function() {
+  var subresources = ( arguments.length > 1 ) ? arguments[0] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
-  if ( util.isArray(resources) ) {
-    url += ';out=' + resources.split(,);
-  } else if ( 'string' == typeof(resources) ) {
-    url += ';out=' + resources
+  if ( !( _.isEmpty(subresources) )  ) {
+    if ( _.isString(subresources) ) {
+      subresources = [subresources];
+    }
+
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json'
@@ -22,8 +29,8 @@ UsersCollection.prototype.fetch = function(resources, cb) {
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var user = userHelper.parseCollection(data.fantasy_content.users[0].user);
 
-      cb(meta);
+      cb(user);
     });
 };

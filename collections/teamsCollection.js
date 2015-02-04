@@ -90,11 +90,9 @@ TeamsCollection.prototype.userFetch = function() {
 
   url += '?format=json';
 
-  console.log(url);
   this
   .api(url)
   .then(function(data) {
-    console.log(data);
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
     cb(games);

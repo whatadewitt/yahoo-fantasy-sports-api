@@ -39,6 +39,9 @@ LeaguesCollection.prototype.fetch = function() {
     .then(function(data) {
       var leagues = leagueHelper.parseCollection(data.fantasy_content.leagues, subresources);
 
-      cb(leagues);
+      cb(null, leagues);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

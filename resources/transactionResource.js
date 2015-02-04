@@ -21,9 +21,10 @@ TransactionResource.prototype.meta = function(transactionKey, cb) {
 
       meta.players = players;
 
-      cb(meta);
+      cb(null, meta);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 

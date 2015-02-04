@@ -58,7 +58,10 @@ GamesCollection.prototype.fetch = function() {
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.games, subresources);
 
-      cb(games);
+      cb(null, games);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -112,7 +115,10 @@ GamesCollection.prototype.user = function() {
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-      cb(games);
+      cb(null, games);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -142,6 +148,9 @@ GamesCollection.prototype.userFetch = function() {
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.leagues, subresources);
 
-      cb(games);
+      cb(null, games);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

@@ -20,9 +20,10 @@ UserResource.prototype.games = function(cb) {
 
       user.games = games;
 
-      cb(user);
+      cb(null, user);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -41,9 +42,10 @@ UserResource.prototype.game_leagues = function(gameKeys, cb) {
 
       user.leagues = leagues;
 
-      cb(user);
+      cb(null, user);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -62,8 +64,9 @@ UserResource.prototype.game_teams = function(gameKeys, cb) {
 
       user.teams = teams;
 
-      cb(user);
+      cb(null, user);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

@@ -16,9 +16,9 @@ var OAuth = require('oauth').OAuth,
   playersCollection = require('./collections/playersCollection.js'),
   gamesCollection = require('./collections/gamesCollection.js'),
   teamsCollection = require('./collections/teamsCollection.js'),
-  leaguesCollection = require('./collections/leaguesCollection.js'),
-  transactionsCollection = require('./collections/transactionsCollection.js'),
-  usersCollection = require('./collections/transactionsCollection.js');
+  leaguesCollection = require('./collections/leaguesCollection.js');
+  // transactionsCollection = require('./collections/transactionsCollection.js')
+  // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
   var oauth = new OAuth(
@@ -42,10 +42,10 @@ function YahooFantasy(consumerKey, consumerSecret) {
     team: teamResource(),
     teams: teamsCollection(),
     transaction: transactionResource(),
-    transactions: transactionsCollection(),
+    // transactions: transactionsCollection(),
     roster: rosterResource(),
     user: userResource(),
-    users: usersCollection(),
+    // users: usersCollection(),
     yuser: {
       token: null,
       secret: null,
@@ -111,10 +111,10 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.teams.leagues = _.bind(this.teams.leagues, this);
   this.teams.games = _.bind(this.teams.games, this);
 
-  this.transactions.fetch = _.bind(this.transactions.fetch, this);
-  this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);
+  // this.transactions.fetch = _.bind(this.transactions.fetch, this);
+  // this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);
 
-  this.users.fetch = _.bind(this.users.fetch, this);
+  // this.users.fetch = _.bind(this.users.fetch, this);
 }
 
 YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSession) {
@@ -155,8 +155,8 @@ YahooFantasy.prototype.api = function(url) {
   return deferred.promise;
 };
 
-YahooFantasy.prototype.err = function(e, cb) {
-  cb({
-    error: e.error.description
-  });
-};
+// YahooFantasy.prototype.err = function(e, cb) {
+//   cb({
+//     error: e.error.description
+//   });
+// };

@@ -76,3 +76,5 @@ TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, f
     cb(meta);
   });
 };
+
+// todo: http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}

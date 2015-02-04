@@ -94,7 +94,6 @@ exports.parseCollection = function(teams, subresources) {
           break;
 
         case 'roster':
-          console.log(team);
           team.roster = self.mapRoster(t[idx + 1].roster);
           break;
 
@@ -111,7 +110,6 @@ exports.parseCollection = function(teams, subresources) {
       }
     });
 
-    console.log(team);
     return team;
   });
 

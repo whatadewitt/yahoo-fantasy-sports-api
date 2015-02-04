@@ -37,8 +37,11 @@ PlayersCollection.prototype.fetch = function() {
   .then(function(data) {
     var players = playerHelper.parseCollection(data.fantasy_content.players, subresources);
 
-    cb(players);
-  });
+    cb(null, players);
+  }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
+    });
 };
 
 // ignoring the single b/c filters
@@ -79,8 +82,11 @@ PlayersCollection.prototype.leagues = function() {
     console.log(data.fantasy_content);
     var leagues = playerHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
-    cb(leagues);
-  });
+    cb(null, leagues);
+  }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
+    });
 };
 
 PlayersCollection.prototype.teams = function() {
@@ -119,6 +125,9 @@ PlayersCollection.prototype.teams = function() {
   .then(function(data) {
     var teams = playerHelper.parseTeamCollection(data.fantasy_content.teams, subresources);
 
-    cb(teams);
+    cb(null, teams);
+  }, function(e) {
+    // self.err(e, cb);
+    cb(e, null);
   });
 };

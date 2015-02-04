@@ -16,9 +16,10 @@ LeagueResource.prototype.meta = function(leagueKey, cb) {
     .then(function(data) {
       var meta = data.fantasy_content.league[0];
 
-      cb(meta);
+      cb(null, meta);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -33,9 +34,10 @@ LeagueResource.prototype.settings = function(leagueKey, cb) {
 
       settings.league = league;
 
-      cb(settings);
+      cb(null, settings);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 }
 
@@ -51,9 +53,10 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
       // todo: do i want the stats for each category as well?
       league.standings = standings;
 
-      cb(league);
+      cb(null, league);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -72,9 +75,10 @@ LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
       league.scoreboard = scoreboard;
       league.scoreboard.week = week;
 
-      cb(league);
+      cb(null, league);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -89,9 +93,10 @@ LeagueResource.prototype.teams = function(leagueKey, cb) {
 
       league.teams = teams;
 
-      cb(league);
+      cb(null, league);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -104,9 +109,10 @@ LeagueResource.prototype.players = function(leagueKey, cb) {
     .then(function(data) {
       var players = data.fantasy_content.league[1].players;
 
-      cb(players);
+      cb(null, players);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -121,9 +127,10 @@ LeagueResource.prototype.draft_results = function(leagueKey, cb) {
 
       league.draft_results = draft;
 
-      cb(league);
+      cb(null, league);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -138,8 +145,9 @@ LeagueResource.prototype.transactions = function(leagueKey, cb) {
 
       league.transactions = transactions;
 
-      cb(league);
+      cb(null, league);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

@@ -20,9 +20,10 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
     .then(function(data) {
       var meta = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
-      cb(meta);
+      cb(null, meta);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -44,9 +45,10 @@ PlayerResource.prototype.stats = function(playerKey, cb) {
 
       player.stats = stats;
 
-      cb(player);
+      cb(null, player);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -67,9 +69,10 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
 
       player.percent_owned = percent_owned;
 
-      cb(player);
+      cb(null, player);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -98,9 +101,10 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
       // todo: what's the data like when the player isn't owned?
       // todo: worth returning more info of the team
 
-      cb(player);
+      cb(null, player);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -118,8 +122,9 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
 
       player.draft_analysis = draft_analysis;
 
-      cb(player);
+      cb(null, player);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

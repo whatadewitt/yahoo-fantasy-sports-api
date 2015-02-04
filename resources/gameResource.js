@@ -18,9 +18,10 @@ GameResource.prototype.meta = function(gameKey, cb) {
     .then(function(data) {
       var meta = data.fantasy_content.game[0];
 
-      cb(meta);
+      cb(null, meta);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -40,9 +41,10 @@ GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
 
       game.leagues = leagues;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -61,9 +63,10 @@ GameResource.prototype.players = function(gameKey, playerKey, cb) {
 
       game.players = players;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -78,9 +81,10 @@ GameResource.prototype.game_weeks = function(gameKey, cb) {
 
       game.weeks = weeks;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -95,9 +99,10 @@ GameResource.prototype.stat_categories = function(gameKey, cb) {
 
       game.stat_categories = stat_categories;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -112,9 +117,10 @@ GameResource.prototype.position_types = function(gameKey, cb) {
 
       game.position_types = position_types;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -129,8 +135,9 @@ GameResource.prototype.roster_positions = function(gameKey, cb) {
 
       game.roster_positions = roster_positions;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

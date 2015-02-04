@@ -19,9 +19,10 @@ RosterResource.prototype.players = function(teamKey, cb) {
 
       team.roster = roster;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 

@@ -16,9 +16,10 @@ TeamResource.prototype.meta = function(teamKey, cb) {
     .then(function(data) {
       var metadata = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      cb(metadata);
+      cb(null, metadata);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -33,9 +34,10 @@ TeamResource.prototype.stats = function(teamKey, cb) {
 
       team.stats = stats;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -50,9 +52,10 @@ TeamResource.prototype.standings = function(teamKey, cb) {
 
       team.standings = standings;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -70,9 +73,10 @@ TeamResource.prototype.roster = function(teamKey, cb) { // (teamKey, week, cb)
 
       team.roster = roster;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -88,9 +92,10 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
 
       team.draft_results = draft_results;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
@@ -107,8 +112,9 @@ TeamResource.prototype.matchups = function(teamKey, cb) {
 
       team.matchups = matchups;
 
-      cb(team);
+      cb(null, team);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
