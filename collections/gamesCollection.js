@@ -142,13 +142,15 @@ GamesCollection.prototype.userFetch = function() {
 
   url += '?format=json';
 
-  console.log(url);
   this
     .api(url)
     .then(function(data) {
-      var games = gameHelper.parseCollection(data.fantasy_content.leagues, subresources);
+      var user = data.fantasy_content.users[0].user[0];
+      var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-      cb(null, games);
+      user.games = games;
+
+      cb(null, user);
     }, function(e) {
       // self.err(e, cb);
       cb(e, null);

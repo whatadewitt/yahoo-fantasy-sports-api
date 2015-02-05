@@ -41,7 +41,8 @@ The API can be used by simply importing the module and querying data
     // query a resource/subresource
     yf.{resource}.{subresource} (
       {possible argument(s)},
-      function cb(data) {
+      function cb(err, data) {
+        // handle error
         // callback function
         // do your thing
       }
@@ -53,6 +54,11 @@ This project is very much still a work in progress, please report any issues via
 
 Changelog
 -------
+
+#### 0.2.0
+  * Made helper classes more consistent
+  * Added collections for games, leagues, players, and teams
+  * Moved to error first convention because JavaScript
 
 #### 0.1.2
   * Added 'Team Matchups' subresource
