@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
+    "jasmine-node": "^1.14.5",
     "lodash": "^2.4.1",
+    "nock": "^0.59.1",
     "oauth": "^0.9.12",
     "q": "^1.0.1"
   }
