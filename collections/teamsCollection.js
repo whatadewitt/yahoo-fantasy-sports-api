@@ -38,6 +38,9 @@ TeamsCollection.prototype.fetch = function() {
     var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
 
     cb(teams);
+  }, function(e) {
+    // self.err(e, cb);
+    cb(e, null);
   });
 };
 
@@ -71,6 +74,9 @@ TeamsCollection.prototype.leagues = function() {
     var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
     cb(leagues);
+  }, function(e) {
+    // self.err(e, cb);
+    cb(e, null);
   });
 };
 
@@ -96,6 +102,9 @@ TeamsCollection.prototype.userFetch = function() {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
     cb(games);
+  }, function(e) {
+    // self.err(e, cb);
+    cb(e, null);
   });
 };
 
@@ -129,5 +138,8 @@ TeamsCollection.prototype.games = function() {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
     cb(games);
+  }, function(e) {
+    // self.err(e, cb);
+    cb(e, null);
   });
 };

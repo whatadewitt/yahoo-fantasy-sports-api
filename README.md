@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.2.1
+  * Hotfix to fix "Teams" collection - use error first convention
+
 #### 0.2.0
   * Made helper classes more consistent
   * Added collections for games, leagues, players, and teams
