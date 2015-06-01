@@ -33,7 +33,6 @@ LeaguesCollection.prototype.fetch = function() {
 
   url += '?format=json';
 
-  console.log(url);
   this
     .api(url)
     .then(function(data) {

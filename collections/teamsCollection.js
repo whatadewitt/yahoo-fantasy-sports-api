@@ -37,7 +37,7 @@ TeamsCollection.prototype.fetch = function() {
   .then(function(data) {
     var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
 
-    cb(teams);
+    cb(null, teams);
   }, function(e) {
     // self.err(e, cb);
     cb(e, null);
@@ -73,7 +73,7 @@ TeamsCollection.prototype.leagues = function() {
   .then(function(data) {
     var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
-    cb(leagues);
+    cb(null, leagues);
   }, function(e) {
     // self.err(e, cb);
     cb(e, null);
@@ -101,7 +101,7 @@ TeamsCollection.prototype.userFetch = function() {
   .then(function(data) {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(games);
+    cb(null, games);
   }, function(e) {
     // self.err(e, cb);
     cb(e, null);
@@ -137,7 +137,7 @@ TeamsCollection.prototype.games = function() {
   .then(function(data) {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(games);
+    cb(null, games);
   }, function(e) {
     // self.err(e, cb);
     cb(e, null);
