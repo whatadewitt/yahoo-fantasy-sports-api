@@ -39,7 +39,6 @@ TeamsCollection.prototype.fetch = function() {
 
     cb(null, teams);
   }, function(e) {
-    // self.err(e, cb);
     cb(e, null);
   });
 };
@@ -75,7 +74,6 @@ TeamsCollection.prototype.leagues = function() {
 
     cb(null, leagues);
   }, function(e) {
-    // self.err(e, cb);
     cb(e, null);
   });
 };
@@ -103,7 +101,6 @@ TeamsCollection.prototype.userFetch = function() {
 
     cb(null, games);
   }, function(e) {
-    // self.err(e, cb);
     cb(e, null);
   });
 };
@@ -139,7 +136,6 @@ TeamsCollection.prototype.games = function() {
 
     cb(null, games);
   }, function(e) {
-    // self.err(e, cb);
     cb(e, null);
   });
 };

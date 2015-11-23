@@ -40,7 +40,6 @@ LeaguesCollection.prototype.fetch = function() {
 
       cb(null, leagues);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

@@ -3,6 +3,8 @@
 module.exports = YahooFantasy;
 
 var OAuth = require('oauth').OAuth,
+  https = require('https'),
+  querystring = require('querystring'),
   util = require('util'),
   _ = require('lodash'),
   Q = require('q'),
@@ -50,6 +52,10 @@ function YahooFantasy(consumerKey, consumerSecret) {
       token: null,
       secret: null,
       sessionHandle: null
+    },
+    consumer: {
+      key: consumerKey,
+      secret: consumerSecret
     }
   });
 
@@ -123,9 +129,42 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
   this.yuser.sessionHandle = userSession;
 };
 
-YahooFantasy.prototype.api = function(url) {
-  var self = this;
+YahooFantasy.prototype.refreshUserToken = function() {
   var deferred = Q.defer();
+  var self = this;
+
+  var now = Math.floor(new Date().getTime() / 1000);
+  var refresh_data = querystring.stringify({
+    oauth_nonce: now.toString(36),
+    oauth_consumer_key: self.consumer.key,
+    oauth_signature_method: 'plaintext',
+    oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
+    oauth_version: '1.0',
+    oauth_token: self.yuser.token,
+    oauth_timestamp: now,
+    oauth_session_handle: self.yuser.sessionHandle
+  });
+
+  https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
+    var s = '';
+    res.on('data', function(d) {
+      s += d;
+    });
+
+    res.on('end', function() {
+      var data = querystring.parse(s);
+      self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
+
+      return deferred.resolve();
+    });
+  });
+
+  return deferred.promise;
+};
+
+YahooFantasy.prototype.api = function(url, deferred) {
+  var self = this;
+  deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
 
   this.oauth.get(
     url,
@@ -133,10 +172,10 @@ YahooFantasy.prototype.api = function(url) {
     self.yuser.secret,
     function(e, data, resp) {
       if (e) {
-        console.log(e);
         if (401 == e.statusCode) {
-          // need to re-authorize the user token
-          // todo: not done yet.
+          return self.refreshUserToken().then(function() {
+            return self.api(url, deferred);
+            });
         } else {
           deferred.reject(JSON.parse(data));
         }
@@ -154,9 +193,3 @@ YahooFantasy.prototype.api = function(url) {
 
   return deferred.promise;
 };
-
-// YahooFantasy.prototype.err = function(e, cb) {
-//   cb({
-//     error: e.error.description
-//   });
-// };

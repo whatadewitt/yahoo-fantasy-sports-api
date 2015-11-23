@@ -39,7 +39,6 @@ PlayersCollection.prototype.fetch = function() {
 
     cb(null, players);
   }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -84,7 +83,6 @@ PlayersCollection.prototype.leagues = function() {
 
     cb(null, leagues);
   }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -126,8 +124,6 @@ PlayersCollection.prototype.teams = function() {
     var teams = playerHelper.parseTeamCollection(data.fantasy_content.teams, subresources);
 
     cb(null, teams);
-  }, function(e) {
-    // self.err(e, cb);
-    cb(e, null);
+  }, function(e) {    cb(e, null);
   });
 };

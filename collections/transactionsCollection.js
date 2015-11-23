@@ -9,7 +9,7 @@ function TransactionsCollection() {
 };
 
 TransactionsCollection.prototype.fetch = function(transactionKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys='
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=';
 
   if ( _.isString(transactionKeys) ) {
     transactionKeys = [transactionKeys];
@@ -43,7 +43,7 @@ TransactionsCollection.prototype.fetch = function(transactionKeys, resources, fi
 };
 
 TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys='
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
     leagueKeys = [leagueKeys];

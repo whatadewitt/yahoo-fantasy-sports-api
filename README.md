@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.3.0
+  * Added a method to refresh the user's token if it has expired.
+
 #### 0.2.2
   * Hotfix to fix "Teams" collection - use error first convention
 

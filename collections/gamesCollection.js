@@ -60,7 +60,6 @@ GamesCollection.prototype.fetch = function() {
 
       cb(null, games);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -117,7 +116,6 @@ GamesCollection.prototype.user = function() {
 
       cb(null, games);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -152,7 +150,6 @@ GamesCollection.prototype.userFetch = function() {
 
       cb(null, user);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

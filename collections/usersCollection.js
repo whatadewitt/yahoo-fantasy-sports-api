@@ -24,7 +24,7 @@ UsersCollection.prototype.fetch = function() {
     url += ';out=' + subresources.join(',');
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
   this
     .api(url)
