@@ -2,7 +2,7 @@ var _ = require('lodash');
 var playerHelper = require('../helpers/playerHelper.js');
 
 exports.mapTransactionPlayers = function(players) {
-  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.filter(players, function(p) { return typeof(p) === 'object'; });
   players = _.map(players, function(p) { return p.player; });
   players = _.map(players, function(p) {
     var player = playerHelper.transactionPlayerMap(p[0]);

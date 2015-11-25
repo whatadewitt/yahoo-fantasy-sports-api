@@ -52,7 +52,7 @@ exports.mapDraftAnalysis = function(da) {
 exports.parseCollection = function(players, subresources) {
   var self = this;
 
-  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.filter(players, function(p) { return typeof(p) === 'object'; });
   players = _.map(players, function(p) { return p.player; });
   players = _.map(players, function(p) {
     var player = self.mapPlayer(p[0]);
@@ -89,7 +89,7 @@ exports.parseCollection = function(players, subresources) {
 exports.parseLeagueCollection = function(leagues, subresources) {
   var self = this;
 
-  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
   leagues = _.map(leagues, function(l) { return l.league; });
   leagues = _.map(leagues, function(l) {
     var league = l[0];
@@ -104,7 +104,7 @@ exports.parseLeagueCollection = function(leagues, subresources) {
 exports.parseTeamCollection = function(teams, subresources) {
   var self = this;
 
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) { return t.team; });
   teams = _.map(teams, function(t) {
     var team = teamHelper.mapTeam(t[0]);

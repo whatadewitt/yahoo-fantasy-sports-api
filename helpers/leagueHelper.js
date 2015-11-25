@@ -6,13 +6,13 @@ var teamHelper = require('./teamHelper.js');
  * Helper function to map data to a "team"
  */
 exports.mapTeams = function(teams) {
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
   return teams;
 };
 
 exports.mapStandings = function(teams) {
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) {
     var team = teamHelper.mapTeam(t.team[0]);
     team.standings = t.team[2].team_standings;
@@ -40,7 +40,7 @@ exports.mapSettings = function(settings) {
 };
 
 exports.mapDraft = function(draft) {
-  draft = _.filter(draft, function(d) { return typeof(d) == 'object'; });
+  draft = _.filter(draft, function(d) { return typeof(d) === 'object'; });
   draft = _.map(draft, function(d) { return d.draft_result; })
 
   return draft;
@@ -49,12 +49,12 @@ exports.mapDraft = function(draft) {
 exports.mapScoreboard = function(scoreboard) {
   var self = this;
   // is this only for h2h? what about roto, and points?
-  var matchups = _.filter(scoreboard, function(s) { return typeof(s) == 'object'; });
+  var matchups = _.filter(scoreboard, function(s) { return typeof(s) === 'object'; });
   matchups = _.map(matchups, function(m) { return m.matchup; });
 
   _.each(matchups, function(matchup) {
     var teams = matchup[0].teams;
-    teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+    teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
     teams = _.map(teams, function(t) {
       var team = teamHelper.mapTeam(t.team[0]);
 
@@ -76,7 +76,7 @@ exports.mapScoreboard = function(scoreboard) {
 };
 
 exports.mapTransactions = function(transactions) {
-  var transactions = _.filter(transactions, function(t) { return typeof(t) == 'object'; });
+  var transactions = _.filter(transactions, function(t) { return typeof(t) === 'object'; });
   transactions = _.map(transactions, function(t) { return t.transaction; });
 
   transactions = _.map(transactions, function(t) {
@@ -89,7 +89,7 @@ exports.mapTransactions = function(transactions) {
 };
 
 exports.mapStats = function(stats) {
-  stats = _.filter(stats, function(s) { return typeof(s) == 'object'; });
+  stats = _.filter(stats, function(s) { return typeof(s) === 'object'; });
   stats = _.map(stats, function(s) { return s.stat; });
 
   return stats;
@@ -98,7 +98,7 @@ exports.mapStats = function(stats) {
 exports.parseCollection = function(leagues, subresources) {
   var self = this;
 
-  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
   leagues = _.map(leagues, function(l) { return l.league; });
   leagues = _.map(leagues, function(l) {
     var league = l[0];

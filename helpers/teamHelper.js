@@ -26,7 +26,7 @@ exports.mapRoster = function(roster) {
   var players = roster[0].players;
 
   // todo: look at chaining in lodash... and/or "reduce"
-  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.filter(players, function(p) { return typeof(p) === 'object'; });
   players = _.map(players, function(p) { return p.player[0]; });
   players = _.map(players, function(p) { return playerHelper.mapPlayer(p); });
 
@@ -40,7 +40,7 @@ exports.mapStats = function(stats) {
 };
 
 exports.mapDraft = function(draft) {
-  draft = _.filter(draft, function(d) { return typeof(d) == 'object'; });
+  draft = _.filter(draft, function(d) { return typeof(d) === 'object'; });
   draft = _.map(draft, function(d) { return d.draft_result; });
   draft = _.sortBy(draft, 'round');
 
@@ -50,10 +50,10 @@ exports.mapDraft = function(draft) {
 exports.mapMatchups = function(matchups) {
   var self = this;
 
-  matchups = _.filter(matchups, function(m) { return typeof(m) == 'object'; });
+  matchups = _.filter(matchups, function(m) { return typeof(m) === 'object'; });
   matchups = _.map(matchups, function(m) { return m.matchup; });
   matchups = _.map(matchups, function(m) {
-    var teams = _.filter(m[0].teams, function(t) { return typeof(t) == 'object'; });
+    var teams = _.filter(m[0].teams, function(t) { return typeof(t) === 'object'; });
 
     m.teams = _.map(teams, function(t) {
       var team = self.mapTeam(t.team[0]);
@@ -74,7 +74,7 @@ exports.mapMatchups = function(matchups) {
 exports.parseCollection = function(teams, subresources) {
   var self = this;
 
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) { return t.team; });
   teams = _.map(teams, function(t) {
     // this is only here because user games collection is adding an extra null
@@ -119,7 +119,7 @@ exports.parseCollection = function(teams, subresources) {
 exports.parseLeagueCollection = function(leagues, subresources) {
   var self = this;
 
-  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
   leagues = _.map(leagues, function(l) { return l.league; });
   leagues = _.map(leagues, function(l) {
     var league = l[0];
@@ -134,7 +134,7 @@ exports.parseLeagueCollection = function(leagues, subresources) {
 exports.parseTeamCollection = function(teams, subresources) {
   var self = this;
 
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) { return t.team; });
   teams = _.map(teams, function(t) {
     var team = teamHelper.mapTeam(t[0]);
@@ -149,7 +149,7 @@ exports.parseTeamCollection = function(teams, subresources) {
 exports.parseGameCollection = function(games, subresources) {
   var self = this;
 
-  games = _.filter(games, function(g) { return typeof(g) == 'object'; });
+  games = _.filter(games, function(g) { return typeof(g) === 'object'; });
   games = _.map(games, function(g) { return g.game; });
   games = _.map(games, function(g) {
     var game = g[0];

@@ -113,7 +113,7 @@ YahooFantasy.prototype.api = function(url, deferred) {
 
 YahooFantasy.prototype.apiCallback = function(url, deferred, e, data, resp) {
   if (e) {
-    if (401 == e.statusCode) {
+    if (401 === e.statusCode) {
       return this.refreshUserToken().then(function() {
         return this.api(url, deferred);
         });

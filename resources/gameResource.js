@@ -22,7 +22,7 @@ GameResource.prototype.meta = function(gameKey, cb) {
 
 /* league key can be an array of keys */
 GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
-  if ( typeof leagueKey == 'string') {
+  if ( typeof leagueKey === 'string') {
     leagueKey = [leagueKey];
   }
 
@@ -42,7 +42,7 @@ GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
 };
 
 GameResource.prototype.players = function(gameKey, playerKey, cb) {
-  if ( typeof playerKey == 'string' ) {
+  if ( typeof playerKey === 'string' ) {
     playerKey = [playerKey];
   }
 

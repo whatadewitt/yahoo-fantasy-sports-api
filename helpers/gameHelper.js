@@ -3,7 +3,7 @@ var playerHelper = require('./playerHelper.js');
 var teamHelper = require('./teamHelper.js');
 
 exports.mapLeagues = function(leagues) {
-  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
   leagues = _.map(leagues, function(l) { return l.league[0]; });
 
   return leagues;
@@ -11,21 +11,21 @@ exports.mapLeagues = function(leagues) {
 
 // todo: again, this should be more re-usable
 exports.mapPlayers = function(players) {
-  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.filter(players, function(p) { return typeof(p) === 'object'; });
   players = _.map(players, function(p) { return playerHelper.mapPlayer(p.player[0]); });
 
   return players;
 };
 
 exports.mapWeeks = function(weeks) {
-  weeks = _.filter(weeks, function(w) { return typeof(w) == 'object'; });
+  weeks = _.filter(weeks, function(w) { return typeof(w) === 'object'; });
   weeks = _.map(weeks, function(w) { return w.game_week; });
 
   return weeks;
 };
 
 exports.mapStatCategories = function(statcats) {
-  statcats = _.filter(statcats, function(s) { return typeof(s) == 'object'; });
+  statcats = _.filter(statcats, function(s) { return typeof(s) === 'object'; });
   statcats = _.map(statcats, function(s) { return s.stat; });
 
   // additional cleanup...
@@ -44,21 +44,21 @@ exports.mapStatCategories = function(statcats) {
 };
 
 exports.mapPositionTypes = function(positions) {
-  positions = _.filter(positions, function(p) { return typeof(p) == 'object'; });
+  positions = _.filter(positions, function(p) { return typeof(p) === 'object'; });
   positions = _.map(positions, function(p) { return p.position_type; });
 
   return positions;
 };
 
 exports.mapRosterPositions = function(positions) {
-  positions = _.filter(positions, function(p) { return typeof(p) == 'object'; });
+  positions = _.filter(positions, function(p) { return typeof(p) === 'object'; });
   positions = _.map(positions, function(p) { return p.roster_position; });
 
   return positions;
 };
 
 exports.mapTeams = function(teams) {
-  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
   teams = _.map(teams, function(t) { return teamHelper.mapTeam(t.team[0]); });
 
   return teams;
@@ -67,7 +67,7 @@ exports.mapTeams = function(teams) {
 exports.parseCollection = function(games, subresources) {
   var self = this;
 
-  games = _.filter(games, function(g) { return typeof(g) == 'object'; });
+  games = _.filter(games, function(g) { return typeof(g) === 'object'; });
   games = _.map(games, function(g) { return g.game; });
   games = _.map(games, function(g) {
     var game = g[0];
