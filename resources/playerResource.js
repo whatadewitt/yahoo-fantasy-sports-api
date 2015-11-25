@@ -1,28 +1,24 @@
 var playerHelper = require('../helpers/playerHelper.js');
 var leagueHelper = require('../helpers/leagueHelper.js');
 
-module.exports = function() {
-  return new PlayerResource();
-};
+module.exports = PlayerResource;
 
-function PlayerResource() {
-  return this;
-};
+function PlayerResource(yf) {
+  this.yf = yf;
+}
 
 /*
  * Includes player key, id, name, editorial information, image, eligible positions, etc.
 */
 PlayerResource.prototype.meta = function(playerKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json')
     .then(function(data) {
       var meta = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
       cb(null, meta);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -31,13 +27,11 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
  * Player stats and points (if in a league context).
  */
 PlayerResource.prototype.stats = function(playerKey, cb) {
-  var self = this;
-
   // todo: can get this by week and/or by season...
   // { week: [WEEKNUM] }
   //;type=week;week=12
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json')
     .then(function(data) {
       var stats = playerHelper.mapStats(data.fantasy_content.player[1].player_stats);
@@ -47,7 +41,6 @@ PlayerResource.prototype.stats = function(playerKey, cb) {
 
       cb(null, player);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -56,9 +49,8 @@ PlayerResource.prototype.stats = function(playerKey, cb) {
  * Data about ownership percentage of the player
  */
 PlayerResource.prototype.percent_owned = function(playerKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json')
     .then(function(data) {
       var percent_owned = data.fantasy_content.player[1].percent_owned[1];
@@ -71,7 +63,6 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
 
       cb(null, player);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -80,9 +71,8 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
  * The player ownership status within a league (whether they're owned by a team, on waivers, or free agents). Only relevant within a league.
  */
 PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json')
     .then(function(data) {
       // move this to helper? not really re-used...
@@ -103,7 +93,6 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
 
       cb(null, player);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -112,9 +101,8 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
  * Average pick, Average round and Percent Drafted.
  */
 PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json')
     .then(function(data) {
       var draft_analysis = playerHelper.mapDraftAnalysis(data.fantasy_content.player[1].draft_analysis);
@@ -124,7 +112,6 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
 
       cb(null, player);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

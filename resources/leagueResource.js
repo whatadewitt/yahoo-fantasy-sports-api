@@ -1,32 +1,27 @@
 var leagueHelper = require('../helpers/leagueHelper.js');
 
-module.exports = function() {
-  return new LeagueResource();
-};
+module.exports = LeagueResource;
 
-function LeagueResource() {
-  return this;
-};
+function LeagueResource(yf) {
+  this.yf = yf;
+}
 
 LeagueResource.prototype.meta = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json')
     .then(function(data) {
       var meta = data.fantasy_content.league[0];
 
       cb(null, meta);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 LeagueResource.prototype.settings = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json')
     .then(function(data) {
       var settings = leagueHelper.mapSettings(data.fantasy_content.league[1].settings[0]);
@@ -36,15 +31,13 @@ LeagueResource.prototype.settings = function(leagueKey, cb) {
 
       cb(null, settings);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
-}
+};
 
 LeagueResource.prototype.standings = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
     .then(function(data) {
       var standings = leagueHelper.mapStandings(data.fantasy_content.league[1].standings[0].teams);
@@ -55,7 +48,6 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
 
       cb(null, league);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -63,9 +55,8 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
 // h2h only
 // todo: add weeks param
 LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
     .then(function(data) {
       var week = data.fantasy_content.league[1].scoreboard.week;
@@ -77,15 +68,13 @@ LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
 
       cb(null, league);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 LeagueResource.prototype.teams = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
     .then(function(data) {
       var teams = leagueHelper.mapTeams(data.fantasy_content.league[1].teams);
@@ -95,31 +84,27 @@ LeagueResource.prototype.teams = function(leagueKey, cb) {
 
       cb(null, league);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 // not quite sure how to wrap this yet...
 LeagueResource.prototype.players = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json')
     .then(function(data) {
       var players = data.fantasy_content.league[1].players;
 
       cb(null, players);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 LeagueResource.prototype.draft_results = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json')
     .then(function(data) {
       var draft = leagueHelper.mapDraft(data.fantasy_content.league[1].draft_results);
@@ -129,15 +114,13 @@ LeagueResource.prototype.draft_results = function(leagueKey, cb) {
 
       cb(null, league);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 LeagueResource.prototype.transactions = function(leagueKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json')
     .then(function(data) {
       var transactions = leagueHelper.mapTransactions(data.fantasy_content.league[1].transactions);
@@ -147,7 +130,6 @@ LeagueResource.prototype.transactions = function(leagueKey, cb) {
 
       cb(null, league);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

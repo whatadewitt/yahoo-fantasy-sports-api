@@ -1,13 +1,11 @@
 var _ = require('lodash');
 var userHelper = require('../helpers/userHelper.js');
 
-module.exports = function() {
-  return new UsersCollection();
-};
+module.exports = UsersCollection;
 
-function UsersCollection() {
-  return this;
-};
+function UsersCollection(yf) {
+  this.yf = yf;
+}
 
 // this doesn't seem super useful...
 UsersCollection.prototype.fetch = function() {
@@ -27,6 +25,7 @@ UsersCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
+    .yf
     .api(url)
     .then(function(data) {
       var user = userHelper.parseCollection(data.fantasy_content.users[0].user);

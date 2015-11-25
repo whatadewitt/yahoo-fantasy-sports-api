@@ -1,13 +1,11 @@
 var _ = require('lodash');
 var leagueHelper = require('../helpers/leagueHelper.js');
 
-module.exports = function() {
-  return new LeaguesCollection();
-};
+module.exports = LeaguesCollection;
 
-function LeaguesCollection() {
-  return this;
-};
+function LeaguesCollection(yf) {
+  this.yf = yf;
+}
 
 // totally making "fetch" happen...
 LeaguesCollection.prototype.fetch = function() {
@@ -34,6 +32,7 @@ LeaguesCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
+    .yf
     .api(url)
     .then(function(data) {
       var leagues = leagueHelper.parseCollection(data.fantasy_content.leagues, subresources);

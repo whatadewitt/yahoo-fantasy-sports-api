@@ -1,17 +1,15 @@
 var _ = require('lodash');
 var gameHelper = require('../helpers/gameHelper.js');
 
-module.exports = function() {
-  return new GamesCollection();
-};
+module.exports = GamesCollection;
 
-function GamesCollection() {
-  return this;
-};
+function GamesCollection(yf) {
+  this.yf = yf;
+}
 
 // params: game keys or filters, subresources (optional), callback
 GamesCollection.prototype.fetch = function() {
-  var gameKeys = '', //arguments[0],
+  var gameKeys = '',
     subresources = '',
     filters = {},
     cb = arguments[arguments.length - 1];
@@ -54,6 +52,7 @@ GamesCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
+    .yf
     .api(url)
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.games, subresources);
@@ -87,7 +86,7 @@ GamesCollection.prototype.user = function() {
 
     default:
       break;
-  };
+  }
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
 
@@ -110,6 +109,7 @@ GamesCollection.prototype.user = function() {
   console.log(url);
 
   this
+    .yf
     .api(url)
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
@@ -141,6 +141,7 @@ GamesCollection.prototype.userFetch = function() {
   url += '?format=json';
 
   this
+    .yf
     .api(url)
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];

@@ -1,17 +1,14 @@
 var teamHelper = require('../helpers/teamHelper.js');
 
-module.exports = function() {
-  return new RosterResource();
-};
+module.exports = RosterResource;
 
-function RosterResource() {
-  return this;
+function RosterResource(yf) {
+  this.yf = yf;
 };
 
 RosterResource.prototype.players = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json')
     .then(function(data) {
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
@@ -21,7 +18,6 @@ RosterResource.prototype.players = function(teamKey, cb) {
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

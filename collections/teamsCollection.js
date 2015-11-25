@@ -1,13 +1,11 @@
 var _ = require('lodash');
 var teamHelper = require('../helpers/teamHelper.js');
 
-module.exports = function() {
-  return new TeamsCollection();
-};
+module.exports = TeamsCollection;
 
-function TeamsCollection() {
-  return this;
-};
+function TeamsCollection(yf) {
+  this.yf = yf;
+}
 
 TeamsCollection.prototype.fetch = function() {
   var teamKeys = arguments[0],
@@ -33,14 +31,15 @@ TeamsCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
-  .api(url)
-  .then(function(data) {
-    var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
+    .yf
+    .api(url)
+    .then(function(data) {
+      var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
 
-    cb(null, teams);
-  }, function(e) {
-    cb(e, null);
-  });
+      cb(null, teams);
+    }, function(e) {
+      cb(e, null);
+    });
 };
 
 TeamsCollection.prototype.leagues = function() {
@@ -68,14 +67,15 @@ TeamsCollection.prototype.leagues = function() {
   url += '?format=json';
 
   this
-  .api(url)
-  .then(function(data) {
-    var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
+    .yf
+    .api(url)
+    .then(function(data) {
+      var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
-    cb(null, leagues);
-  }, function(e) {
-    cb(e, null);
-  });
+      cb(null, leagues);
+    }, function(e) {
+      cb(e, null);
+    });
 };
 
 TeamsCollection.prototype.userFetch = function() {
@@ -95,14 +95,15 @@ TeamsCollection.prototype.userFetch = function() {
   url += '?format=json';
 
   this
-  .api(url)
-  .then(function(data) {
-    var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
+    .yf
+    .api(url)
+    .then(function(data) {
+      var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(null, games);
-  }, function(e) {
-    cb(e, null);
-  });
+      cb(null, games);
+    }, function(e) {
+      cb(e, null);
+    });
 };
 
 TeamsCollection.prototype.games = function() {
@@ -130,12 +131,13 @@ TeamsCollection.prototype.games = function() {
   url += '?format=json';
 
   this
-  .api(url)
-  .then(function(data) {
-    var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
+    .yf
+    .api(url)
+    .then(function(data) {
+      var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-    cb(null, games);
-  }, function(e) {
-    cb(e, null);
-  });
+      cb(null, games);
+    }, function(e) {
+      cb(e, null);
+    });
 };

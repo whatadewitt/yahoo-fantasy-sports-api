@@ -1,18 +1,14 @@
-var _ = require('lodash');
 var userHelper = require('../helpers/userHelper.js');
 
-module.exports = function() {
-  return new UserResource();
-};
+module.exports = UserResource;
 
-function UserResource() {
-  return this;
-};
+function UserResource(yf) {
+  this.yf = yf;
+}
 
 UserResource.prototype.games = function(cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json')
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
@@ -22,7 +18,6 @@ UserResource.prototype.games = function(cb) {
 
       cb(null, user);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -30,11 +25,12 @@ UserResource.prototype.games = function(cb) {
 UserResource.prototype.game_leagues = function(gameKeys, cb) {
   var self = this;
   // todo: get stats from other users...
-  if ( !_.isArray(gameKeys) ) {
+  if ( !Array.isArray(gameKeys) ) {
     gameKeys = [ gameKeys ];
   }
 
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/leagues?format=json')
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
@@ -44,19 +40,17 @@ UserResource.prototype.game_leagues = function(gameKeys, cb) {
 
       cb(null, user);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 UserResource.prototype.game_teams = function(gameKeys, cb) {
-  var self = this;
-
-  if ( !_.isArray(gameKeys) ) {
+  if ( !Array.isArray(gameKeys) ) {
     gameKeys = [ gameKeys ];
   }
 
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/teams?format=json')
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
@@ -66,7 +60,6 @@ UserResource.prototype.game_teams = function(gameKeys, cb) {
 
       cb(null, user);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

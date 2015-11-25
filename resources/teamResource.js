@@ -1,32 +1,27 @@
 var teamHelper = require('../helpers/teamHelper.js');
 
-module.exports = function() {
-  return new TeamResource();
-};
+module.exports = TeamResource;
 
-function TeamResource() {
-  return this;
-};
+function TeamResource(yf) {
+  this.yf = yf;
+}
 
 TeamResource.prototype.meta = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/metadata?format=json')
     .then(function(data) {
       var metadata = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
       cb(null, metadata);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 TeamResource.prototype.stats = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json')
     .then(function(data) {
       var stats = teamHelper.mapStats(data.fantasy_content.team[1]);
@@ -36,15 +31,13 @@ TeamResource.prototype.stats = function(teamKey, cb) {
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 TeamResource.prototype.standings = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/standings?format=json')
     .then(function(data) {
       var standings = data.fantasy_content.team[1].team_standings;
@@ -54,18 +47,15 @@ TeamResource.prototype.standings = function(teamKey, cb) {
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 // todo: needs to be tested
 TeamResource.prototype.roster = function(teamKey, cb) { // (teamKey, week, cb)
-  var self = this;
-
   // 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster;weeks=' + weeks.split(',') + '?format=json'
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster?format=json')
     .then(function(data) {
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
@@ -75,16 +65,14 @@ TeamResource.prototype.roster = function(teamKey, cb) { // (teamKey, week, cb)
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
 
 
 TeamResource.prototype.draft_results = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json')
     .then(function(data) {
       var draft_results = teamHelper.mapDraft(data.fantasy_content.team[1].draft_results);
@@ -94,7 +82,6 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };
@@ -102,9 +89,8 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
 // h2h leagues only
 // todo: add weeks param
 TeamResource.prototype.matchups = function(teamKey, cb) {
-  var self = this;
-
   this
+    .yf
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups?format=json')
     .then(function(data) {
       var matchups = teamHelper.mapMatchups(data.fantasy_content.team[1].matchups);
@@ -114,7 +100,6 @@ TeamResource.prototype.matchups = function(teamKey, cb) {
 
       cb(null, team);
     }, function(e) {
-      // self.err(e, cb);
       cb(e, null);
     });
 };

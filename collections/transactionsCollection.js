@@ -1,12 +1,10 @@
 var _ = require('lodash');
 
-module.exports = function() {
-  return new TransactionsCollection();
-};
+module.exports = TransactionsCollection;
 
-function TransactionsCollection() {
-  return this;
-};
+function TransactionsCollection(yf) {
+  this.yf = yf;
+}
 
 TransactionsCollection.prototype.fetch = function(transactionKeys, resources, filters, cb) {
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=';
@@ -31,15 +29,16 @@ TransactionsCollection.prototype.fetch = function(transactionKeys, resources, fi
     });
   }
 
-  url += '?format=json'
+  url += '?format=json';
 
   this
-  .api(url)
-  .then(function(data) {
-    var meta = data.fantasy_content;
+    .yf
+    .api(url)
+    .then(function(data) {
+      var meta = data.fantasy_content;
 
-    cb(meta);
-  });
+      cb(meta);
+    });
 };
 
 TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, filters, cb) {
