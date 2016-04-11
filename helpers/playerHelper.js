@@ -1,27 +1,23 @@
 var _ = require('lodash');
+var teamHelper = require('./teamHelper.js');
 
 exports.mapPlayer = function(player) {
-  // why this is necessary i will never understand
-  var offset = 0;
-  if ( 15 < player.length ) {
-    offset = 1;
-  }
+  var playerObj = {};
+  var key;
 
-  return {
-    player_key: player[0].player_key,
-    player_id: player[1].player_id,
-    name: player[2].name,
-    editorial_player_key: player[3].editorial_player_key,
-    editorial_team_key: player[4].editorial_team_key,
-    editorial_team_full_name: player[5].editorial_team_full_name,
-    editorial_team_abbr: player[6].editorial_team_abbr,
-    uniform_number: player[7].uniform_number,
-    display_position: player[8].display_position,
-    headshot: player[9 + offset].headshot.url,
-    is_undroppable: player[10 + offset].is_undroppable,
-    position_type: player[11 + offset].position_type,
-    eligible_positions: _.map(player[12 + offset].eligible_positions, function(p) { return p.position; })
-  };
+  _.forEach(player, function(obj) {
+    key = _.keys(obj)[0];
+    if ( !_.isUndefined(key) ) {
+      playerObj[key] = obj[key];
+    }
+  });
+
+  playerObj.eligible_positions = _.map(
+    playerObj.eligible_positions,
+    function(p) { return p.position; }
+  );
+
+  return playerObj;
 };
 
 exports.transactionPlayerMap = function(player) {
@@ -51,4 +47,71 @@ exports.mapDraftAnalysis = function(da) {
     average_cost: da[2].average_cost,
     percent_drafted: da[3].percent_drafted
   }
-}
+};
+
+exports.parseCollection = function(players, subresources) {
+  var self = this;
+
+  players = _.filter(players, function(p) { return typeof(p) == 'object'; });
+  players = _.map(players, function(p) { return p.player; });
+  players = _.map(players, function(p) {
+    var player = self.mapPlayer(p[0]);
+
+    _.forEach(subresources, function(resource, idx) {
+      switch (resource) {
+        case 'stats':
+          player.stats = self.mapStats(p[idx + 1].player_stats);
+          break;
+
+        case 'percent_owned': // todo: clean this up and in resource
+          player.percent_owned = p[idx + 1].percent_owned;
+          break;
+
+        case 'ownership':
+          player.ownership = p[idx + 1].ownership;
+          break;
+
+        case 'draft_analysis':
+          player.draft_analysis = self.mapDraftAnalysis(p[idx + 1].draft_analysis);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return player;
+  });
+
+  return players;
+};
+
+exports.parseLeagueCollection = function(leagues, subresources) {
+  var self = this;
+
+  leagues = _.filter(leagues, function(l) { return typeof(l) == 'object'; });
+  leagues = _.map(leagues, function(l) { return l.league; });
+  leagues = _.map(leagues, function(l) {
+    var league = l[0];
+    league.players = self.parseCollection(l[1].players, subresources);
+
+    return league;
+  });
+
+  return leagues;
+};
+
+exports.parseTeamCollection = function(teams, subresources) {
+  var self = this;
+
+  teams = _.filter(teams, function(t) { return typeof(t) == 'object'; });
+  teams = _.map(teams, function(t) { return t.team; });
+  teams = _.map(teams, function(t) {
+    var team = teamHelper.mapTeam(t[0]);
+    team.players = self.parseCollection(t[1].players, subresources);
+
+    return team;
+  });
+
+  return teams;
+};

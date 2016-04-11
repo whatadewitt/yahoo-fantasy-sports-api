@@ -1,73 +1,120 @@
 var teamHelper = require('../helpers/teamHelper.js');
 
-exports.meta = function(teamKey, cb) {
+module.exports = function() {
+  return new TeamResource();
+};
+
+function TeamResource() {
+  return this;
+};
+
+TeamResource.prototype.meta = function(teamKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/metadata?format=json')
     .then(function(data) {
-      var metadata = teamHelper.teamMap(data.team[0]);
+      var metadata = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      return cb(metadata);
+      cb(null, metadata);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.stats = function(teamKey, cb) {
+TeamResource.prototype.stats = function(teamKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json')
     .then(function(data) {
-      var stats = teamHelper.statsMap(data.team[1]);
-      var team = teamHelper.teamMap(data.team[0]);
+      var stats = teamHelper.mapStats(data.fantasy_content.team[1]);
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      stats.team = team;
+      team.stats = stats;
 
-      cb(stats);
+      cb(null, team);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.standings = function(teamKey, cb) {
+TeamResource.prototype.standings = function(teamKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/standings?format=json')
     .then(function(data) {
-      var standings = data.team[1].team_standings;
-      var team = teamHelper.teamMap(data.team[0]);
+      var standings = data.fantasy_content.team[1].team_standings;
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      standings.team = team;
+      team.standings = standings;
 
-      cb(standings);
+      cb(null, team);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
 // todo: needs to be tested
-exports.roster = function(teamKey, week, cb) {
-  this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster;weeks=' + weeks.split(',') + '?format=json')
-    .then(function(data) {
-      var roster = data.fantasy_content;
+TeamResource.prototype.roster = function(teamKey, cb) { // (teamKey, week, cb)
+  var self = this;
 
-      cb(roster);
+  // 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster;weeks=' + weeks.split(',') + '?format=json'
+
+  this
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster?format=json')
+    .then(function(data) {
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
+      var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
+
+      team.roster = roster;
+
+      cb(null, team);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
 
-exports.draft_results = function(teamKey, cb) {
+TeamResource.prototype.draft_results = function(teamKey, cb) {
+  var self = this;
+
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json')
     .then(function(data) {
-      var draft_results = teamHelper.draftMap(data.team[1].draft_results);
-      var team = teamHelper.teamMap(data.team[0]);
+      var draft_results = teamHelper.mapDraft(data.fantasy_content.team[1].draft_results);
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
 
-      draft_results.team = team;
+      team.draft_results = draft_results;
 
-      cb(draft_results);
+      cb(null, team);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-// todo: this
-exports.matchups = function(teamKey, weeks, cb) {
-  this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups;weeks=' + weeks.split(',') + '?format=json')
-    .then(function(data) {
-      var matchups = data.fantasy_content;
+// h2h leagues only
+// todo: add weeks param
+TeamResource.prototype.matchups = function(teamKey, cb) {
+  var self = this;
 
-      cb(matchups);
+  this
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups?format=json')
+    .then(function(data) {
+      var matchups = teamHelper.mapMatchups(data.fantasy_content.team[1].matchups);
+      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
+
+      team.matchups = matchups;
+
+      cb(null, team);
+    }, function(e) {
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

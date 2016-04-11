@@ -1,8 +1,16 @@
 var _ = require('lodash');
 var gameHelper = require('../helpers/gameHelper.js');
 
+module.exports = function() {
+  return new GameResource();
+};
+
+function GameResource() {
+  return this;
+};
+
 /* gameKey can be game_key or league (ie/ nfl, mlb) */
-exports.meta = function(gameKey, cb) {
+GameResource.prototype.meta = function(gameKey, cb) {
   var self = this;
 
   this
@@ -10,14 +18,15 @@ exports.meta = function(gameKey, cb) {
     .then(function(data) {
       var meta = data.fantasy_content.game[0];
 
-      cb(meta);
+      cb(null, meta);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
 /* league key can be an array of keys */
-exports.leagues = function(gameKey, leagueKey, cb) {
+GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
   var self = this;
 
   if ( _.isString(leagueKey) ) {
@@ -27,18 +36,19 @@ exports.leagues = function(gameKey, leagueKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/leagues;league_keys=' + leagueKey.join(',') + '?format=json')
     .then(function(data) {
-      var leagues = gameHelper.leaguesMap(data.fantasy_content.game[1].leagues);
+      var leagues = gameHelper.mapLeagues(data.fantasy_content.game[1].leagues);
       var game = data.fantasy_content.game[0];
 
       game.leagues = leagues;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.players = function(gameKey, playerKey, cb) {
+GameResource.prototype.players = function(gameKey, playerKey, cb) {
   var self = this;
 
   if ( _.isString(playerKey) ) {
@@ -48,81 +58,86 @@ exports.players = function(gameKey, playerKey, cb) {
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/players;player_keys=' + playerKey.join(',') + '?format=json')
     .then(function(data) {
-      var players = gameHelper.playersMap(data.fantasy_content.game[1].players);
+      var players = gameHelper.mapPlayers(data.fantasy_content.game[1].players);
       var game = data.fantasy_content.game[0];
 
       game.players = players;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.game_weeks = function(gameKey, cb) {
+GameResource.prototype.game_weeks = function(gameKey, cb) {
   var self = this;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/game_weeks?format=json')
     .then(function(data) {
-      var weeks = gameHelper.weeksMap(data.fantasy_content.game[1].game_weeks);
+      var weeks = gameHelper.mapWeeks(data.fantasy_content.game[1].game_weeks);
       var game = data.fantasy_content.game[0];
 
       game.weeks = weeks;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.stat_categories = function(gameKey, cb) {
+GameResource.prototype.stat_categories = function(gameKey, cb) {
   var self = this;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/stat_categories?format=json')
     .then(function(data) {
-      var stat_categories = gameHelper.statCategoriesMap(data.fantasy_content.game[1].stat_categories.stats);
+      var stat_categories = gameHelper.mapStatCategories(data.fantasy_content.game[1].stat_categories.stats);
       var game = data.fantasy_content.game[0];
 
       game.stat_categories = stat_categories;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.position_types = function(gameKey, cb) {
+GameResource.prototype.position_types = function(gameKey, cb) {
   var self = this;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json')
     .then(function(data) {
-      var position_types = gameHelper.positionTypesMap(data.fantasy_content.game[1].position_types);
+      var position_types = gameHelper.mapPositionTypes(data.fantasy_content.game[1].position_types);
       var game = data.fantasy_content.game[0];
 
       game.position_types = position_types;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };
 
-exports.roster_positions = function(gameKey, cb) {
+GameResource.prototype.roster_positions = function(gameKey, cb) {
   var self = this;
 
   this
     .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json')
     .then(function(data) {
-      var roster_positions = gameHelper.rosterPositionsMap(data.fantasy_content.game[1].roster_positions);
+      var roster_positions = gameHelper.mapRosterPositions(data.fantasy_content.game[1].roster_positions);
       var game = data.fantasy_content.game[0];
 
       game.roster_positions = roster_positions;
 
-      cb(game);
+      cb(null, game);
     }, function(e) {
-      self.err(e, cb);
+      // self.err(e, cb);
+      cb(e, null);
     });
 };

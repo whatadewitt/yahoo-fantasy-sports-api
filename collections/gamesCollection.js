@@ -1,13 +1,41 @@
 var _ = require('lodash');
+var gameHelper = require('../helpers/gameHelper.js');
 
-exports.fetch = function(gameKeys, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=';
+module.exports = function() {
+  return new GamesCollection();
+};
 
-  if ( _.isString(gameKeys) ) {
+function GamesCollection() {
+  return this;
+};
+
+// params: game keys or filters, subresources (optional), callback
+GamesCollection.prototype.fetch = function() {
+  var gameKeys = '', //arguments[0],
+    subresources = '',
+    filters = {},
+    cb = arguments[arguments.length - 1];
+
+  // there should be a better way...
+  if ( _.isObject(arguments[0]) ) {
+    // filters
+    filters = arguments[0];
+  } else {
+    // game key(s)
+    gameKeys = arguments[0];
+  }
+
+  subresources = arguments[1];
+
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games';
+
+  if ( _.isString(gameKeys)  && !_.isEmpty(gameKeys) ) {
     gameKeys = [gameKeys];
   }
 
-  url += gameKeys.join(',');
+  if ( !(_.isEmpty(gameKeys)) ) {
+    url += ';game_keys=' + gameKeys.join(',');
+  }
 
   if ( !( _.isEmpty(filters) )  ) {
     _.each(Object.keys(filters), function(key) {
@@ -15,18 +43,52 @@ exports.fetch = function(gameKeys, filters, cb) {
     });
   }
 
+  if ( _.isString(subresources) && !_.isEmpty(subresources) ) {
+    subresources = [subresources];
+  }
+
+  if ( !(_.isEmpty(subresources)) ) {
+    url += ';out=' + subresources.join(',');
+  }
+
   url += '?format=json';
 
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var games = gameHelper.parseCollection(data.fantasy_content.games, subresources);
 
-      cb(meta);
+      cb(null, games);
+    }, function(e) {
+      cb(e, null);
     });
 };
 
-exports.user = function(filters, cb) {
+GamesCollection.prototype.user = function() {
+  // no gamekeys...
+  var subresources = '',
+    filters = {},
+    cb = arguments[arguments.length - 1];
+
+  switch (arguments.length) {
+    case 2:
+      if ( _.isObject(arguments[0]) ) {
+        filters = arguments[0];
+      } else {
+        subresources = arguments[0];
+      }
+
+      break;
+
+    case 3:
+      filters = arguments[0];
+      subresources = arguments[1];
+      break;
+
+    default:
+      break;
+  };
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
 
   if ( !( _.isEmpty(filters) )  ) {
@@ -35,18 +97,35 @@ exports.user = function(filters, cb) {
     });
   }
 
+  if ( _.isString(subresources) && !_.isEmpty(subresources) ) {
+    subresources = [subresources];
+  }
+
+  if ( !(_.isEmpty(subresources)) ) {
+    url += ';out=' + subresources.join(',');
+  }
+
   url += '?format=json';
+
+  console.log(url);
 
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-      cb(meta);
+      cb(null, games);
+    }, function(e) {
+      cb(e, null);
     });
 };
 
-exports.userFetch = function(filters, cb) {
+GamesCollection.prototype.userFetch = function() {
+  // no filters...
+  var gameKeys = arguments[0],
+    subresources = ( arguments.length > 2 ) ? arguments[1] : [],
+    cb = arguments[arguments.length - 1];
+
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
@@ -55,10 +134,8 @@ exports.userFetch = function(filters, cb) {
 
   url += gameKeys.join(',');
 
-  if ( !( _.isEmpty(filters) )  ) {
-    _.each(Object.keys(filters), function(key) {
-      url += ';' + key + '=' + filters[key];
-    });
+  if ( !(_.isEmpty(subresources)) ) {
+    url += ';out=' + subresources.join(',');
   }
 
   url += '?format=json';
@@ -66,8 +143,13 @@ exports.userFetch = function(filters, cb) {
   this
     .api(url)
     .then(function(data) {
-      var meta = data.fantasy_content;
+      var user = data.fantasy_content.users[0].user[0];
+      var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
-      cb(meta);
+      user.games = games;
+
+      cb(null, user);
+    }, function(e) {
+      cb(e, null);
     });
 };

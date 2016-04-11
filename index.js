@@ -3,6 +3,8 @@
 module.exports = YahooFantasy;
 
 var OAuth = require('oauth').OAuth,
+  https = require('https'),
+  querystring = require('querystring'),
   util = require('util'),
   _ = require('lodash'),
   Q = require('q'),
@@ -16,9 +18,9 @@ var OAuth = require('oauth').OAuth,
   playersCollection = require('./collections/playersCollection.js'),
   gamesCollection = require('./collections/gamesCollection.js'),
   teamsCollection = require('./collections/teamsCollection.js'),
-  leaguesCollection = require('./collections/leaguesCollection.js'),
-  transactionsCollection = require('./collections/transactionsCollection.js'),
-  usersCollection = require('./collections/transactionsCollection.js');
+  leaguesCollection = require('./collections/leaguesCollection.js');
+  // transactionsCollection = require('./collections/transactionsCollection.js')
+  // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
   var oauth = new OAuth(
@@ -33,23 +35,27 @@ function YahooFantasy(consumerKey, consumerSecret) {
 
   _.extend(this, {
     oauth: oauth,
-    game: gameResource,
-    games: gamesCollection,
-    league: leagueResource,
-    leagues: leaguesCollection,
-    player: playerResource,
-    players: playersCollection,
-    team: teamResource,
-    teams: teamsCollection,
-    transaction: transactionResource,
-    transactions: transactionsCollection,
-    roster: rosterResource,
-    user: userResource,
-    users: usersCollection,
+    game: gameResource(),
+    games: gamesCollection(),
+    league: leagueResource(),
+    leagues: leaguesCollection(),
+    player: playerResource(),
+    players: playersCollection(),
+    team: teamResource(),
+    teams: teamsCollection(),
+    transaction: transactionResource(),
+    // transactions: transactionsCollection(),
+    roster: rosterResource(),
+    user: userResource(),
+    // users: usersCollection(),
     yuser: {
       token: null,
       secret: null,
       sessionHandle: null
+    },
+    consumer: {
+      key: consumerKey,
+      secret: consumerSecret
     }
   });
 
@@ -92,8 +98,8 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.transaction.players = _.bind(this.transaction.players, this);
 
   this.user.games = _.bind(this.user.games, this);
-  this.user.leagues = _.bind(this.user.leagues, this);
-  this.user.teams = _.bind(this.user.teams, this);
+  this.user.game_leagues = _.bind(this.user.game_leagues, this);
+  this.user.game_teams = _.bind(this.user.game_teams, this);
 
   // collections
   this.games.fetch = _.bind(this.games.fetch, this);
@@ -103,13 +109,18 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.leagues.fetch = _.bind(this.leagues.fetch, this);
 
   this.players.fetch = _.bind(this.players.fetch, this);
-  this.players.leagueFetch = _.bind(this.players.leagueFetch, this);
-  this.players.teamFetch = _.bind(this.players.teamFetch, this);
+  this.players.leagues = _.bind(this.players.leagues, this);
+  this.players.teams = _.bind(this.players.teams, this);
 
-  this.transactions.fetch = _.bind(this.transactions.fetch, this);
-  this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);
+  this.teams.fetch = _.bind(this.teams.fetch, this);
+  this.teams.userFetch = _.bind(this.teams.userFetch, this);
+  this.teams.leagues = _.bind(this.teams.leagues, this);
+  this.teams.games = _.bind(this.teams.games, this);
 
-  this.users.fetch = _.bind(this.users.fetch, this);
+  // this.transactions.fetch = _.bind(this.transactions.fetch, this);
+  // this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);
+
+  // this.users.fetch = _.bind(this.users.fetch, this);
 }
 
 YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSession) {
@@ -118,9 +129,42 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
   this.yuser.sessionHandle = userSession;
 };
 
-YahooFantasy.prototype.api = function(url) {
-  var self = this;
+YahooFantasy.prototype.refreshUserToken = function() {
   var deferred = Q.defer();
+  var self = this;
+
+  var now = Math.floor(new Date().getTime() / 1000);
+  var refresh_data = querystring.stringify({
+    oauth_nonce: now.toString(36),
+    oauth_consumer_key: self.consumer.key,
+    oauth_signature_method: 'plaintext',
+    oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
+    oauth_version: '1.0',
+    oauth_token: self.yuser.token,
+    oauth_timestamp: now,
+    oauth_session_handle: self.yuser.sessionHandle
+  });
+
+  https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
+    var s = '';
+    res.on('data', function(d) {
+      s += d;
+    });
+
+    res.on('end', function() {
+      var data = querystring.parse(s);
+      self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
+
+      return deferred.resolve();
+    });
+  });
+
+  return deferred.promise;
+};
+
+YahooFantasy.prototype.api = function(url, deferred) {
+  var self = this;
+  deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
 
   this.oauth.get(
     url,
@@ -129,8 +173,9 @@ YahooFantasy.prototype.api = function(url) {
     function(e, data, resp) {
       if (e) {
         if (401 == e.statusCode) {
-          // need to re-authorize the user token
-          // todo: not done yet.
+          return self.refreshUserToken().then(function() {
+            return self.api(url, deferred);
+            });
         } else {
           deferred.reject(JSON.parse(data));
         }
@@ -147,10 +192,4 @@ YahooFantasy.prototype.api = function(url) {
   );
 
   return deferred.promise;
-};
-
-YahooFantasy.prototype.err = function(e, cb) {
-  cb({
-    error: e.error.description
-  });
 };
