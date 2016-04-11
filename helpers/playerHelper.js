@@ -2,21 +2,30 @@ var _ = require('lodash');
 var teamHelper = require('./teamHelper.js');
 
 exports.mapPlayer = function(player) {
-  var playerObj = {};
-  var key;
+  var mergeObjects = function(arrayOfObjects) {
+    var destinationObj = {};
+    var key;
 
-  _.forEach(player, function(obj) {
-    _.forEach(_.keys(obj), function(key) {
-      if ( !_.isUndefined(key) ) {
-        playerObj[key] = obj[key];
-      }
+    _.forEach(arrayOfObjects, function(obj) {
+      _.forEach(_.keys(obj), function(key) {
+        if (!_.isUndefined(key)) {
+          destinationObj[key] = obj[key];
+        }
+      });
     });
-  });
+
+    return destinationObj;
+  };
+
+  var playerObj = mergeObjects(player);
 
   playerObj.eligible_positions = _.map(
     playerObj.eligible_positions,
     function(p) { return p.position; }
   );
+
+  playerObj.selected_position = mergeObjects(playerObj.selected_position);
+  playerObj.starting_status = mergeObjects(playerObj.starting_status);
 
   return playerObj;
 };
