@@ -6,10 +6,11 @@ exports.mapPlayer = function(player) {
   var key;
 
   _.forEach(player, function(obj) {
-    key = _.keys(obj)[0];
-    if ( !_.isUndefined(key) ) {
-      playerObj[key] = obj[key];
-    }
+    _.forEach(_.keys(obj), function(key) {
+      if ( !_.isUndefined(key) ) {
+        playerObj[key] = obj[key];
+      }
+    });
   });
 
   playerObj.eligible_positions = _.map(
