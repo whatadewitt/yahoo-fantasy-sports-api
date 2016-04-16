@@ -6,13 +6,15 @@ exports.mapPlayer = function(player) {
     var destinationObj = {};
     var key;
 
-    _.forEach(arrayOfObjects, function(obj) {
-      _.forEach(_.keys(obj), function(key) {
-        if (!_.isUndefined(key)) {
-          destinationObj[key] = obj[key];
-        }
+    if(arrayOfObjects){      
+      _.forEach(arrayOfObjects, function(obj) {
+        _.forEach(_.keys(obj), function(key) {
+          if (!_.isUndefined(key)) {
+            destinationObj[key] = obj[key];
+          }
+        });
       });
-    });
+    }
 
     return destinationObj;
   };
