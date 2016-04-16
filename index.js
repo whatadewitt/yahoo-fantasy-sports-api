@@ -81,7 +81,7 @@ YahooFantasy.prototype.refreshUserToken = function() {
     oauth_session_handle: self.yuser.sessionHandle
   });
 
-  return https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
+  https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
     var s = '';
     res.on('data', function(d) {
       s += d;

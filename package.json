@@ -4,7 +4,7 @@
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/jasmine-node/bin/jasmine-node ./tests/"
   },
   "repository": {
     "type": "git",
@@ -24,9 +24,9 @@
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
     "jasmine-node": "^1.14.5",
-    "lodash": "^2.4.1",
-    "nock": "^0.59.1",
-    "oauth": "^0.9.12",
-    "q": "^1.0.1"
+    "lodash": "^2.4.2",
+    "nock": "^3.3.2",
+    "oauth": "^0.9.14",
+    "q": "^1.4.1"
   }
 }
