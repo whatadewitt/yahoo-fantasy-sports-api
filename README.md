@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.3.1
+  * Additional player attributes added, thanks [ryus08](https://github.com/ryus08)!
+
 #### 0.3.0
   * Added a method to refresh the user's token if it has expired.
 
