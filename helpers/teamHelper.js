@@ -25,7 +25,6 @@ exports.mapTeam = function(t) {
 exports.mapRoster = function(roster) {
   var players = roster[0].players;
 
-  // todo: look at chaining in lodash... and/or "reduce"
   players = _.filter(players, function(p) { return typeof(p) === 'object'; });
   players = _.map(players, function(p) { return p.player[0]; });
   players = _.map(players, function(p) { return playerHelper.mapPlayer(p); });
