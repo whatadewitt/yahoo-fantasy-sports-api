@@ -14,7 +14,7 @@ TeamsCollection.prototype.fetch = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
 
   if ( _.isString(teamKeys) ) {
     teamKeys = teamKeys.split(',');
@@ -48,7 +48,7 @@ TeamsCollection.prototype.leagues = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
     leagueKeys = [leagueKeys];
@@ -82,7 +82,7 @@ TeamsCollection.prototype.userFetch = function() {
   var subresources = ( arguments.length > 1 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
 
   if ( !( _.isEmpty(subresources) )  ) {
     if ( _.isString(subresources) ) {
@@ -110,7 +110,7 @@ TeamsCollection.prototype.games = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
     gameKeys = [gameKeys];

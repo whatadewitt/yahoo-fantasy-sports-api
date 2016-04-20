@@ -12,7 +12,7 @@ RosterResource.prototype.players = function(teamKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json')
     .then(function(data) {
       var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
       var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
