@@ -9,7 +9,7 @@ function TransactionsCollection() {
 };
 
 TransactionsCollection.prototype.fetch = function(transactionKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=';
 
   if ( _.isString(transactionKeys) ) {
     transactionKeys = [transactionKeys];
@@ -43,7 +43,7 @@ TransactionsCollection.prototype.fetch = function(transactionKeys, resources, fi
 };
 
 TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
     leagueKeys = [leagueKeys];
@@ -77,4 +77,4 @@ TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, f
   });
 };
 
-// todo: http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
+// todo: https://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}

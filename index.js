@@ -2,8 +2,7 @@
 
 module.exports = YahooFantasy;
 
-var OAuth = require('oauth').OAuth,
-  https = require('https'),
+var request = require('request'),
   querystring = require('querystring'),
   util = require('util'),
   _ = require('lodash'),
@@ -22,19 +21,8 @@ var OAuth = require('oauth').OAuth,
   // transactionsCollection = require('./collections/transactionsCollection.js')
   // usersCollection = require('./collections/usersCollection.js');
 
-function YahooFantasy(consumerKey, consumerSecret) {
-  var oauth = new OAuth(
-    'https://api.login.yahoo.com/oauth/v2/get_request_token',
-    'https://api.login.yahoo.com/oauth/v2/get_token',
-    consumerKey,
-    consumerSecret,
-    '1.0',
-    null,
-    'HMAC-SHA1'
-  );
-
+function YahooFantasy() {
   _.extend(this, {
-    oauth: oauth,
     game: gameResource(),
     games: gamesCollection(),
     league: leagueResource(),
@@ -48,15 +36,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
     roster: rosterResource(),
     user: userResource(),
     // users: usersCollection(),
-    yuser: {
-      token: null,
-      secret: null,
-      sessionHandle: null
-    },
-    consumer: {
-      key: consumerKey,
-      secret: consumerSecret
-    }
+    yuserToken: null
   });
 
   // binding everything... is there really not a better way?
@@ -123,62 +103,23 @@ function YahooFantasy(consumerKey, consumerSecret) {
   // this.users.fetch = _.bind(this.users.fetch, this);
 }
 
-YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSession) {
-  this.yuser.token = userToken;
-  this.yuser.secret = userSecret;
-  this.yuser.sessionHandle = userSession;
-};
-
-YahooFantasy.prototype.refreshUserToken = function() {
-  var deferred = Q.defer();
-  var self = this;
-
-  var now = Math.floor(new Date().getTime() / 1000);
-  var refresh_data = querystring.stringify({
-    oauth_nonce: now.toString(36),
-    oauth_consumer_key: self.consumer.key,
-    oauth_signature_method: 'plaintext',
-    oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
-    oauth_version: '1.0',
-    oauth_token: self.yuser.token,
-    oauth_timestamp: now,
-    oauth_session_handle: self.yuser.sessionHandle
-  });
-
-  https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
-    var s = '';
-    res.on('data', function(d) {
-      s += d;
-    });
-
-    res.on('end', function() {
-      var data = querystring.parse(s);
-      self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
-
-      return deferred.resolve();
-    });
-  });
-
-  return deferred.promise;
+YahooFantasy.prototype.setUserToken = function(userToken) {
+  this.yuserToken = userToken;
 };
 
 YahooFantasy.prototype.api = function(url, deferred) {
   var self = this;
   deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
 
-  this.oauth.get(
-    url,
-    self.yuser.token,
-    self.yuser.secret,
-    function(e, data, resp) {
+  var options = {
+    url: url,
+    headers: { Authorization: 'Bearer ' + self.yuserToken },
+    rejectUnauthorized: false
+  };
+
+  request.get(options, function(e, r, data) {
       if (e) {
-        if (401 == e.statusCode) {
-          return self.refreshUserToken().then(function() {
-            return self.api(url, deferred);
-            });
-        } else {
-          deferred.reject(JSON.parse(data));
-        }
+        deferred.reject(JSON.parse(data));
       } else {
         try {
           data = JSON.parse(data);

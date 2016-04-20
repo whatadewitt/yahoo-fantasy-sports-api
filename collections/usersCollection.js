@@ -14,7 +14,7 @@ UsersCollection.prototype.fetch = function() {
   var subresources = ( arguments.length > 1 ) ? arguments[0] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
   if ( !( _.isEmpty(subresources) )  ) {
     if ( _.isString(subresources) ) {

@@ -16,7 +16,7 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json')
     .then(function(data) {
       var meta = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
@@ -38,7 +38,7 @@ PlayerResource.prototype.stats = function(playerKey, cb) {
   //;type=week;week=12
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json')
     .then(function(data) {
       var stats = playerHelper.mapStats(data.fantasy_content.player[1].player_stats);
       var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
@@ -59,7 +59,7 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json')
     .then(function(data) {
       var percent_owned = data.fantasy_content.player[1].percent_owned[1];
       var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
@@ -83,7 +83,7 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json')
     .then(function(data) {
       // move this to helper? not really re-used...
       var league = data.fantasy_content.league[0];
@@ -115,7 +115,7 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json')
+    .api('https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json')
     .then(function(data) {
       var draft_analysis = playerHelper.mapDraftAnalysis(data.fantasy_content.player[1].draft_analysis);
       var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
