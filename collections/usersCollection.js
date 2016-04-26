@@ -27,7 +27,7 @@ UsersCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
-    .api(url)
+    .api(url, 'GET', null)
     .then(function(data) {
       var user = userHelper.parseCollection(data.fantasy_content.users[0].user);
 

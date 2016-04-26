@@ -14,7 +14,7 @@ GameResource.prototype.meta = function(gameKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json', 'GET', null)
     .then(function(data) {
       var meta = data.fantasy_content.game[0];
 
@@ -34,7 +34,7 @@ GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
   }
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/leagues;league_keys=' + leagueKey.join(',') + '?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/leagues;league_keys=' + leagueKey.join(',') + '?format=json', 'GET', null)
     .then(function(data) {
       var leagues = gameHelper.mapLeagues(data.fantasy_content.game[1].leagues);
       var game = data.fantasy_content.game[0];
@@ -56,7 +56,7 @@ GameResource.prototype.players = function(gameKey, playerKey, cb) {
   }
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/players;player_keys=' + playerKey.join(',') + '?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/players;player_keys=' + playerKey.join(',') + '?format=json', 'GET', null)
     .then(function(data) {
       var players = gameHelper.mapPlayers(data.fantasy_content.game[1].players);
       var game = data.fantasy_content.game[0];
@@ -74,7 +74,7 @@ GameResource.prototype.game_weeks = function(gameKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/game_weeks?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/game_weeks?format=json', 'GET', null)
     .then(function(data) {
       var weeks = gameHelper.mapWeeks(data.fantasy_content.game[1].game_weeks);
       var game = data.fantasy_content.game[0];
@@ -92,7 +92,7 @@ GameResource.prototype.stat_categories = function(gameKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/stat_categories?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/stat_categories?format=json', 'GET', null)
     .then(function(data) {
       var stat_categories = gameHelper.mapStatCategories(data.fantasy_content.game[1].stat_categories.stats);
       var game = data.fantasy_content.game[0];
@@ -110,7 +110,7 @@ GameResource.prototype.position_types = function(gameKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json', 'GET', null)
     .then(function(data) {
       var position_types = gameHelper.mapPositionTypes(data.fantasy_content.game[1].position_types);
       var game = data.fantasy_content.game[0];
@@ -128,7 +128,7 @@ GameResource.prototype.roster_positions = function(gameKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json', 'GET', null)
     .then(function(data) {
       var roster_positions = gameHelper.mapRosterPositions(data.fantasy_content.game[1].roster_positions);
       var game = data.fantasy_content.game[0];

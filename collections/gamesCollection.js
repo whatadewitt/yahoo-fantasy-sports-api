@@ -54,7 +54,7 @@ GamesCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
-    .api(url)
+    .api(url, 'GET', null)
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.games, subresources);
 
@@ -110,7 +110,7 @@ GamesCollection.prototype.user = function() {
   console.log(url);
 
   this
-    .api(url)
+    .api(url, 'GET', null)
     .then(function(data) {
       var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
@@ -141,7 +141,7 @@ GamesCollection.prototype.userFetch = function() {
   url += '?format=json';
 
   this
-    .api(url)
+    .api(url, 'GET', null)
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
       var games = gameHelper.parseCollection(data.fantasy_content.users[0].user[1].games, subresources);

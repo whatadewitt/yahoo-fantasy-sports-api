@@ -18,8 +18,8 @@ var OAuth = require('oauth').OAuth,
   playersCollection = require('./collections/playersCollection.js'),
   gamesCollection = require('./collections/gamesCollection.js'),
   teamsCollection = require('./collections/teamsCollection.js'),
-  leaguesCollection = require('./collections/leaguesCollection.js');
-  // transactionsCollection = require('./collections/transactionsCollection.js')
+  leaguesCollection = require('./collections/leaguesCollection.js'),
+  transactionsCollection = require('./collections/transactionsCollection.js');
   // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
@@ -44,7 +44,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
     team: teamResource(),
     teams: teamsCollection(),
     transaction: transactionResource(),
-    // transactions: transactionsCollection(),
+    transactions: transactionsCollection(),
     roster: rosterResource(),
     user: userResource(),
     // users: usersCollection(),
@@ -119,6 +119,9 @@ function YahooFantasy(consumerKey, consumerSecret) {
 
   // this.transactions.fetch = _.bind(this.transactions.fetch, this);
   // this.transactions.leagueFetch = _.bind(this.transactions.leagueFetch, this);
+  this.transactions.add_player = _.bind(this.transactions.add_player, this);
+  this.transactions.drop_player = _.bind(this.transactions.drop_player, this);
+  this.transactions.adddrop_players = _.bind(this.transactions.adddrop_players, this);
 
   // this.users.fetch = _.bind(this.users.fetch, this);
 }
@@ -162,34 +165,65 @@ YahooFantasy.prototype.refreshUserToken = function() {
   return deferred.promise;
 };
 
-YahooFantasy.prototype.api = function(url, deferred) {
+YahooFantasy.prototype.api = function(url, method, postData, deferred) {
   var self = this;
   deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
 
-  this.oauth.get(
-    url,
-    self.yuser.token,
-    self.yuser.secret,
-    function(e, data, resp) {
-      if (e) {
-        if (401 == e.statusCode) {
-          return self.refreshUserToken().then(function() {
-            return self.api(url, deferred);
-            });
+  if (method == 'GET') {
+    this.oauth.get(
+      url,
+      self.yuser.token,
+      self.yuser.secret,
+      function(e, data, resp) {
+        if (e) {
+          if (401 == e.statusCode) {
+            return self.refreshUserToken().then(function() {
+              return self.api(url, deferred);
+              });
+          } else {
+            deferred.reject(JSON.parse(data));
+          }
         } else {
-          deferred.reject(JSON.parse(data));
-        }
-      } else {
-        try {
-          data = JSON.parse(data);
-        } catch (er) {
-          deferred.reject(er);
-        }
+          try {
+            data = JSON.parse(data);
+          } catch (er) {
+            deferred.reject(er);
+          }
 
-        deferred.resolve(data);
+          deferred.resolve(data);
+        }
       }
-    }
-  );
+    );
+  } else if (method == 'POST') {
+    this.oauth.post(
+      url,
+      self.yuser.token,
+      self.yuser.secret,
+      postData,
+      'application/xml',
+      function(e, data, resp) {
+        if (e) {
+          if (401 == e.statusCode) {
+            return self.refreshUserToken().then(function() {
+              return self.api(url, deferred);
+              });
+          } else {
+            deferred.reject(JSON.parse(data));
+          }
+        } else {
+          try {
+            data = JSON.parse(data);
+          } catch (er) {
+            deferred.reject(er);
+          }
+
+          deferred.resolve(data);
+        }
+      }
+    );
+  } else {
+    deferred.reject('Unknown method:' + method);
+  }
 
   return deferred.promise;
 };
