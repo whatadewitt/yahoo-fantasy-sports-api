@@ -12,7 +12,7 @@ LeagueResource.prototype.meta = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json', 'GET', null)
     .then(function(data) {
       var meta = data.fantasy_content.league[0];
 
@@ -27,7 +27,7 @@ LeagueResource.prototype.settings = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json', 'GET', null)
     .then(function(data) {
       var settings = leagueHelper.mapSettings(data.fantasy_content.league[1].settings[0]);
       var league = data.fantasy_content.league[0];
@@ -45,7 +45,7 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json', 'GET', null)
     .then(function(data) {
       var standings = leagueHelper.mapStandings(data.fantasy_content.league[1].standings[0].teams);
       var league = data.fantasy_content.league[0];
@@ -66,7 +66,7 @@ LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json', 'GET', null)
     .then(function(data) {
       var week = data.fantasy_content.league[1].scoreboard.week;
       var scoreboard = leagueHelper.mapScoreboard(data.fantasy_content.league[1].scoreboard[0].matchups);
@@ -86,7 +86,7 @@ LeagueResource.prototype.teams = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json', 'GET', null)
     .then(function(data) {
       var teams = leagueHelper.mapTeams(data.fantasy_content.league[1].teams);
       var league = data.fantasy_content.league[0];
@@ -105,7 +105,7 @@ LeagueResource.prototype.players = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json', 'GET', null)
     .then(function(data) {
       var players = data.fantasy_content.league[1].players;
 
@@ -120,7 +120,7 @@ LeagueResource.prototype.draft_results = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json', 'GET', null)
     .then(function(data) {
       var draft = leagueHelper.mapDraft(data.fantasy_content.league[1].draft_results);
       var league = data.fantasy_content.league[0];
@@ -138,7 +138,7 @@ LeagueResource.prototype.transactions = function(leagueKey, cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json', 'GET', null)
     .then(function(data) {
       var transactions = leagueHelper.mapTransactions(data.fantasy_content.league[1].transactions);
       var league = data.fantasy_content.league[0];

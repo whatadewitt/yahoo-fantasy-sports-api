@@ -33,7 +33,7 @@ TeamsCollection.prototype.fetch = function() {
   url += '?format=json';
 
   this
-  .api(url)
+  .api(url, 'GET', null)
   .then(function(data) {
     var teams = teamHelper.parseCollection(data.fantasy_content.teams, subresources);
 
@@ -68,7 +68,7 @@ TeamsCollection.prototype.leagues = function() {
   url += '?format=json';
 
   this
-  .api(url)
+  .api(url, 'GET', null)
   .then(function(data) {
     var leagues = teamHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
 
@@ -95,7 +95,7 @@ TeamsCollection.prototype.userFetch = function() {
   url += '?format=json';
 
   this
-  .api(url)
+  .api(url, 'GET', null)
   .then(function(data) {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 
@@ -130,7 +130,7 @@ TeamsCollection.prototype.games = function() {
   url += '?format=json';
 
   this
-  .api(url)
+  .api(url, 'GET', null)
   .then(function(data) {
     var games = teamHelper.parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
 

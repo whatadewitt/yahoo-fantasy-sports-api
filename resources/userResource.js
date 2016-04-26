@@ -13,7 +13,7 @@ UserResource.prototype.games = function(cb) {
   var self = this;
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json', 'GET', null)
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
       var games = userHelper.mapGames(data.fantasy_content.users[0].user[1].games);
@@ -35,7 +35,7 @@ UserResource.prototype.game_leagues = function(gameKeys, cb) {
   }
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/leagues?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/leagues?format=json', 'GET', null)
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
       var leagues = userHelper.mapUserLeagues(data.fantasy_content.users[0].user[1].games);
@@ -57,7 +57,7 @@ UserResource.prototype.game_teams = function(gameKeys, cb) {
   }
 
   this
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/teams?format=json')
+    .api('http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/teams?format=json', 'GET', null)
     .then(function(data) {
       var user = data.fantasy_content.users[0].user[0];
       var teams = userHelper.mapUserTeams(data.fantasy_content.users[0].user[1].games);
