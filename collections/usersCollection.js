@@ -10,7 +10,8 @@ function UsersCollection(yf) {
 // this doesn't seem super useful...
 UsersCollection.prototype.fetch = function() {
   var subresources = ( arguments.length > 1 ) ? arguments[0] : [],
-    cb = arguments[arguments.length - 1];
+    cb = arguments[arguments.length - 1],
+    apiCallback = this._fetch_callback.bind(this, cb);
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
@@ -26,10 +27,15 @@ UsersCollection.prototype.fetch = function() {
 
   this
     .yf
-    .api(url)
-    .then(function(data) {
-      var user = userHelper.parseCollection(data.fantasy_content.users[0].user);
+    .api(
+      url,
+      apiCallback
+    );
+};
 
-      cb(user);
-    });
+UsersCollection.prototype._fetch_callback = function(cb, e, data) {
+  if ( e ) return cb(e);
+  
+  var user = userHelper.parseCollection(data.fantasy_content.users[0].user);
+  return cb(user);
 };

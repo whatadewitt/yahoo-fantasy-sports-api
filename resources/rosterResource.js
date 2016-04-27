@@ -7,19 +7,24 @@ function RosterResource(yf) {
 };
 
 RosterResource.prototype.players = function(teamKey, cb) {
+  var apiCallback = this._players_callback.bind(this, cb);
+  
   this
     .yf
-    .api('http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json')
-    .then(function(data) {
-      var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
-      var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
+    .api(
+      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json',
+      apiCallback
+    );
+};
 
-      team.roster = roster;
+RosterResource.prototype._players_callback = function(cb, e, data) {
+  if ( e ) return cb(e);
+  
+  var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
+  var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
+  team.roster = roster;
 
-      cb(null, team);
-    }, function(e) {
-      cb(e, null);
-    });
+  return cb(null, team);
 };
 
 // todo: need to add date, week

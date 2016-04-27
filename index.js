@@ -48,11 +48,13 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.roster = new RosterResource(this);
   this.user = new UserResource(this);
   // this.users = new UsersCollection();
+  
   this.yuser = {
     token: null,
     secret: null,
     sessionHandle: null
   };
+  
   this.consumer = {
     key: consumerKey,
     secret: consumerSecret
@@ -65,68 +67,71 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
   this.yuser.sessionHandle = userSession;
 };
 
-YahooFantasy.prototype.refreshUserToken = function() {
-  var deferred = Q.defer();
-  var self = this;
+// YahooFantasy.prototype.refreshUserToken = function() {
+//   var deferred = Q.defer();
+//   var self = this;
 
-  var now = Math.floor(new Date().getTime() / 1000);
-  var refresh_data = querystring.stringify({
-    oauth_nonce: now.toString(36),
-    oauth_consumer_key: self.consumer.key,
-    oauth_signature_method: 'plaintext',
-    oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
-    oauth_version: '1.0',
-    oauth_token: self.yuser.token,
-    oauth_timestamp: now,
-    oauth_session_handle: self.yuser.sessionHandle
-  });
+//   var now = Math.floor(new Date().getTime() / 1000);
+//   var refresh_data = querystring.stringify({
+//     oauth_nonce: now.toString(36),
+//     oauth_consumer_key: self.consumer.key,
+//     oauth_signature_method: 'plaintext',
+//     oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
+//     oauth_version: '1.0',
+//     oauth_token: self.yuser.token,
+//     oauth_timestamp: now,
+//     oauth_session_handle: self.yuser.sessionHandle
+//   });
 
-  https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
-    var s = '';
-    res.on('data', function(d) {
-      s += d;
-    });
+//   https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
+//     var s = '';
+//     res.on('data', function(d) {
+//       s += d;
+//     });
 
-    res.on('end', function() {
-      var data = querystring.parse(s);
-      self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
+//     res.on('end', function() {
+//       var data = querystring.parse(s);
+//       self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
 
-      return deferred.resolve();
-    });
-  });
+//       return deferred.resolve();
+//     });
+//   });
 
-  return deferred.promise;
-};
+//   return deferred.promise;
+// };
 
-YahooFantasy.prototype.api = function(url, deferred) {
-  deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
+YahooFantasy.prototype.api = function(url, cb) {
+  // deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
+  var callback = this.apiCallback.bind(this, url, cb);
 
   this.oauth.get(
     url,
     this.yuser.token,
     this.yuser.secret,
-    this.apiCallback.bind(this, url, deferred)
+    callback
   );
 
-  return deferred.promise;
+  // return deferred.promise;
 };
 
-YahooFantasy.prototype.apiCallback = function(url, deferred, e, data, resp) {
-  if (e) {
-    if (401 === e.statusCode) {
-      return this.refreshUserToken().then(function() {
-        return this.api(url, deferred);
-        });
+YahooFantasy.prototype.apiCallback = function(url, cb, e, data, resp) {
+  try {
+    data = JSON.parse(data);
+    
+    if (e) {
+      return cb(e);
     } else {
-      deferred.reject(JSON.parse(data));
+      if ( data.error ) {
+        return cb(data.error);
+      }
+      
+      return cb(null, data);
     }
-  } else {
-    try {
-      data = JSON.parse(data);
-    } catch (er) {
-      deferred.reject(er);
-    }
-
-    deferred.resolve(data);
+  } catch (error) {
+    return cb(error);
   }
+};
+
+YahooFantasy.prototype.apiError = function(cb, e) {
+  return cb(e);
 };

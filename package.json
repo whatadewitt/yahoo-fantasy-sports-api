@@ -4,7 +4,8 @@
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node ./tests/"
+    "test": "./node_modules/jasmine-node/bin/jasmine-node ./tests/",
+    "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
+    "istanbul": "^0.4.3",
     "jasmine-node": "^1.14.5",
     "lodash": "^2.4.2",
     "nock": "^3.3.2",
