@@ -12,6 +12,7 @@ RosterResource.prototype.players = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json',
       apiCallback
     );

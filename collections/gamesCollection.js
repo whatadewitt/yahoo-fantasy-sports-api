@@ -55,6 +55,7 @@ GamesCollection.prototype.fetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -114,6 +115,7 @@ GamesCollection.prototype.user = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -150,6 +152,7 @@ GamesCollection.prototype.userFetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );

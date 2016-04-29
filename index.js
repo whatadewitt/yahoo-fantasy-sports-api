@@ -8,7 +8,6 @@ var OAuth = require('oauth').OAuth,
   https = require('https'),
   querystring = require('querystring'),
   util = require('util'),
-  Q = require('q'),
   GameResource = require('./resources/gameResource.js'),
   LeagueResource = require('./resources/leagueResource.js'),
   PlayerResource = require('./resources/playerResource.js'),
@@ -33,6 +32,9 @@ function YahooFantasy(consumerKey, consumerSecret) {
     null,
     'HMAC-SHA1'
   );
+  
+  this.GET = 'get';
+  this.POST = 'post';
 
   this.oauth = oauth;
   this.game = new GameResource(this);
@@ -100,21 +102,18 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
 //   return deferred.promise;
 // };
 
-YahooFantasy.prototype.api = function(url, cb) {
-  // deferred = typeof deferred !== 'undefined' ?  deferred : Q.defer();
-  var callback = this.apiCallback.bind(this, url, cb);
-
-  this.oauth.get(
+YahooFantasy.prototype.api = function(method, url, cb) {
+  var callback = this.apiCallback.bind(this, method, url, cb);
+  
+  this.oauth[method.toLowerCase()](
     url,
     this.yuser.token,
     this.yuser.secret,
     callback
   );
-
-  // return deferred.promise;
 };
 
-YahooFantasy.prototype.apiCallback = function(url, cb, e, data, resp) {
+YahooFantasy.prototype.apiCallback = function(method, url, cb, e, data, resp) {
   try {
     data = JSON.parse(data);
     
@@ -130,8 +129,4 @@ YahooFantasy.prototype.apiCallback = function(url, cb, e, data, resp) {
   } catch (error) {
     return cb(error);
   }
-};
-
-YahooFantasy.prototype.apiError = function(cb, e) {
-  return cb(e);
 };

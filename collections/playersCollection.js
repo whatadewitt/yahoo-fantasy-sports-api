@@ -34,6 +34,7 @@ PlayersCollection.prototype.fetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -82,6 +83,7 @@ PlayersCollection.prototype.leagues = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -129,6 +131,7 @@ PlayersCollection.prototype.teams = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );

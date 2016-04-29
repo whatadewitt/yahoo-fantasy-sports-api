@@ -16,6 +16,7 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json',
       apiCallback
     );
@@ -40,6 +41,7 @@ PlayerResource.prototype.stats = function(playerKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json',
       apiCallback
     );
@@ -64,6 +66,7 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json',
       apiCallback
     );
@@ -90,6 +93,7 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json',
       apiCallback
     );
@@ -126,6 +130,7 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json',
       apiCallback
     );

@@ -35,6 +35,7 @@ TransactionsCollection.prototype.fetch = function(transactionKeys, resources, fi
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -76,6 +77,7 @@ TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, f
 
   this
   .api(
+    this.yf.GET,
     url,
     apiCallback
   );

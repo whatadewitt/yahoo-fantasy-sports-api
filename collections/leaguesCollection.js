@@ -35,6 +35,7 @@ LeaguesCollection.prototype.fetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );

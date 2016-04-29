@@ -34,6 +34,7 @@ TeamsCollection.prototype.fetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -74,6 +75,7 @@ TeamsCollection.prototype.leagues = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -106,6 +108,7 @@ TeamsCollection.prototype.userFetch = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );
@@ -146,6 +149,7 @@ TeamsCollection.prototype.games = function() {
   this
     .yf
     .api(
+      this.yf.GET,
       url,
       apiCallback
     );

@@ -12,6 +12,7 @@ TeamResource.prototype.meta = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/metadata?format=json',
       apiCallback
     );
@@ -30,6 +31,7 @@ TeamResource.prototype.stats = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json',
       apiCallback
     );
@@ -51,14 +53,10 @@ TeamResource.prototype.standings = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/standings?format=json',
       apiCallback
     );
-    .then(function(data) {
-      
-    }, function(e) {
-      cb(e, null);
-    });
 };
 
 TeamResource.prototype._standings_callback = function(cb, e, data) {
@@ -99,6 +97,7 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json',
       apiCallback
     );
@@ -122,6 +121,7 @@ TeamResource.prototype.matchups = function(teamKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups?format=json',
       apiCallback
     );

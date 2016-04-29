@@ -12,6 +12,7 @@ LeagueResource.prototype.meta = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json',
       apiCallback
     );
@@ -30,6 +31,7 @@ LeagueResource.prototype.settings = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json',
       apiCallback
     );
@@ -51,6 +53,7 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json',
       apiCallback
     );
@@ -76,6 +79,7 @@ LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json',
       apiCallback
     );
@@ -100,6 +104,7 @@ LeagueResource.prototype.teams = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json',
       apiCallback
     );
@@ -122,6 +127,7 @@ LeagueResource.prototype.players = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json',
       apiCallback
     );
@@ -140,6 +146,7 @@ LeagueResource.prototype.draft_results = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json',
       apiCallback
     );
@@ -162,6 +169,7 @@ LeagueResource.prototype.transactions = function(leagueKey, cb) {
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json',
       apiCallback
     );
