@@ -46,10 +46,10 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.team = new TeamResource(this);
   this.teams = new TeamsCollection(this);
   this.transaction = new TransactionResource(this);
-  // this.transactions = new TransactionsCollection(this);
+  // this.transactions = new TransactionsCollection(this); // TODO
   this.roster = new RosterResource(this);
   this.user = new UserResource(this);
-  // this.users = new UsersCollection();
+  // this.users = new UsersCollection(); // TODO
   
   this.yuser = {
     token: null,
@@ -68,39 +68,6 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
   this.yuser.secret = userSecret;
   this.yuser.sessionHandle = userSession;
 };
-
-// YahooFantasy.prototype.refreshUserToken = function() {
-//   var deferred = Q.defer();
-//   var self = this;
-
-//   var now = Math.floor(new Date().getTime() / 1000);
-//   var refresh_data = querystring.stringify({
-//     oauth_nonce: now.toString(36),
-//     oauth_consumer_key: self.consumer.key,
-//     oauth_signature_method: 'plaintext',
-//     oauth_signature: self.consumer.secret + '&' + self.yuser.secret,
-//     oauth_version: '1.0',
-//     oauth_token: self.yuser.token,
-//     oauth_timestamp: now,
-//     oauth_session_handle: self.yuser.sessionHandle
-//   });
-
-//   https.get('https://api.login.yahoo.com/oauth/v2/get_token?' + refresh_data, function(res) {
-//     var s = '';
-//     res.on('data', function(d) {
-//       s += d;
-//     });
-
-//     res.on('end', function() {
-//       var data = querystring.parse(s);
-//       self.setUserToken(data.oauth_token, data.oauth_token_secret, data.oauth_session_handle);
-
-//       return deferred.resolve();
-//     });
-//   });
-
-//   return deferred.promise;
-// };
 
 YahooFantasy.prototype.api = function(method, url, cb) {
   var callback = this.apiCallback.bind(this, method, url, cb);

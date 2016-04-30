@@ -1,6 +1,6 @@
 {
   "name": "yahoo-fantasy",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "dependencies": {
     "istanbul": "^0.4.3",
     "jasmine-node": "^1.14.5",
-    "lodash": "^2.4.2",
+    "lodash": "^4.11.1",
     "nock": "^3.3.2",
     "oauth": "^0.9.14"
   }
