@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.4.1
+  * Fixes to how POST data is handled
+
 #### 0.4.0
   * Significantly restructured the code to have more consistency and set it up better for future plans, namely POST methods and proper unit testing
   * Removed the "refresh user token" and instead return the error to the user who can handle the refresh within their application. 

@@ -69,18 +69,34 @@ YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSessio
   this.yuser.sessionHandle = userSession;
 };
 
-YahooFantasy.prototype.api = function(method, url, cb) {
-  var callback = this.apiCallback.bind(this, method, url, cb);
+YahooFantasy.prototype.api = function(method, url, postData, cb) {
+  if ( arguments.length == 3 ) {
+    cb = postData;
+    postData = null;
+  }
   
-  this.oauth[method.toLowerCase()](
-    url,
-    this.yuser.token,
-    this.yuser.secret,
-    callback
-  );
+  var callback = this.apiCallback.bind(this, method, url, postData, cb);
+  
+  if ( this.POST == method ) {
+    this.oauth.post(
+      url,
+      this.yuser.token,
+      this.yuser.secret,
+      postData,
+      'application/xml',
+      callback
+    );
+  } else {
+    this.oauth.get(
+      url,
+      this.yuser.token,
+      this.yuser.secret,
+      callback
+    ); 
+  }
 };
 
-YahooFantasy.prototype.apiCallback = function(method, url, cb, e, data, resp) {
+YahooFantasy.prototype.apiCallback = function(method, url, postData, cb, e, data, resp) {
   try {
     data = JSON.parse(data);
     
