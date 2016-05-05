@@ -18,8 +18,8 @@ var OAuth = require('oauth').OAuth,
   PlayersCollection = require('./collections/playersCollection.js'),
   GamesCollection = require('./collections/gamesCollection.js'),
   TeamsCollection = require('./collections/teamsCollection.js'),
-  LeaguesCollection = require('./collections/leaguesCollection.js');
-  // transactionsCollection = require('./collections/transactionsCollection.js')
+  LeaguesCollection = require('./collections/leaguesCollection.js'),
+  TransactionsCollection = require('./collections/transactionsCollection.js');
   // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
@@ -46,7 +46,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.team = new TeamResource(this);
   this.teams = new TeamsCollection(this);
   this.transaction = new TransactionResource(this);
-  // this.transactions = new TransactionsCollection(this); // TODO
+  this.transactions = new TransactionsCollection(this);
   this.roster = new RosterResource(this);
   this.user = new UserResource(this);
   // this.users = new UsersCollection(); // TODO
