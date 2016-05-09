@@ -25,9 +25,9 @@ exports.mapPlayer = function(player) {
     playerObj.eligible_positions,
     function(p) { return p.position; }
   );
-
-  playerObj.selected_position = mergeObjects(playerObj.selected_position);
-  playerObj.starting_status = mergeObjects(playerObj.starting_status);
+  
+  playerObj.selected_position = playerObj.selected_position[1].position;
+  playerObj.starting_status = ( playerObj.starting_status ) ? playerObj.starting_status[1].is_starting : 0;
 
   return playerObj;
 };

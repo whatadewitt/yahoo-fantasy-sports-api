@@ -26,7 +26,7 @@ exports.mapRoster = function(roster) {
   var players = roster[0].players;
 
   players = _.filter(players, function(p) { return typeof(p) === 'object'; });
-  players = _.map(players, function(p) { return p.player[0]; });
+  players = _.map(players, function(p) { return _.flatten(p.player); });
   players = _.map(players, function(p) { return playerHelper.mapPlayer(p); });
 
   return players;

@@ -71,11 +71,11 @@ TeamResource.prototype._standings_callback = function(cb, e, data) {
 
 TeamResource.prototype.roster = function(teamKey, cb) {
   var apiCallback = this._roster_callback.bind(this, cb);
-   // (teamKey, week, cb)
-  // 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster;weeks=' + weeks.split(',') + '?format=json'
+  
   this
     .yf
     .api(
+      this.yf.GET,
       'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster?format=json',
       apiCallback
     );

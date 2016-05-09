@@ -6,14 +6,31 @@ function RosterResource(yf) {
   this.yf = yf;
 };
 
-RosterResource.prototype.players = function(teamKey, cb) {
-  var apiCallback = this._players_callback.bind(this, cb);
+RosterResource.prototype.players = function(teamKey, date, cb) {
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster';
+  
+  if ( 2 == arguments.length ) {
+    cb = date;
+    date = null;
+  } else if ( 3 == arguments.length ) {
+    if ( date.indexOf('-') > 0 ) {
+      // string is date, of format y-m-d
+      url += ';date=' + date;
+    } else {
+      // number is week...
+      url += ';week=' + date;
+    }  
+  }
+  
+  var apiCallback = this._players_callback.bind(this, cb); 
+  
+  url += '?format=json';
   
   this
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster/players?format=json',
+      url,
       apiCallback
     );
 };
