@@ -55,6 +55,11 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.4.2
+  * Added the ability to specify a date or week when querying the roster resource.
+  * Cleaned up the player normalization model
+  * Fixed a bug where the team.roster call was erroring
+
 #### 0.4.1
   * Fixes to how POST data is handled
 
