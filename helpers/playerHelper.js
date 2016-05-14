@@ -6,7 +6,7 @@ exports.mapPlayer = function(player) {
     var destinationObj = {};
     var key;
 
-    if(arrayOfObjects){      
+    if(arrayOfObjects){
       _.forEach(arrayOfObjects, function(obj) {
         _.forEach(_.keys(obj), function(key) {
           if (!_.isUndefined(key)) {
@@ -15,10 +15,10 @@ exports.mapPlayer = function(player) {
         });
       });
     }
-
+    
     return destinationObj;
   };
-
+  
   var playerObj = mergeObjects(player);
 
   playerObj.eligible_positions = _.map(
@@ -26,8 +26,13 @@ exports.mapPlayer = function(player) {
     function(p) { return p.position; }
   );
   
-  playerObj.selected_position = playerObj.selected_position[1].position;
-  playerObj.starting_status = ( playerObj.starting_status ) ? playerObj.starting_status[1].is_starting : 0;
+  if ( playerObj.selected_position ) {
+    playerObj.selected_position = playerObj.selected_position[1].position;
+  }
+  
+  if ( playerObj.starting_status ) {
+    playerObj.starting_status = ( playerObj.starting_status ) ? playerObj.starting_status[1].is_starting : 0;
+  }
 
   return playerObj;
 };

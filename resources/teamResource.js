@@ -114,15 +114,28 @@ TeamResource.prototype._draft_results_callback = function(cb, e, data) {
 };
 
 // h2h leagues only
-// todo: add weeks param
-TeamResource.prototype.matchups = function(teamKey, cb) {
+TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups';
+  
+  if ( 2 == arguments.length ) {
+    cb = weeks;
+    weeks = null;
+  } else if ( 3 == arguments.length ) {
+    if ( Array.isArray(weeks) ) {
+      weeks = weeks.join(',');
+    }
+    
+    url += ';weeks=' + weeks;  
+  }
   var apiCallback = this._matchups_callback.bind(this, cb);
+  
+  url += '?format=json';
   
   this
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups?format=json',
+      url,
       apiCallback
     );
 };

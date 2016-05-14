@@ -32,17 +32,25 @@ PlayerResource.prototype._meta_callback = function(cb, e, data) {
 /*
  * Player stats and points (if in a league context).
  */
-PlayerResource.prototype.stats = function(playerKey, cb) {
+PlayerResource.prototype.stats = function(playerKey, week, cb) {
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats'; 
+  
+  if ( 2 == arguments.length ) {
+    cb = week;
+    week = null;
+  } else if ( 3 == arguments.length ) {
+    url += ';week=' + week;  
+  }
+  
   var apiCallback = this._stats_callback.bind(this, cb);
   
-  // todo: can get this by week and/or by season...
-  // { week: [WEEKNUM] }
-  //;type=week;week=12
+  url += '?format=json';
+  
   this
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats?format=json',
+      url,
       apiCallback
     );
 };
@@ -77,8 +85,8 @@ PlayerResource.prototype._percent_owned_callback = function(cb, e, data) {
   
   var percent_owned = data.fantasy_content.player[1].percent_owned[1];
   var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
+  
   // todo: do we need coverage type and/or delta????
-  // wtf are those about?!?
   player.percent_owned = percent_owned;
 
   return cb(null, player);
@@ -102,7 +110,6 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
 PlayerResource.prototype._ownership_callback = function(cb, e, data) {
   if ( e ) return cb(e);
   
-  // move this to helper? not really re-used...
   var league = data.fantasy_content.league[0];
   var player = playerHelper.mapPlayer(data.fantasy_content.league[1].players[0].player[0]);
   var status = data.fantasy_content.league[1].players[0].player[1].ownership
@@ -111,13 +118,7 @@ PlayerResource.prototype._ownership_callback = function(cb, e, data) {
 
   player.status = status;
   player.league = league;
-  // var isOwned = data.fantasy_content;
-  // var isOwned = d.fantasy_content.player[1].percent_owned[1];
-  // var player = playerHelper.mapPlayer(d.fantasy_content.player[0]);
-
-  // todo: what's the data like when the player isn't owned?
-  // todo: worth returning more info of the team
-
+  
   return cb(null, player);
 };
 

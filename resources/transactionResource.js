@@ -30,7 +30,6 @@ TransactionResource.prototype._meta_callback = function(cb, e, data) {
 };
 
 TransactionResource.prototype.players = function(transactionKey, cb) {
-  // same as meta?? just with the players... which we want...
   this.meta(transactionKey, cb);
 };
 

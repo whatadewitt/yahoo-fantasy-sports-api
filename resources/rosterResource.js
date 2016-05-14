@@ -44,6 +44,3 @@ RosterResource.prototype._players_callback = function(cb, e, data) {
 
   return cb(null, team);
 };
-
-// todo: need to add date, week
-// https://developer.yahoo.com/fantasysports/guide/roster-resource.html#roster-resource-desc

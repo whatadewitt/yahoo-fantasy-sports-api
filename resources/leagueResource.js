@@ -65,22 +65,30 @@ LeagueResource.prototype._standings_callback = function(cb, e, data) {
   var standings = leagueHelper.mapStandings(data.fantasy_content.league[1].standings[0].teams);
   var league = data.fantasy_content.league[0];
 
-  // todo: do i want the stats for each category as well?
   league.standings = standings;
 
   return cb(null, league);
 };
 
 // h2h only
-// todo: add weeks param
-LeagueResource.prototype.scoreboard = function(leagueKey, cb) {
+LeagueResource.prototype.scoreboard = function(leagueKey, week, cb) {
+  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard'
+  
+  if ( 2 == arguments.length ) {
+    cb = week;
+    week = null;
+  } else if ( 3 == arguments.length ) {
+    url += ';week=' + week;  
+  }
   var apiCallback = this._scoreboard_callback.bind(this, cb);
+  
+  url += '?format=json';
   
   this
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard?format=json',
+      url,
       apiCallback
     );
 };

@@ -55,6 +55,12 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.4.3
+  * Added weeks param for league.scoreboard
+  * Added weeks param for team.matchups
+  * Fixed a bug where individual players weren't mapping properly
+  * Minor code cleanup
+
 #### 0.4.2
   * Added the ability to specify a date or week when querying the roster resource.
   * Cleaned up the player normalization model
