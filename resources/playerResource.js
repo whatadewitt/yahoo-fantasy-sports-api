@@ -126,7 +126,7 @@ PlayerResource.prototype._ownership_callback = function(cb, e, data) {
  * Average pick, Average round and Percent Drafted.
  */
 PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
-  var apiCallback = this._ownership_callback.bind(this, cb);
+  var apiCallback = this._draft_analysis_callback.bind(this, cb);
   
   this
     .yf
@@ -137,7 +137,7 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
     );
 };
 
-PlayerResource.prototype._meta_callback = function(cb, e, data) {
+PlayerResource.prototype._draft_analysis_callback = function(cb, e, data) {
   if ( e ) return cb(e);
   
   var draft_analysis = playerHelper.mapDraftAnalysis(data.fantasy_content.player[1].draft_analysis);
