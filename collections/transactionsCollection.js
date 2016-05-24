@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var transactionHelper = require('../helpers/transactionHelper.js');
 
 module.exports = TransactionsCollection;
 
@@ -122,7 +123,14 @@ TransactionsCollection.prototype.add_player = function(leagueKey, teamKey, playe
 TransactionsCollection.prototype._add_player_callback = function(cb, e, data) {
   if ( e ) return cb(e);
 
-  var meta = data.fantasy_content;
+  var transactions = data.fantasy_content.league[1].transactions;
+  transactions = _.filter(transactions, function(p) { return typeof(p) === 'object'; });
+  transactions = _.map(transactions, function(p) { return p.transaction; });
+  var transaction = transactions[0];
+  var meta = transaction[0];
+  var players = transactionHelper.mapTransactionPlayers(transaction[1].players);
+  meta.players = players;
+
   return cb(null, meta);
 };
 
@@ -156,7 +164,14 @@ TransactionsCollection.prototype.drop_player = function(leagueKey, teamKey, play
 TransactionsCollection.prototype._drop_player_callback = function(cb, e, data) {
   if ( e ) return cb(e);
 
-  var meta = data.fantasy_content;
+  var transactions = data.fantasy_content.league[1].transactions;
+  transactions = _.filter(transactions, function(p) { return typeof(p) === 'object'; });
+  transactions = _.map(transactions, function(p) { return p.transaction; });
+  var transaction = transactions[0];
+  var meta = transaction[0];
+  var players = transactionHelper.mapTransactionPlayers(transaction[1].players);
+  meta.players = players;
+
   return cb(null, meta);
 };
 
@@ -199,6 +214,13 @@ TransactionsCollection.prototype.adddrop_players = function(leagueKey, teamKey, 
 TransactionsCollection.prototype._adddrop_players_callback = function(cb, e, data) {
   if ( e ) return cb(e);
 
-  var meta = data.fantasy_content;
+  var transactions = data.fantasy_content.league[1].transactions;
+  transactions = _.filter(transactions, function(p) { return typeof(p) === 'object'; });
+  transactions = _.map(transactions, function(p) { return p.transaction; });
+  var transaction = transactions[0];
+  var meta = transaction[0];
+  var players = transactionHelper.mapTransactionPlayers(transaction[1].players);
+  meta.players = players;
+
   return cb(null, meta);
 };
