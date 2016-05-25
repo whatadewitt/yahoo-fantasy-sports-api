@@ -55,8 +55,11 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.5.0
+  * Added "Transactions" collection with functionality to add players, drop players, and add/drop players, thanks again [githubsmilo](https://github.com/githubsmilo)!
+
 #### 0.4.4
-  * Fixed a bug in player.draft_analysis
+  * Fixed a bug in player.draft_analysis, thanks [githubsmilo](https://github.com/githubsmilo)!
 
 #### 0.4.3
   * Added weeks param for league.scoreboard
