@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.4.4
+  * Fixed a bug in player.draft_analysis
+
 #### 0.4.3
   * Added weeks param for league.scoreboard
   * Added weeks param for team.matchups
