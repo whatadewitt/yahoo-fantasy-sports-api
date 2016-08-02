@@ -11,8 +11,7 @@ function LeaguesCollection(yf) {
 LeaguesCollection.prototype.fetch = function() {
   var leagueKeys = arguments[0],
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
-    cb = arguments[arguments.length - 1],
-    apiCallback = this._fetch_callback.bind(this, cb);
+    cb = arguments[arguments.length - 1];
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
@@ -32,6 +31,8 @@ LeaguesCollection.prototype.fetch = function() {
 
   url += '?format=json';
 
+  var apiCallback = this._fetch_callback.bind(this, cb, subresources);
+
   this
     .yf
     .api(
@@ -41,7 +42,7 @@ LeaguesCollection.prototype.fetch = function() {
     );
 };
 
-LeaguesCollection.prototype._fetch_callback = function(cb, e, data) {
+LeaguesCollection.prototype._fetch_callback = function(cb, subresources, e, data) {
   if ( e ) return cb(e);
   
   var leagues = leagueHelper.parseCollection(data.fantasy_content.leagues, subresources);

@@ -10,8 +10,7 @@ function PlayersCollection(yf) {
 PlayersCollection.prototype.fetch = function() {
   var playerKeys = arguments[0],
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
-    cb = arguments[arguments.length - 1],
-    apiCallback = this._fetch_callback.bind(this, cb);
+    cb = arguments[arguments.length - 1];
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=';
 
@@ -31,6 +30,8 @@ PlayersCollection.prototype.fetch = function() {
 
   url += '?format=json';
 
+  var apiCallback = this._fetch_callback.bind(this, cb, subresources);
+
   this
     .yf
     .api(
@@ -40,9 +41,9 @@ PlayersCollection.prototype.fetch = function() {
     );
 };
 
-PlayersCollection.prototype._fetch_callback = function(cb, e, data) {
+PlayersCollection.prototype._fetch_callback = function(cb, subresources, e, data) {
   if ( e ) return cb(e);
-  
+
   var players = playerHelper.parseCollection(data.fantasy_content.players, subresources);
   return cb(null, players);
 };
@@ -52,8 +53,7 @@ PlayersCollection.prototype.leagues = function() {
   var leagueKeys = arguments[0],
     filters = ( arguments.length > 3 ) ? arguments[1] : ( arguments.length > 2 && _.isObject( arguments[1]) ) ? arguments[1] : {},
     subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
-    cb = arguments[arguments.length - 1],
-    apiCallback = this._leagues_callback.bind(this, cb);
+    cb = arguments[arguments.length - 1];
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
@@ -80,6 +80,8 @@ PlayersCollection.prototype.leagues = function() {
 
   url += '?format=json';
 
+  apiCallback = this._leagues_callback.bind(this, cb, subresources);
+
   this
     .yf
     .api(
@@ -89,7 +91,7 @@ PlayersCollection.prototype.leagues = function() {
     );
 };
 
-PlayersCollection.prototype._leagues_callback = function(cb, e, data) {
+PlayersCollection.prototype._leagues_callback = function(cb, subresources, e, data) {
   if ( e ) return cb(e);
   
   var leagues = playerHelper.parseLeagueCollection(data.fantasy_content.leagues, subresources);
@@ -100,8 +102,7 @@ PlayersCollection.prototype.teams = function() {
   var teamKeys = arguments[0],
     filters = ( arguments.length > 3 ) ? arguments[1] : ( arguments.length > 2 && _.isObject( arguments[1]) ) ? arguments[1] : {},
     subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
-    cb = arguments[arguments.length - 1],
-    apiCallback = this._teams_callback.bind(this, cb);
+    cb = arguments[arguments.length - 1];
 
   var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
 
@@ -128,6 +129,8 @@ PlayersCollection.prototype.teams = function() {
 
   url += '?format=json';
 
+  var apiCallback = this._teams_callback.bind(this, cb, subresources);
+
   this
     .yf
     .api(
@@ -137,7 +140,7 @@ PlayersCollection.prototype.teams = function() {
     );
 };
 
-PlayersCollection.prototype._teams_callback = function(cb, e, data) {
+PlayersCollection.prototype._teams_callback = function(cb, subresources, e, data) {
   if ( e ) return cb(e);
   
   var teams = playerHelper.parseTeamCollection(data.fantasy_content.teams, subresources);
