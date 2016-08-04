@@ -39,7 +39,7 @@ PlayerResource.prototype.stats = function(playerKey, week, cb) {
     cb = week;
     week = null;
   } else if ( 3 == arguments.length ) {
-    url += ';week=' + week;  
+    url += ';type=week;week=' + week;
   }
   
   var apiCallback = this._stats_callback.bind(this, cb);
