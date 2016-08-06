@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.5.2
+  * Fixed a bug where player stats by week url was not being created properly, thanks [withsmilo](https://github.com/withsmilo)!
+
 #### 0.5.1
   * Fixed a bug where collections that contained subresources would return no data.
 
