@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 0.5.3
+  * Fixed a bug where leagueFetch was throwing an error, thanks [danielspector](https://github.com/danielspector)!
+
 #### 0.5.2
   * Fixed a bug where player stats by week url was not being created properly, thanks [withsmilo](https://github.com/withsmilo)!
 
