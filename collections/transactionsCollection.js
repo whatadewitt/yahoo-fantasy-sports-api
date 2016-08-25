@@ -77,6 +77,7 @@ TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, f
   url += '?format=json';
 
   this
+  .yf
   .api(
     this.yf.GET,
     url,
