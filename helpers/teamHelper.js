@@ -4,22 +4,38 @@ var playerHelper = require('./playerHelper.js');
 
 // todo: use this where possible...
 exports.mapTeam = function(t) {
-  return {
-    team_key: t[0].team_key,
-    team_id: t[1].team_id,
-    name: t[2].name,
-    is_owned_by_current_login: t[3].is_owned_by_current_login,
-    url: t[4].url,
-    team_logo: t[5].team_logos[0].team_logo.url,
-    waiver_priority: t[7].waiver_priority,
-    number_of_moves: t[9].number_of_moves,
-    number_of_trades: t[10].number_of_trades,
-    // wtf is "roster adds" object?
-    clinched_playoffs: t[12].clinched_playoffs,
-    managers: _.map(t[13].managers, function(m) {
-      return m.manager;
-    })
+  // todo: mergeObjects is shared...
+  // todo: the combination of numbers and strings here is confusing...
+  var mergeObjects = function(arrayOfObjects) {
+    var destinationObj = {};
+    var key;
+
+    if(arrayOfObjects){
+      _.forEach(arrayOfObjects, function(obj) {
+        _.forEach(_.keys(obj), function(key) {
+          if ( !_.isUndefined(key) ) {
+            destinationObj[key] = _.isobj[key];
+          }
+        });
+      });
+    }
+    
+    return destinationObj;
   };
+  
+  var team = mergeObjects(t);
+  
+  // clean up team_logos
+  team.team_logos = _.map(team.team_logos, function(logo) {
+    return logo.team_logo;
+  });
+
+  // clean up managers
+  team.managers = _.map(team.managers, function(m) {
+    return m.manager;
+  });
+
+  return team;
 };
 
 exports.mapRoster = function(roster) {
@@ -52,13 +68,22 @@ exports.mapMatchups = function(matchups) {
   matchups = _.filter(matchups, function(m) { return typeof(m) === 'object'; });
   matchups = _.map(matchups, function(m) { return m.matchup; });
   matchups = _.map(matchups, function(m) {
+    // grades seem to be football specific...
+    // todo: shared with league helper...
+    if ( m.matchup_grades ) {
+      m.matchup_grades = _.map(m.matchup_grades, function(grade) {
+        return {
+          team_key: grade.matchup_grade.team_key,
+          grade: grade.matchup_grade.grade
+        }
+      });
+    }
+
     var teams = _.filter(m[0].teams, function(t) { return typeof(t) === 'object'; });
 
     m.teams = _.map(teams, function(t) {
       var team = self.mapTeam(t.team[0]);
-
-      team.points = t.team[1].team_points;
-      team.stats = leagueHelper.mapStats(t.team[1].team_stats.stats);
+      team = self.mapTeamPoints(team, t.team[1]);
 
       return team;
     });
@@ -68,7 +93,21 @@ exports.mapMatchups = function(matchups) {
   });
 
   return matchups;
-}
+};
+
+exports.mapTeamPoints = function(team, points) {
+  team.points = points.team_points;
+
+  if ( points.team_stats ) {
+    team.stats = self.mapStats(points.team_stats.stats);
+  }
+
+  if ( points.team_projected_points ) {
+    team.projected_points = points.team_projected_points;
+  }
+
+  return team;
+};
 
 exports.parseCollection = function(teams, subresources) {
   var self = this;

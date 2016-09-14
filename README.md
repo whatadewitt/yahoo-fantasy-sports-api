@@ -55,6 +55,11 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 1.0.0
+  * Breaking changes
+  * Fixed NFL scoreboard/matchups bug ([Issue #19](https://github.com/whatadewitt/yfsapi/issues/19))
+  * In fixing this bug I realized that my "team" set up was really only useful for MLB fantasy, so I rewrote team mapping to work better across all sports and give additional details that weren't previously reported. This will cause errors if you are using the team.manager attribute in your code. 
+
 #### 0.5.3
   * Fixed a bug where leagueFetch was throwing an error, thanks [danielspector](https://github.com/danielspector)!
 
