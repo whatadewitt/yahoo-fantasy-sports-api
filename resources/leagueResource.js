@@ -95,7 +95,7 @@ LeagueResource.prototype.scoreboard = function(leagueKey, week, cb) {
 
 LeagueResource.prototype._scoreboard_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var week = data.fantasy_content.league[1].scoreboard.week;
   var scoreboard = leagueHelper.mapScoreboard(data.fantasy_content.league[1].scoreboard[0].matchups);
   var league = data.fantasy_content.league[0];

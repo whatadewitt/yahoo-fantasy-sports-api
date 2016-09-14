@@ -53,14 +53,23 @@ exports.mapScoreboard = function(scoreboard) {
   matchups = _.map(matchups, function(m) { return m.matchup; });
 
   _.each(matchups, function(matchup) {
+    // grades seem to be football specific...
+    // todo: shared with team helper...
+    if ( matchup.matchup_grades ) {
+      matchup.matchup_grades = _.map(matchup.matchup_grades, function(grade) {
+        return {
+          team_key: grade.matchup_grade.team_key,
+          grade: grade.matchup_grade.grade
+        }
+      });
+    }
+
     var teams = matchup[0].teams;
     teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
     teams = _.map(teams, function(t) {
       var team = teamHelper.mapTeam(t.team[0]);
-
-      team.points = t.team[1].team_points;
-      team.stats = self.mapStats(t.team[1].team_stats.stats);
-
+      team = teamHelper.mapTeamPoints(team, t.team[1]);
+      
       return team;
     });
 
