@@ -14,7 +14,7 @@ exports.mapTeam = function(t) {
       _.forEach(arrayOfObjects, function(obj) {
         _.forEach(_.keys(obj), function(key) {
           if ( !_.isUndefined(key) ) {
-            destinationObj[key] = _.isobj[key];
+            destinationObj[key] = obj[key];
           }
         });
       });

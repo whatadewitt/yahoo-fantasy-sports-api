@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 1.0.1
+  * Fixed a typo that was breaking team mapping.
+
 #### 1.0.0
   * Breaking changes
   * Fixed NFL scoreboard/matchups bug ([Issue #19](https://github.com/whatadewitt/yfsapi/issues/19))
