@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 1.0.2
+  * Fixed game resource roster postions callback bug.
+
 #### 1.0.1
   * Fixed a typo that was breaking team mapping.
 

@@ -151,7 +151,7 @@ GameResource.prototype._position_types_callback = function(cb, e, data) {
 };
 
 GameResource.prototype.roster_positions = function(gameKey, cb) {
-  var apiCallback = this._position_types_callback.bind(this, cb);
+  var apiCallback = this._roster_positions_callback.bind(this, cb);
   
   this
     .yf
