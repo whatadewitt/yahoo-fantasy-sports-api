@@ -13,7 +13,7 @@ UsersCollection.prototype.fetch = function() {
     cb = arguments[arguments.length - 1],
     apiCallback = this._fetch_callback.bind(this, cb);
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
   if ( !( _.isEmpty(subresources) )  ) {
     if ( _.isString(subresources) ) {

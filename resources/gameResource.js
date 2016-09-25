@@ -14,7 +14,7 @@ GameResource.prototype.meta = function(gameKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json', 
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json', 
       apiCallback
     );
 };
@@ -38,7 +38,7 @@ GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/leagues;league_keys=' + leagueKey.join(',') + '?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/leagues;league_keys=' + leagueKey.join(',') + '?format=json',
       apiCallback
     );
 };
@@ -65,7 +65,7 @@ GameResource.prototype.players = function(gameKey, playerKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/players;player_keys=' + playerKey.join(',') + '?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/players;player_keys=' + playerKey.join(',') + '?format=json',
       apiCallback
     );
 };
@@ -88,7 +88,7 @@ GameResource.prototype.game_weeks = function(gameKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/game_weeks?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/game_weeks?format=json',
       apiCallback
     );
 };
@@ -111,7 +111,7 @@ GameResource.prototype.stat_categories = function(gameKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/stat_categories?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/stat_categories?format=json',
       apiCallback
     );
 };
@@ -134,7 +134,7 @@ GameResource.prototype.position_types = function(gameKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/position_types?format=json',
       apiCallback
     );
 };
@@ -157,7 +157,7 @@ GameResource.prototype.roster_positions = function(gameKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/roster_positions?format=json',
       apiCallback
     );
 };

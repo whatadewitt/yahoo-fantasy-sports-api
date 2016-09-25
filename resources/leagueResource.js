@@ -13,7 +13,7 @@ LeagueResource.prototype.meta = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/metadata?format=json',
       apiCallback
     );
 };
@@ -32,7 +32,7 @@ LeagueResource.prototype.settings = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/settings?format=json',
       apiCallback
     );
 };
@@ -54,7 +54,7 @@ LeagueResource.prototype.standings = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/standings?format=json',
       apiCallback
     );
 };
@@ -72,7 +72,7 @@ LeagueResource.prototype._standings_callback = function(cb, e, data) {
 
 // h2h only
 LeagueResource.prototype.scoreboard = function(leagueKey, week, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard'
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/scoreboard'
   
   if ( 2 == arguments.length ) {
     cb = week;
@@ -113,7 +113,7 @@ LeagueResource.prototype.teams = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/teams?format=json',
       apiCallback
     );
 };
@@ -136,7 +136,7 @@ LeagueResource.prototype.players = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players?format=json',
       apiCallback
     );
 };
@@ -155,7 +155,7 @@ LeagueResource.prototype.draft_results = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/draftresults?format=json',
       apiCallback
     );
 };
@@ -178,7 +178,7 @@ LeagueResource.prototype.transactions = function(leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json',
       apiCallback
     );
 };

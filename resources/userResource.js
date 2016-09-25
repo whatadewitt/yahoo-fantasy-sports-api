@@ -13,7 +13,7 @@ UserResource.prototype.games = function(cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json',
       apiCallback
     );
 };
@@ -40,7 +40,7 @@ UserResource.prototype.game_leagues = function(gameKeys, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/leagues?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/leagues?format=json',
       apiCallback
     );
 };
@@ -66,7 +66,7 @@ UserResource.prototype.game_teams = function(gameKeys, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/teams?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=' + gameKeys.join(',') + '/teams?format=json',
       apiCallback
     );
 };

@@ -4,10 +4,8 @@
 
 module.exports = YahooFantasy;
 
-var OAuth = require('oauth').OAuth,
-  https = require('https'),
-  querystring = require('querystring'),
-  util = require('util'),
+var https = require('https'),
+  request = require('request'),
   GameResource = require('./resources/gameResource.js'),
   LeagueResource = require('./resources/leagueResource.js'),
   PlayerResource = require('./resources/playerResource.js'),
@@ -23,18 +21,18 @@ var OAuth = require('oauth').OAuth,
   // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
-  var oauth = new OAuth(
-    'https://api.login.yahoo.com/oauth/v2/get_request_token',
-    'https://api.login.yahoo.com/oauth/v2/get_token',
-    consumerKey,
-    consumerSecret,
-    '1.0',
-    null,
-    'HMAC-SHA1'
-  );
+  // var oauth = new OAuth(
+  //   'https://api.login.yahoo.com/oauth/v2/get_request_token',
+  //   'https://api.login.yahoo.com/oauth/v2/get_token',
+  //   consumerKey,
+  //   consumerSecret,
+  //   '1.0',
+  //   null,
+  //   'HMAC-SHA1'
+  // );
   
-  this.GET = 'get';
-  this.POST = 'post';
+  this.GET = 'GET';
+  this.POST = 'POST';
 
   this.oauth = oauth;
   this.game = new GameResource(this);
@@ -51,22 +49,11 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.user = new UserResource(this);
   // this.users = new UsersCollection(); // TODO
   
-  this.yuser = {
-    token: null,
-    secret: null,
-    sessionHandle: null
-  };
-  
-  this.consumer = {
-    key: consumerKey,
-    secret: consumerSecret
-  };
+  this.yahooUserToken = null;
 }
 
-YahooFantasy.prototype.setUserToken = function(userToken, userSecret, userSession) {
-  this.yuser.token = userToken;
-  this.yuser.secret = userSecret;
-  this.yuser.sessionHandle = userSession;
+YahooFantasy.prototype.setUserToken = function(token) {
+  this.yahooUserToken = token;
 };
 
 YahooFantasy.prototype.api = function(method, url, postData, cb) {
@@ -76,8 +63,21 @@ YahooFantasy.prototype.api = function(method, url, postData, cb) {
   }
   
   var callback = this.apiCallback.bind(this, method, url, postData, cb);
-  
-  if ( this.POST == method ) {
+  var options = {
+    url: url,
+    method: method,
+    auth: {
+      'auth': {
+        'bearer': this.yahooUserToken
+      }
+    }
+  };
+
+  request(options, callback);
+
+  /*if ( this.POST == method ) {
+    options.method = "POST";
+
     this.oauth.post(
       url,
       this.yuser.token,
@@ -93,7 +93,7 @@ YahooFantasy.prototype.api = function(method, url, postData, cb) {
       this.yuser.secret,
       callback
     ); 
-  }
+  }*/
 };
 
 YahooFantasy.prototype.apiCallback = function(method, url, postData, cb, e, data, resp) {

@@ -17,7 +17,7 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/metadata?format=json',
       apiCallback
     );
 };
@@ -33,7 +33,7 @@ PlayerResource.prototype._meta_callback = function(cb, e, data) {
  * Player stats and points (if in a league context).
  */
 PlayerResource.prototype.stats = function(playerKey, week, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats'; 
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats'; 
   
   if ( 2 == arguments.length ) {
     cb = week;
@@ -75,7 +75,7 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/percent_owned?format=json',
       apiCallback
     );
 };
@@ -102,7 +102,7 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/players;player_keys=' + playerKey + '/ownership?format=json',
       apiCallback
     );
 };
@@ -132,7 +132,7 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/draft_analysis?format=json',
       apiCallback
     );
 };
