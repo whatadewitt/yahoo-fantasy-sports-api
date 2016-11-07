@@ -24,10 +24,12 @@
   },
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
+    "lodash": "^4.16.6",
+    "request": "^2.78.0"
+  },
+  "devDependencies": {
     "istanbul": "^0.4.3",
     "jasmine": "^2.4.1",
-    "lodash": "^4.11.1",
-    "nock": "^3.3.2",
-    "request": "^2.75.0"
+    "nock": "^3.3.2"
   }
 }

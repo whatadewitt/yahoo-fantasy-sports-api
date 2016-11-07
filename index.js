@@ -34,7 +34,7 @@ function YahooFantasy(consumerKey, consumerSecret) {
   this.GET = 'GET';
   this.POST = 'POST';
 
-  this.oauth = oauth;
+  // this.oauth = oauth;
   this.game = new GameResource(this);
   this.games = new GamesCollection(this);
   this.league = new LeagueResource(this);
@@ -66,50 +66,25 @@ YahooFantasy.prototype.api = function(method, url, postData, cb) {
   var options = {
     url: url,
     method: method,
+    json: true,
     auth: {
-      'auth': {
-        'bearer': this.yahooUserToken
-      }
+      'bearer': this.yahooUserToken
     }
   };
 
   request(options, callback);
-
-  /*if ( this.POST == method ) {
-    options.method = "POST";
-
-    this.oauth.post(
-      url,
-      this.yuser.token,
-      this.yuser.secret,
-      postData,
-      'application/xml',
-      callback
-    );
-  } else {
-    this.oauth.get(
-      url,
-      this.yuser.token,
-      this.yuser.secret,
-      callback
-    ); 
-  }*/
 };
 
-YahooFantasy.prototype.apiCallback = function(method, url, postData, cb, e, data, resp) {
-  try {
-    data = JSON.parse(data);
-    
-    if (e) {
-      return cb(e);
-    } else {
-      if ( data.error ) {
-        return cb(data.error);
-      }
-      
-      return cb(null, data);
+YahooFantasy.prototype.apiCallback = function(method, url, postData, cb, e, resp, data) {
+  if (e) {
+    return cb(e);
+  } else {
+    if ( data.error ) {
+      // i hate regex so if anyone has a better way to do this...
+      data.error.reason = String(data.error.description).match( /"(.*?)"/ )[1];
+      return cb(data.error);
     }
-  } catch (error) {
-    return cb(error);
+    
+    return cb(null, data);
   }
 };
