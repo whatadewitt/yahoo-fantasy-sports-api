@@ -4,8 +4,7 @@
 
 module.exports = YahooFantasy;
 
-var https = require('https'),
-  request = require('request'),
+var request = require('request'),
   GameResource = require('./resources/gameResource.js'),
   LeagueResource = require('./resources/leagueResource.js'),
   PlayerResource = require('./resources/playerResource.js'),
@@ -21,20 +20,9 @@ var https = require('https'),
   // usersCollection = require('./collections/usersCollection.js');
 
 function YahooFantasy(consumerKey, consumerSecret) {
-  // var oauth = new OAuth(
-  //   'https://api.login.yahoo.com/oauth/v2/get_request_token',
-  //   'https://api.login.yahoo.com/oauth/v2/get_token',
-  //   consumerKey,
-  //   consumerSecret,
-  //   '1.0',
-  //   null,
-  //   'HMAC-SHA1'
-  // );
-  
   this.GET = 'GET';
   this.POST = 'POST';
 
-  // this.oauth = oauth;
   this.game = new GameResource(this);
   this.games = new GamesCollection(this);
   this.league = new LeagueResource(this);
