@@ -13,7 +13,7 @@ LeaguesCollection.prototype.fetch = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
     leagueKeys = [leagueKeys];

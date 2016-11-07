@@ -8,7 +8,7 @@ function TransactionsCollection(yf) {
 }
 
 TransactionsCollection.prototype.fetch = function(transactionKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=',
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=',
     apiCallback = this._fetch_callback.bind(this, cb);
 
   if ( _.isString(transactionKeys) ) {
@@ -50,7 +50,7 @@ TransactionsCollection.prototype._fetch_callback = function(cb, e, data) {
 };
 
 TransactionsCollection.prototype.leagueFetch = function(leagueKeys, resources, filters, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=',
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=',
     apiCallback = this._leagueFetch_callback.bind(this, cb);
 
   if ( _.isString(leagueKeys) ) {
@@ -92,10 +92,10 @@ TransactionsCollection.prototype._leagueFetch_callback = function(cb, e, data) {
   return cb(null, meta);
 };
 
-// todo: http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
+// todo: https://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
 
 TransactionsCollection.prototype.add_player = function(leagueKey, teamKey, playerKey, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
   var apiCallback = this._add_player_callback.bind(this, cb);
   var xmlData = ' \
     <fantasy_content> \
@@ -136,7 +136,7 @@ TransactionsCollection.prototype._add_player_callback = function(cb, e, data) {
 };
 
 TransactionsCollection.prototype.drop_player = function(leagueKey, teamKey, playerKey, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
   var apiCallback = this._drop_player_callback.bind(this, cb);
   var xmlData = ' \
     <fantasy_content> \
@@ -177,7 +177,7 @@ TransactionsCollection.prototype._drop_player_callback = function(cb, e, data) {
 };
 
 TransactionsCollection.prototype.adddrop_players = function(leagueKey, teamKey, addPlayerKey, dropPlayerKey, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/' + leagueKey + '/transactions?format=json';
   var apiCallback = this._adddrop_players_callback.bind(this, cb);
   var xmlData = ' \
     <fantasy_content> \

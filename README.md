@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 2.0.0
+  * Moved to Yahoo!'s OAuth2.0 authentication mechanism. 
+
 #### 1.0.2
   * Fixed game resource roster postions callback bug.
 

@@ -25,7 +25,7 @@ GamesCollection.prototype.fetch = function() {
 
   subresources = arguments[1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/games';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/games';
 
   if ( _.isString(gameKeys)  && !_.isEmpty(gameKeys) ) {
     gameKeys = [gameKeys];
@@ -94,7 +94,7 @@ GamesCollection.prototype.user = function() {
       break;
   }
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
 
   if ( !( _.isEmpty(filters) )  ) {
     _.each(Object.keys(filters), function(key) {
@@ -136,7 +136,7 @@ GamesCollection.prototype.userFetch = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=';
 
   if ( _.isString(gameKeys) ) {
     gameKeys = [gameKeys];

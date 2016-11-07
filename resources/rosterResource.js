@@ -7,7 +7,7 @@ function RosterResource(yf) {
 };
 
 RosterResource.prototype.players = function(teamKey, date, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster';
   
   if ( 2 == arguments.length ) {
     cb = date;

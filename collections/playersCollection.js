@@ -12,7 +12,7 @@ PlayersCollection.prototype.fetch = function() {
     subresources = ( arguments.length > 2 ) ? arguments[1] : [],
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=';
 
   if ( _.isString(playerKeys) ) {
     playerKeys = [playerKeys];
@@ -55,7 +55,7 @@ PlayersCollection.prototype.leagues = function() {
     subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
 
   if ( _.isString(leagueKeys) ) {
     leagueKeys = [leagueKeys];
@@ -104,7 +104,7 @@ PlayersCollection.prototype.teams = function() {
     subresources = ( arguments.length > 3 ) ? arguments[2] : ( arguments.length > 2 && _.isArray( arguments[1]) ) ? arguments[1] : [], // ugliest line of code ever?
     cb = arguments[arguments.length - 1];
 
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=';
 
   if ( _.isString(teamKeys) ) {
     teamKeys = [teamKeys];

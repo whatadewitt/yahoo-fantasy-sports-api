@@ -13,7 +13,7 @@ TeamResource.prototype.meta = function(teamKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/metadata?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/metadata?format=json',
       apiCallback
     );
 };
@@ -32,7 +32,7 @@ TeamResource.prototype.stats = function(teamKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/stats?format=json',
       apiCallback
     );
 };
@@ -54,7 +54,7 @@ TeamResource.prototype.standings = function(teamKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/standings?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/standings?format=json',
       apiCallback
     );
 };
@@ -76,7 +76,7 @@ TeamResource.prototype.roster = function(teamKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster?format=json',
       apiCallback
     );
 };
@@ -98,7 +98,7 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/draftresults?format=json',
       apiCallback
     );
 };
@@ -115,7 +115,7 @@ TeamResource.prototype._draft_results_callback = function(cb, e, data) {
 
 // h2h leagues only
 TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
-  var url = 'http://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups';
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups';
   
   if ( 2 == arguments.length ) {
     cb = weeks;

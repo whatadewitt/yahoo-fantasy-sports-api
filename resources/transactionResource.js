@@ -13,7 +13,7 @@ TransactionResource.prototype.meta = function(transactionKey, cb) {
     .yf
     .api(
       this.yf.GET,
-      'http://fantasysports.yahooapis.com/fantasy/v2/transaction/' + transactionKey + '/players?format=json',
+      'https://fantasysports.yahooapis.com/fantasy/v2/transaction/' + transactionKey + '/players?format=json',
       apiCallback
     );
 };
