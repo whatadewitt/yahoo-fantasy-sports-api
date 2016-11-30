@@ -15,21 +15,21 @@ exports.mapPlayer = function(player) {
         });
       });
     }
-    
+
     return destinationObj;
   };
-  
+
   var playerObj = mergeObjects(player);
 
   playerObj.eligible_positions = _.map(
     playerObj.eligible_positions,
     function(p) { return p.position; }
   );
-  
+
   if ( playerObj.selected_position ) {
     playerObj.selected_position = playerObj.selected_position[1].position;
   }
-  
+
   if ( playerObj.starting_status ) {
     playerObj.starting_status = ( playerObj.starting_status ) ? playerObj.starting_status[1].is_starting : 0;
   }
@@ -57,6 +57,15 @@ exports.mapStats = function(stats) {
   };
 };
 
+exports.mapPoints = function(points) {
+  var coverage_type = points[0].coverage_type;
+  return {
+    coverage_type: coverage_type,
+    coverage_value: points[0][coverage_type],
+    total: points.total
+  };
+}
+
 exports.mapDraftAnalysis = function(da) {
   return {
     average_pick: da[0].average_pick,
@@ -78,6 +87,7 @@ exports.parseCollection = function(players, subresources) {
       switch (resource) {
         case 'stats':
           player.stats = self.mapStats(p[idx + 1].player_stats);
+          player.points = self.mapPoints(p[idx + 1].player_points);
           break;
 
         case 'percent_owned': // todo: clean this up and in resource
