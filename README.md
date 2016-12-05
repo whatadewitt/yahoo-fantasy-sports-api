@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 2.0.1
+  * Removed the code that added a "reason" to errors coming from Yahoo! as it was breaking other errors. Retry notifications should now be handled within the application using the module.
+
 #### 2.0.0
   * Moved to Yahoo!'s OAuth2.0 authentication mechanism. 
 

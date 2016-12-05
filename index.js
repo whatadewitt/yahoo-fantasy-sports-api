@@ -68,8 +68,6 @@ YahooFantasy.prototype.apiCallback = function(method, url, postData, cb, e, resp
     return cb(e);
   } else {
     if ( data.error ) {
-      // i hate regex so if anyone has a better way to do this...
-      data.error.reason = String(data.error.description).match( /"(.*?)"/ )[1];
       return cb(data.error);
     }
     
