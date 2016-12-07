@@ -96,6 +96,7 @@ exports.mapMatchups = function(matchups) {
 };
 
 exports.mapTeamPoints = function(team, points) {
+  var self = this;
   team.points = points.team_points;
 
   if ( points.team_stats ) {
