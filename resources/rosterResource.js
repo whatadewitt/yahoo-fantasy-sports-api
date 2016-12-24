@@ -8,7 +8,7 @@ function RosterResource(yf) {
 
 RosterResource.prototype.players = function(teamKey, date, cb) {
   var url = 'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/roster';
-  
+
   if ( 2 == arguments.length ) {
     cb = date;
     date = null;
@@ -19,13 +19,13 @@ RosterResource.prototype.players = function(teamKey, date, cb) {
     } else {
       // number is week...
       url += ';week=' + date;
-    }  
+    }
   }
-  
-  var apiCallback = this._players_callback.bind(this, cb); 
-  
+
+  var apiCallback = this._players_callback.bind(this, cb);
+
   url += '?format=json';
-  
+
   this
     .yf
     .api(
@@ -37,7 +37,7 @@ RosterResource.prototype.players = function(teamKey, date, cb) {
 
 RosterResource.prototype._players_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
   team.roster = roster;

@@ -1,4 +1,4 @@
-var YahooFantasy = require('../../index.js');
+var YahooFantasy = require('../index.js');
 var nock = require('nock');
 var q = require('q');
 
@@ -42,11 +42,11 @@ describe ("resource : gameResource", function(){
   });
 
   // meta
-  describe(": meta", function(){
-    var meta = require('../nock-data/gameMeta').meta;
-    
-    it ("should build a proper url to retrieve metadata via a numeric game key", function(done) {      
-      nock('http://fantasysports.yahooapis.com')
+  describe(": meta", function() {
+    var meta = require('./nock-data/gameMeta').meta;
+
+    it ("should build a proper url to retrieve metadata via a numeric game key", function(done) {
+      nock('https://fantasysports.yahooapis.com')
         .get("/fantasy/v2/game/328/metadata?format=json")
         .reply(200, meta);
 
@@ -57,7 +57,7 @@ describe ("resource : gameResource", function(){
     });
 
     it ("should build a proper url to retrieve metadata via a string game key", function(done) {
-      nock('http://fantasysports.yahooapis.com')
+      nock('https://fantasysports.yahooapis.com')
         .get("/fantasy/v2/game/mlb/metadata?format=json")
         .reply(200, meta);
 
@@ -68,48 +68,53 @@ describe ("resource : gameResource", function(){
     });
   });
 
+  beforeEach(function() {
+    spyOn(yf, "api").andCallThrough();
+  });
+
   // leagues
-  describe(": leagues", function(){
+  describe(": leagues", function() {
+
     it ("should build a proper url to retrieve league data for a single league using a numeric game key", function() {
       game.leagues(328, '328.l.34014', null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json", jasmine.any(Function));
     });
 
     it ("should build a proper url to retrieve league data for a single league using a string game key", function() {
       game.leagues('mlb', 'mlb.l.34014', null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json", jasmine.any(Function));
     });
 
     it ("should build a proper url to retrieve league data for a single league using a numeric game key and league as an array", function() {
       game.leagues(328, ['328.l.34014'], null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json", jasmine.any(Function));
     });
 
     it ("should build a proper url to retrieve league data for a single league using a string game key and league as an array", function() {
       game.leagues('mlb', ['mlb.l.34014'], null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json", jasmine.any(Function));
     });
 
     it ("should build a proper url to retrieve league data for a multiple leagues using a numeric game key", function() {
       game.leagues(328, ['328.l.34014', '328.l.24281'], null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014,328.l.24281?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014,328.l.24281?format=json", jasmine.any(Function));
     });
 
     it ("should build a proper url to retrieve league data for a multiple leagues using a string game key", function() {
       game.leagues('mlb', ['mlb.l.34014', 'mlb.l.24281'], null);
 
       expect(yf.api)
-        .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014,mlb.l.24281?format=json");
+        .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014,mlb.l.24281?format=json", jasmine.any(Function));
     });
   });
 
@@ -118,42 +123,42 @@ describe ("resource : gameResource", function(){
     game.players(328, '328.p.6619', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve player data for a single player using a string game key", function() {
     game.players('mlb', 'mlb.p.6619', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve player data for a single player using a numeric game key and player as an array", function() {
     game.players(328, ['328.p.6619'], null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve player data for a single player using a string game key and player as an array", function() {
     game.players('mlb', ['mlb.p.6619'], null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve player data for a multiple players using a numeric game key", function() {
     game.players(328, ['328.p.6619', '328.p.8172'], null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619,328.p.8172?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619,328.p.8172?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve player data for a multiple players using a string game key", function() {
     game.players('mlb', ['mlb.p.6619', 'mlb.p.8172'], null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619,mlb.p.8172?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619,mlb.p.8172?format=json", jasmine.any(Function));
   });
 
   // game_weeks
@@ -161,14 +166,14 @@ describe ("resource : gameResource", function(){
     game.game_weeks(328, null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/game_weeks?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/game_weeks?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve game weeks using a string game key", function() {
     game.game_weeks('nfl', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/game_weeks?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/game_weeks?format=json", jasmine.any(Function));
   });
 
   // stat_categories
@@ -176,14 +181,14 @@ describe ("resource : gameResource", function(){
     game.stat_categories(328, null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/stat_categories?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/stat_categories?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve stat categories using a string game key", function() {
     game.stat_categories('nfl', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/stat_categories?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/stat_categories?format=json", jasmine.any(Function));
   });
 
   // position_types
@@ -191,14 +196,14 @@ describe ("resource : gameResource", function(){
     game.position_types(328, null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/position_types?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/position_types?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve position types using a string game key", function() {
     game.position_types('nfl', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types?format=json", jasmine.any(Function));
   });
 
   // roster_positions
@@ -206,13 +211,13 @@ describe ("resource : gameResource", function(){
     game.roster_positions(328, null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/roster_positions?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/328/roster_positions?format=json", jasmine.any(Function));
   });
 
   it ("should build a proper url to retrieve roster positions using a string game key", function() {
     game.roster_positions('nfl', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions?format=json", jasmine.any(Function));
   });
 });

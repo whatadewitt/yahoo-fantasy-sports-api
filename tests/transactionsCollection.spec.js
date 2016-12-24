@@ -1,4 +1,4 @@
-var YahooFantasy = require('../../index.js');
+var YahooFantasy = require('../index.js');
 var nock = require('nock');
 
 describe ("collection: transactionsCollection", function(){

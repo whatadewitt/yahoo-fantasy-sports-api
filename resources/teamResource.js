@@ -8,7 +8,7 @@ function TeamResource(yf) {
 
 TeamResource.prototype.meta = function(teamKey, cb) {
   var apiCallback = this._meta_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -20,14 +20,14 @@ TeamResource.prototype.meta = function(teamKey, cb) {
 
 TeamResource.prototype._meta_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var metadata = teamHelper.mapTeam(data.fantasy_content.team[0]);
   return cb(null, metadata);
 };
 
 TeamResource.prototype.stats = function(teamKey, cb) {
   var apiCallback = this._stats_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -39,7 +39,7 @@ TeamResource.prototype.stats = function(teamKey, cb) {
 
 TeamResource.prototype._stats_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var stats = teamHelper.mapStats(data.fantasy_content.team[1]);
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   team.stats = stats;
@@ -49,7 +49,7 @@ TeamResource.prototype._stats_callback = function(cb, e, data) {
 
 TeamResource.prototype.standings = function(teamKey, cb) {
   var apiCallback = this._standings_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -61,7 +61,7 @@ TeamResource.prototype.standings = function(teamKey, cb) {
 
 TeamResource.prototype._standings_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var standings = data.fantasy_content.team[1].team_standings;
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   team.standings = standings;
@@ -71,7 +71,7 @@ TeamResource.prototype._standings_callback = function(cb, e, data) {
 
 TeamResource.prototype.roster = function(teamKey, cb) {
   var apiCallback = this._roster_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -83,7 +83,7 @@ TeamResource.prototype.roster = function(teamKey, cb) {
 
 TeamResource.prototype._roster_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   var roster = teamHelper.mapRoster(data.fantasy_content.team[1].roster);
   team.roster = roster;
@@ -93,7 +93,7 @@ TeamResource.prototype._roster_callback = function(cb, e, data) {
 
 TeamResource.prototype.draft_results = function(teamKey, cb) {
   var apiCallback = this._draft_results_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -105,7 +105,7 @@ TeamResource.prototype.draft_results = function(teamKey, cb) {
 
 TeamResource.prototype._draft_results_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var draft_results = teamHelper.mapDraft(data.fantasy_content.team[1].draft_results);
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   team.draft_results = draft_results;
@@ -116,7 +116,7 @@ TeamResource.prototype._draft_results_callback = function(cb, e, data) {
 // h2h leagues only
 TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
   var url = 'https://fantasysports.yahooapis.com/fantasy/v2/team/' + teamKey + '/matchups';
-  
+
   if ( 2 == arguments.length ) {
     cb = weeks;
     weeks = null;
@@ -124,13 +124,13 @@ TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
     if ( Array.isArray(weeks) ) {
       weeks = weeks.join(',');
     }
-    
-    url += ';weeks=' + weeks;  
+
+    url += ';weeks=' + weeks;
   }
   var apiCallback = this._matchups_callback.bind(this, cb);
-  
+
   url += '?format=json';
-  
+
   this
     .yf
     .api(
@@ -142,7 +142,7 @@ TeamResource.prototype.matchups = function(teamKey, weeks, cb) {
 
 TeamResource.prototype._matchups_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var matchups = teamHelper.mapMatchups(data.fantasy_content.team[1].matchups);
   var team = teamHelper.mapTeam(data.fantasy_content.team[0]);
   team.matchups = matchups;

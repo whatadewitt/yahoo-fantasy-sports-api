@@ -12,7 +12,7 @@ function PlayerResource(yf) {
 */
 PlayerResource.prototype.meta = function(playerKey, cb) {
   var apiCallback = this._meta_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -24,7 +24,7 @@ PlayerResource.prototype.meta = function(playerKey, cb) {
 
 PlayerResource.prototype._meta_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var meta = playerHelper.mapPlayer(data.fantasy_content.player[0]);
   return cb(null, meta);
 };
@@ -33,19 +33,19 @@ PlayerResource.prototype._meta_callback = function(cb, e, data) {
  * Player stats and points (if in a league context).
  */
 PlayerResource.prototype.stats = function(playerKey, week, cb) {
-  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats'; 
-  
+  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/player/' + playerKey + '/stats';
+
   if ( 2 == arguments.length ) {
     cb = week;
     week = null;
   } else if ( 3 == arguments.length ) {
     url += ';type=week;week=' + week;
   }
-  
+
   var apiCallback = this._stats_callback.bind(this, cb);
-  
+
   url += '?format=json';
-  
+
   this
     .yf
     .api(
@@ -57,7 +57,7 @@ PlayerResource.prototype.stats = function(playerKey, week, cb) {
 
 PlayerResource.prototype._stats_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var stats = playerHelper.mapStats(data.fantasy_content.player[1].player_stats);
   var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
   player.stats = stats;
@@ -70,7 +70,7 @@ PlayerResource.prototype._stats_callback = function(cb, e, data) {
  */
 PlayerResource.prototype.percent_owned = function(playerKey, cb) {
   var apiCallback = this._percent_owned_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -82,10 +82,10 @@ PlayerResource.prototype.percent_owned = function(playerKey, cb) {
 
 PlayerResource.prototype._percent_owned_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var percent_owned = data.fantasy_content.player[1].percent_owned[1];
   var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
-  
+
   // todo: do we need coverage type and/or delta????
   player.percent_owned = percent_owned;
 
@@ -97,7 +97,7 @@ PlayerResource.prototype._percent_owned_callback = function(cb, e, data) {
  */
 PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
   var apiCallback = this._ownership_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -109,7 +109,7 @@ PlayerResource.prototype.ownership = function(playerKey, leagueKey, cb) {
 
 PlayerResource.prototype._ownership_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var league = data.fantasy_content.league[0];
   var player = playerHelper.mapPlayer(data.fantasy_content.league[1].players[0].player[0]);
   var status = data.fantasy_content.league[1].players[0].player[1].ownership
@@ -118,7 +118,7 @@ PlayerResource.prototype._ownership_callback = function(cb, e, data) {
 
   player.status = status;
   player.league = league;
-  
+
   return cb(null, player);
 };
 
@@ -127,7 +127,7 @@ PlayerResource.prototype._ownership_callback = function(cb, e, data) {
  */
 PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
   var apiCallback = this._draft_analysis_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -139,7 +139,7 @@ PlayerResource.prototype.draft_analysis = function(playerKey, cb) {
 
 PlayerResource.prototype._draft_analysis_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var draft_analysis = playerHelper.mapDraftAnalysis(data.fantasy_content.player[1].draft_analysis);
   var player = playerHelper.mapPlayer(data.fantasy_content.player[0]);
 
