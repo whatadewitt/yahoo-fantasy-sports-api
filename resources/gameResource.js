@@ -9,19 +9,19 @@ function GameResource(yf) {
 /* gameKey can be game_key or league (ie/ nfl, mlb) */
 GameResource.prototype.meta = function(gameKey, cb) {
   var apiCallback = this._meta_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
       this.yf.GET,
-      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json', 
+      'https://fantasysports.yahooapis.com/fantasy/v2/game/' + gameKey + '/metadata?format=json',
       apiCallback
     );
 };
 
 GameResource.prototype._meta_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var meta = data.fantasy_content.game[0];
   return cb(null, meta);
 };
@@ -29,7 +29,7 @@ GameResource.prototype._meta_callback = function(cb, e, data) {
 /* league key can be an array of keys */
 GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
   var apiCallback = this._leagues_callback.bind(this, cb);
-  
+
   if ( typeof leagueKey === 'string' ) {
     leagueKey = [leagueKey];
   }
@@ -45,7 +45,7 @@ GameResource.prototype.leagues = function(gameKey, leagueKey, cb) {
 
 GameResource.prototype._leagues_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var leagues = gameHelper.mapLeagues(data.fantasy_content.game[1].leagues);
   var game = data.fantasy_content.game[0];
 
@@ -56,7 +56,7 @@ GameResource.prototype._leagues_callback = function(cb, e, data) {
 
 GameResource.prototype.players = function(gameKey, playerKey, cb) {
   var apiCallback = this._players_callback.bind(this, cb);
-  
+
   if ( typeof playerKey === 'string' ) {
     playerKey = [playerKey];
   }
@@ -72,7 +72,7 @@ GameResource.prototype.players = function(gameKey, playerKey, cb) {
 
 GameResource.prototype._players_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var players = gameHelper.mapPlayers(data.fantasy_content.game[1].players);
   var game = data.fantasy_content.game[0];
 
@@ -83,7 +83,7 @@ GameResource.prototype._players_callback = function(cb, e, data) {
 
 GameResource.prototype.game_weeks = function(gameKey, cb) {
   var apiCallback = this._game_weeks_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -95,7 +95,7 @@ GameResource.prototype.game_weeks = function(gameKey, cb) {
 
 GameResource.prototype._game_weeks_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var weeks = gameHelper.mapWeeks(data.fantasy_content.game[1].game_weeks);
   var game = data.fantasy_content.game[0];
 
@@ -106,7 +106,7 @@ GameResource.prototype._game_weeks_callback = function(cb, e, data) {
 
 GameResource.prototype.stat_categories = function(gameKey, cb) {
   var apiCallback = this._stat_categories_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -118,7 +118,7 @@ GameResource.prototype.stat_categories = function(gameKey, cb) {
 
 GameResource.prototype._stat_categories_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var stat_categories = gameHelper.mapStatCategories(data.fantasy_content.game[1].stat_categories.stats);
   var game = data.fantasy_content.game[0];
 
@@ -129,7 +129,7 @@ GameResource.prototype._stat_categories_callback = function(cb, e, data) {
 
 GameResource.prototype.position_types = function(gameKey, cb) {
   var apiCallback = this._position_types_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -141,7 +141,7 @@ GameResource.prototype.position_types = function(gameKey, cb) {
 
 GameResource.prototype._position_types_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var position_types = gameHelper.mapPositionTypes(data.fantasy_content.game[1].position_types);
   var game = data.fantasy_content.game[0];
 
@@ -152,7 +152,7 @@ GameResource.prototype._position_types_callback = function(cb, e, data) {
 
 GameResource.prototype.roster_positions = function(gameKey, cb) {
   var apiCallback = this._roster_positions_callback.bind(this, cb);
-  
+
   this
     .yf
     .api(
@@ -164,7 +164,7 @@ GameResource.prototype.roster_positions = function(gameKey, cb) {
 
 GameResource.prototype._roster_positions_callback = function(cb, e, data) {
   if ( e ) return cb(e);
-  
+
   var roster_positions = gameHelper.mapRosterPositions(data.fantasy_content.game[1].roster_positions);
   var game = data.fantasy_content.game[0];
 

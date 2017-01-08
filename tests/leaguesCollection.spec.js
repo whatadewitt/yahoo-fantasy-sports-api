@@ -1,15 +1,15 @@
-var YahooFantasy = require('../../index.js');
+var YahooFantasy = require('../index.js');
 var nock = require('nock');
 
-describe ("collection: usersCollection", function(){
+describe ("collection: leaguesCollection", function(){
   var yf = new YahooFantasy(
     'Y!APPLICATION_KEY',
     'Y!APPLICATION_SECRET')
-    , users = yf.users;
+    , leagues = yf.leagues;
 
 
   it ("should be defined", function() {
-    expect(users).not.toBe(null);
+    expect(leagues).not.toBe(null);
   });
 
 });

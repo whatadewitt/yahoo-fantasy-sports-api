@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "istanbul": "^0.4.3",
-    "jasmine": "^2.4.1",
-    "nock": "^3.3.2"
+    "nock": "^3.3.2",
+    "q": "^1.4.1",
+    "jasmine-node": "^1.14.5"
   }
 }

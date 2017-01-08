@@ -1,4 +1,4 @@
-var YahooFantasy = require('../../index.js');
+var YahooFantasy = require('../index.js');
 var nock = require('nock');
 
 describe ("resource: rosterResource", function() {
@@ -23,13 +23,13 @@ describe ("resource: rosterResource", function() {
 
   // meta
   it ("should build a proper url to retrieve players on a team", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/roster/players?format=json")
       .reply(200, {});
 
     roster.players('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster/players?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json", jasmine.any(Function));
   });
 });

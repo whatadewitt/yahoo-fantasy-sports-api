@@ -1,4 +1,4 @@
-var YahooFantasy = require('../../index.js');
+var YahooFantasy = require('../index.js');
 var nock = require('nock');
 
 describe ("resource: teamResource", function() {
@@ -43,73 +43,73 @@ describe ("resource: teamResource", function() {
 
   // meta
   it ("should build a proper url to retrieve metadata via a team key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/metadata?format=json")
       .reply(200, {});
 
     team.meta('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json", jasmine.any(Function));
   });
 
   // stats
   it ("should build a proper url to retrieve team stats via a team key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/stats?format=json")
       .reply(200, {});
 
     team.stats('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json", jasmine.any(Function));
   });
 
   // standings
   it ("should build a proper url to retrieve team standings via a team key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/standings?format=json")
       .reply(200, {});
 
     team.standings('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json", jasmine.any(Function));
   });
 
   // roster
   it ("should build a proper url to retrieve team ownership in a given league via a team key and a league key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
       .reply(200, {});
 
     team.roster('328.l.34014.t.1');
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json", jasmine.any(Function));
   });
 
   // draft_results
   it ("should build a proper url to retrieve team draft analysis via a team key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json")
       .reply(200, {});
 
     team.draft_results('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json", jasmine.any(Function));
   });
 
   // matchups
   it ("should build a proper url to retrieve team draft analysis via a team key", function() {
-    nock('http://fantasysports.yahooapis.com')
+    nock('https://fantasysports.yahooapis.com')
       .get("/fantasy/v2/team/328.l.34014.t.1/matchups?format=json")
       .reply(200, {});
 
     team.matchups('328.l.34014.t.1', null);
 
     expect(yf.api)
-      .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json");
+      .toHaveBeenCalledWith("GET", "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json", jasmine.any(Function));
   });
 });
