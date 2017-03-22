@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 2.0.3
+  * Fixed a bug where the league players collection was not properly parsing the ownership subresource
+
 #### 2.0.2
   * Fixed a bug where "mapTeamPoints" helper function was not defining "self". Thanks [platky](https://github.com/platky)!
 

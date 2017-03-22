@@ -57,6 +57,19 @@ exports.mapStats = function(stats) {
   };
 };
 
+exports.mapOwnership = function(ownership) {
+  var o = {
+    ownership_type: ownership.ownership_type
+  };
+
+  if ('team' == o.ownership_type) {
+    o.owner_team_key = ownership.owner_team_key;
+    o.owner_team_name = ownership.owner_team_name;
+  }
+
+  return o;
+};
+
 exports.mapDraftAnalysis = function(da) {
   return {
     average_pick: da[0].average_pick,
@@ -85,7 +98,7 @@ exports.parseCollection = function(players, subresources) {
           break;
 
         case 'ownership':
-          player.ownership = p[idx + 1].ownership;
+          player.ownership = self.mapOwnership(p[idx + 1].ownership);
           break;
 
         case 'draft_analysis':
