@@ -1,6 +1,6 @@
 {
   "name": "yahoo-fantasy",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
