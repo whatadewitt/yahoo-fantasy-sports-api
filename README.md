@@ -55,6 +55,9 @@ This project is very much still a work in progress, please report any issues via
 Changelog
 -------
 
+#### 2.0.4
+  * Added a fix to give a cleaner value for the new "batting order" attribute in the player oject.
+
 #### 2.0.3
   * Fixed a bug where the league players collection was not properly parsing the ownership subresource
 

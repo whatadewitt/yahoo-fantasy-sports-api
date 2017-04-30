@@ -32,6 +32,10 @@ exports.mapPlayer = function(player) {
   
   if ( playerObj.starting_status ) {
     playerObj.starting_status = ( playerObj.starting_status ) ? playerObj.starting_status[1].is_starting : 0;
+
+    if ( playerObj.batting_order ) {
+      playerObj.batting_order = playerObj.batting_order[0].order_num;
+    }
   }
 
   return playerObj;
