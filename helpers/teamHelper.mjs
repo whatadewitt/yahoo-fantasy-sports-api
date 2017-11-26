@@ -1,7 +1,8 @@
 // var _ = require('lodash');
 // var leagueHelper = require('./leagueHelper.js');
 // var playerHelper = require('./playerHelper.js');
-import { mergeObjects } from "./sharedHelpers.mjs";
+import { mapPlayer } from "./playerHelper.mjs";
+import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
 
 export const mapTeam = t => {
   const team = mergeObjects(t);
@@ -14,15 +15,22 @@ export const mapTeam = t => {
   return team;
 };
 
-// exports.mapRoster = function(roster) {
-//   var players = roster[0].players;
+export const mapRoster = r => {
+  let players = r[0].players;
 
-//   players = _.filter(players, function(p) { return typeof(p) === 'object'; });
-//   players = _.map(players, function(p) { return _.flatten(p.player); });
-//   players = _.map(players, function(p) { return playerHelper.mapPlayer(p); });
+  // TODO: clean this up?
+  const count = players.count;
+  const roster = [];
 
-//   return players;
-// };
+  for (let i = 0; i < count; i++) {
+    let player = players[i].player[0];
+    player = mapPlayer(player);
+
+    roster.push(player);
+  }
+
+  return roster;
+};
 
 export const mapStats = stats => {
   stats.stats = stats.map(s => s.stat);

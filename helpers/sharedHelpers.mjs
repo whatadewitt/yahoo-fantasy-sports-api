@@ -13,3 +13,24 @@ export const mergeObjects = arrayOfObjects => {
 
   return destinationObj;
 };
+
+export const flattenObject = obj => {
+  let toReturn = {};
+
+  for (let i in obj) {
+    if (!obj.hasOwnProperty(i)) continue;
+
+    if (typeof obj[i] === "object") {
+      let flatObject = flattenObject(obj[i]);
+      for (let x in flatObject) {
+        if (!flatObject.hasOwnProperty(x)) continue;
+
+        toReturn[i + "." + x] = flatObject[x];
+      }
+    } else {
+      toReturn[i] = obj[i];
+    }
+  }
+
+  return toReturn;
+};
