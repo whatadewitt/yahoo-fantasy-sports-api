@@ -33,51 +33,77 @@ export const mapRoster = r => {
 };
 
 export const mapStats = stats => {
-  stats.stats = stats.map(s => s.stat);
+  stats = stats.map(s => s.stat);
 
   return stats;
 };
 
-// exports.mapDraft = function(draft) {
-//   draft = _.filter(draft, function(d) { return typeof(d) === 'object'; });
-//   draft = _.map(draft, function(d) { return d.draft_result; });
-//   draft = _.sortBy(draft, 'round');
+export const mapDraft = d => {
+  // TODO: clean this up?
+  const count = d.count;
+  const draft = [];
 
-//   return draft;
-// };
+  for (let i = 0; i < count; i++) {
+    let result = d[i].draft_result;
 
-// exports.mapMatchups = function(matchups) {
-//   var self = this;
+    draft.push(result);
+  }
 
-//   matchups = _.filter(matchups, function(m) { return typeof(m) === 'object'; });
-//   matchups = _.map(matchups, function(m) { return m.matchup; });
-//   matchups = _.map(matchups, function(m) {
-//     // grades seem to be football specific...
-//     // todo: shared with league helper...
-//     if ( m.matchup_grades ) {
-//       m.matchup_grades = _.map(m.matchup_grades, function(grade) {
-//         return {
-//           team_key: grade.matchup_grade.team_key,
-//           grade: grade.matchup_grade.grade
-//         }
-//       });
-//     }
+  return draft;
+};
 
-//     var teams = _.filter(m[0].teams, function(t) { return typeof(t) === 'object'; });
+export const mapMatchups = ms => {
+  // TODO: clean this up?
+  const count = ms.count;
+  const matchups = [];
 
-//     m.teams = _.map(teams, function(t) {
-//       var team = self.mapTeam(t.team[0]);
-//       team = self.mapTeamPoints(team, t.team[1]);
+  for (let i = 0; i < count; i++) {
+    let matchup = ms[i].matchup;
 
-//       return team;
-//     });
+    // grades seem to be football specific...
+    // todo: shared with league helper...
+    if (matchup.matchup_grades) {
+      matchup.matchup_grades = matchup.matchup_grades.map(grade => {
+        return {
+          team_key: grade.matchup_grade.team_key,
+          grade: grade.matchup_grade.grade
+        };
+      });
+    }
 
-//     delete m[0];
-//     return m;
-//   });
+    // TODO: clean this up too...
+    let teamCount = matchup[0].teams.count;
+    matchup.teams = [];
+    for (let j = 0; j < teamCount; j++) {
+      let team = mapTeam(matchup[0].teams[j].team[0]);
+      team = mapTeamPoints(team, matchup[0].teams[j].team[1]);
 
-//   return matchups;
-// };
+      matchup.teams.push(team);
+    }
+
+    delete matchup[0];
+    matchups.push(matchup);
+  }
+
+  return matchups;
+
+  matchups = _.map(matchups, function(m) {
+    var teams = _.filter(m[0].teams, function(t) {
+      return typeof t === "object";
+    });
+
+    m.teams = _.map(teams, function(t) {
+      var team = self.mapTeam(t.team[0]);
+      team = self.mapTeamPoints(team, t.team[1]);
+
+      return team;
+    });
+
+    return m;
+  });
+
+  return matchups;
+};
 
 export const mapTeamPoints = (team, points) => {
   team.points = points.team_points;
