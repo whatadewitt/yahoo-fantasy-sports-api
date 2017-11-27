@@ -7,8 +7,8 @@ import {
   Player,
   Roster,
   Team,
-  Transaction
-  // User
+  Transaction,
+  User
 } from "./resources";
 
 // import { Games, Teams, Leagues, Transactions, Users } from "./collections";
@@ -50,7 +50,7 @@ class YahooFantasy {
 
     this.roster = new Roster(this);
 
-    // this.user = new User(this);
+    this.user = new User(this);
     // this.users = new Users(); // TODO
 
     this.yahooUserToken = null;
