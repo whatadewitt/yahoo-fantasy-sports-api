@@ -1,5 +1,4 @@
 import { mapPlayer } from "./playerHelper.mjs";
-// var teamHelper = require("./teamHelper.js");
 
 export const mapLeagues = ls => {
   // TODO: clean this up?
@@ -79,61 +78,55 @@ export const mapRosterPositions = positions => {
 //   return teams;
 // };
 
-// exports.parseCollection = function(games, subresources) {
-//   var self = this;
+export const parseCollection = (games, subresources) => {
+  var self = this;
 
-//   games = _.filter(games, function(g) {
-//     return typeof g === "object";
-//   });
-//   games = _.map(games, function(g) {
-//     return g.game;
-//   });
-//   games = _.map(games, function(g) {
-//     var game = g[0];
+  games = games.filter(g => typeof g === "object").map(g => {
+    let game = g.game[0];
 
-//     _.forEach(subresources, function(resource, idx) {
-//       switch (resource) {
-//         case "leagues":
-//           game.leagues = self.mapLeagues(g[idx + 1].leagues);
-//           break;
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "leagues":
+          game.leagues = self.mapLeagues(g[idx + 1].leagues);
+          break;
 
-//         case "players":
-//           game.players = self.mapPlayers(g[idx + 1].players);
-//           break;
+        case "players":
+          game.players = self.mapPlayers(g[idx + 1].players);
+          break;
 
-//         case "game_weeks":
-//           game.game_weeks = self.mapWeeks(g[idx + 1].game_weeks);
-//           break;
+        case "game_weeks":
+          game.game_weeks = self.mapWeeks(g[idx + 1].game_weeks);
+          break;
 
-//         case "stat_categories":
-//           game.stat_categories = self.mapStatCategories(
-//             g[idx + 1].stat_categories.stats
-//           );
-//           break;
+        case "stat_categories":
+          game.stat_categories = self.mapStatCategories(
+            g[idx + 1].stat_categories.stats
+          );
+          break;
 
-//         case "position_types":
-//           game.position_types = self.mapPositionTypes(
-//             g[idx + 1].position_types
-//           );
-//           break;
+        case "position_types":
+          game.position_types = self.mapPositionTypes(
+            g[idx + 1].position_types
+          );
+          break;
 
-//         case "roster_positions":
-//           game.roster_positions = self.mapRosterPositions(
-//             g[idx + 1].roster_positions
-//           );
-//           break;
+        case "roster_positions":
+          game.roster_positions = self.mapRosterPositions(
+            g[idx + 1].roster_positions
+          );
+          break;
 
-//         case "teams":
-//           game.teams = self.mapTeams(g[idx + 1].teams);
-//           break;
+        case "teams":
+          game.teams = self.mapTeams(g[idx + 1].teams);
+          break;
 
-//         default:
-//           break;
-//       }
-//     });
+        default:
+          break;
+      }
+    });
 
-//     return game;
-//   });
+    return game;
+  });
 
-//   return games;
-// };
+  return games;
+};

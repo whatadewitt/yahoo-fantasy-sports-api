@@ -48,7 +48,6 @@ export const mapUserTeams = gs => {
     const teamCount = ts.count;
     const teams = [];
     for (let j = 0; j < teamCount; j++) {
-      console.log(ts[j].team[0]);
       const team = mapTeam(ts[j].team[0]);
 
       teams.push(team);

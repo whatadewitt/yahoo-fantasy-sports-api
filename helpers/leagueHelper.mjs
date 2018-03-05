@@ -1,6 +1,3 @@
-// var _ = require('lodash');
-// var transactionHelper = require('./transactionHelper.js');
-// var teamHelper = require('./teamHelper.js');
 import { mapTeam, mapTeamPoints } from "./teamHelper.mjs";
 import { mapTransactionPlayers } from "./transactionHelper.mjs";
 
@@ -116,54 +113,50 @@ export const mapTransactions = ts => {
   return transactions;
 };
 
-// exports.mapStats = function(stats) {
-//   stats = _.filter(stats, function(s) { return typeof(s) === 'object'; });
-//   stats = _.map(stats, function(s) { return s.stat; });
+export const parseCollection = (leagues, subresources) => {
+  const self = this;
 
-//   return stats;
-// };
+  leagues = leagues
+    .filter(l => "object" === typeof l)
+    .map(l => l.league)
+    .map(l => {
+      let league = l[0];
 
-// exports.parseCollection = function(leagues, subresources) {
-//   var self = this;
+      subresources.forEach((resource, idx) => {
+        switch (resource) {
+          case "settings":
+            league.settings = self.mapSettings(l[idx + 1].settings[0]);
+            break;
 
-//   leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
-//   leagues = _.map(leagues, function(l) { return l.league; });
-//   leagues = _.map(leagues, function(l) {
-//     var league = l[0];
+          case "standings":
+            league.standings = self.mapStandings(l[idx + 1].standings[0].teams);
+            break;
 
-//     _.forEach(subresources, function(resource, idx) {
-//       switch (resource) {
-//         case 'settings':
-//           league.settings = self.mapSettings(l[idx + 1].settings[0]);
-//           break;
+          case "scoreboard":
+            league.scoreboard = self.mapScoreboard(
+              l[idx + 1].scoreboard[0].matchups
+            );
+            break;
 
-//         case 'standings':
-//           league.standings = self.mapStandings(l[idx + 1].standings[0].teams);
-//           break;
+          case "teams":
+            league.teams = self.mapTeams(l[idx + 1].teams);
+            break;
 
-//         case 'scoreboard':
-//           league.scoreboard = self.mapScoreboard(l[idx + 1].scoreboard[0].matchups);
-//           break;
+          case "draftresults":
+            league.draftresults = self.mapDraft(l[idx + 1].draft_results);
+            break;
 
-//         case 'teams':
-//           league.teams = self.mapTeams(l[idx + 1].teams);
-//           break;
+          case "transactions":
+            league.transactions = self.mapTransactions(l[idx + 1].transactions);
+            break;
 
-//         case 'draftresults':
-//           league.draftresults = self.mapDraft(l[idx + 1].draft_results);
-//           break;
+          default:
+            break;
+        }
 
-//         case 'transactions':
-//           league.transactions = self.mapTransactions(l[idx + 1].transactions);
-//           break;
+        return league;
+      });
+    });
 
-//         default:
-//           break;
-//       }
-//     });
-
-//     return league;
-//   });
-
-//   return leagues;
-// };
+  return leagues;
+};

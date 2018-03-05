@@ -11,7 +11,8 @@ import {
   User
 } from "./resources";
 
-// import { Games, Teams, Leagues, Transactions, Users } from "./collections";
+import { Games } from "./collections";
+//Teams, Leagues, Transactions, Users } from "./collections";
 
 import request from "request";
 //   GameResource = require("./resources/gameResource.js"),
