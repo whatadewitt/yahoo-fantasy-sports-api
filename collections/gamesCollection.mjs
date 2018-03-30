@@ -12,16 +12,14 @@ class GamesCollection {
       filters = {};
     const cb = args.pop();
 
-    if (Array.isArray(args[0])) {
-      gameKeys = args.shift();
-    } else if ("string" == typeof args[0]) {
-      gameKeys = [args.shift()];
+    if ("string" == typeof args[0]) {
+      gameKeys = args.shift().split(",");
     } else {
       filters = args.shift();
     }
 
     if (args.length) {
-      subresources = args[1];
+      subresources = args.pop();
 
       // needs to be an array
       if ("string" == typeof subresources) {
@@ -107,7 +105,7 @@ class GamesCollection {
         return cb(e);
       }
 
-      const games = gameHelper.parseCollection(
+      const games = parseCollection(
         data.fantasy_content.users[0].user[1].games,
         subresources
       );
@@ -147,7 +145,7 @@ class GamesCollection {
       }
 
       let user = data.fantasy_content.users[0].user[0];
-      user.games = gameHelper.parseCollection(
+      user.games = parseCollection(
         data.fantasy_content.users[0].user[1].games,
         subresources
       );

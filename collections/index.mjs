@@ -1,6 +1,6 @@
 import GamesCollection from "./gamesCollection.mjs";
-import LeagueCollection from "./leagueCollection.mjs";
-import PlayerCollection from "./playerCollection.mjs";
+import LeagueCollection from "./leaguesCollection.mjs";
+import PlayerCollection from "./playersCollection.mjs";
 // import TransactionCollection from "./transactionCollection.mjs";
 // import TeamCollection from "./TeamCollection.mjs";
 // import UserCollection from "./UserCollection.mjs";

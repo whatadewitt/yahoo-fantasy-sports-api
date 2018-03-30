@@ -11,7 +11,7 @@ import {
   User
 } from "./resources";
 
-import { Games } from "./collections";
+import { Games, Leagues, Players } from "./collections";
 //Teams, Leagues, Transactions, Users } from "./collections";
 
 import request from "request";
@@ -35,13 +35,13 @@ class YahooFantasy {
     this.POST = "POST";
 
     this.game = new Game(this);
-    // this.games = new Games(this);
+    this.games = new Games(this);
 
     this.league = new League(this);
-    // this.leagues = new Leagues(this);
+    this.leagues = new Leagues(this);
 
     this.player = new Player(this);
-    // this.players = new Players(this);
+    this.players = new Players(this);
 
     this.team = new Team(this);
     // this.teams = new Teams(this);

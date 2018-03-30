@@ -6,16 +6,12 @@ class LeaguesCollection {
   }
 
   fetch(...args) {
-    let leagueKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift : [];
+    let leagueKeys = args.shift().split(","),
+      subresources = args.length > 1 ? args.shift() : [];
     const cb = args.pop();
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
-
-    if ("string" === typeof leagueKeys) {
-      leagueKeys = [leagueKeys];
-    }
 
     url += leagueKeys.join(",");
 
@@ -34,7 +30,7 @@ class LeaguesCollection {
         return cb(e);
       }
 
-      const leagues = leagueHelper.parseCollection(
+      const leagues = parseCollection(
         data.fantasy_content.leagues,
         subresources
       );

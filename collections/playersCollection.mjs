@@ -1,4 +1,8 @@
-// var playerHelper = require('../helpers/playerHelper.js');
+import {
+  parseCollection,
+  parseLeagueCollection,
+  parseTeamCollection
+} from "../helpers/playerHelper.mjs";
 
 class PlayersCollection {
   constructor(yf) {
@@ -34,7 +38,7 @@ class PlayersCollection {
         return cb(e);
       }
 
-      const players = playerHelper.parseCollection(
+      const players = parseCollection(
         data.fantasy_content.players,
         subresources
       );
@@ -60,11 +64,10 @@ class PlayersCollection {
       filters = args.shift();
       subresources = args.shift();
     } else if (args.length === 1) {
-      if ("object" === typeof args[0]) {
-        // TODO: verify this works...
-        filters = args.shift();
-      } else {
+      if (Array.isArray(args[0])) {
         subresources = args.shift();
+      } else {
+        filters = args.shift();
       }
     }
 
@@ -86,7 +89,7 @@ class PlayersCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    if (!_.isEmpty(filters)) {
+    if (Object.keys(filters).length) {
       Object.keys(filters).forEach(key => {
         url += `;${key}=${filters[key]}`;
       });
@@ -99,7 +102,7 @@ class PlayersCollection {
         return cb(e);
       }
 
-      const leagues = playerHelper.parseLeagueCollection(
+      const leagues = parseLeagueCollection(
         data.fantasy_content.leagues,
         subresources
       );
@@ -108,6 +111,7 @@ class PlayersCollection {
     });
   }
 
+  // TODO: This is where I am
   teams(...args) {
     let teamKeys = args.shift(),
       filters = {},
@@ -141,8 +145,8 @@ class PlayersCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    _.each(Object.keys(filters), function(key) {
-      url += ";" + key + "=" + filters[key];
+    Object.keys(filters).forEach(key => {
+      url += `;${key}=${filters[key]}`;
     });
 
     url += "?format=json";
@@ -152,7 +156,7 @@ class PlayersCollection {
         return cb(e);
       }
 
-      const teams = playerHelper.parseTeamCollection(
+      const teams = parseTeamCollection(
         data.fantasy_content.teams,
         subresources
       );

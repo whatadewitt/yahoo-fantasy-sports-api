@@ -1,4 +1,5 @@
 import { mergeObjects } from "./sharedHelpers.mjs";
+import { mapTeam } from "./teamHelper.mjs";
 
 export const mapPlayer = p => {
   const player = mergeObjects(p);
@@ -49,36 +50,35 @@ export const mapOwnership = ownership => {
 export const mapDraftAnalysis = da => {
   return mergeObjects(da);
 };
-/**
-exports.parseCollection = function(players, subresources) {
-  var self = this;
 
-  players = _.filter(players, function(p) {
-    return typeof p === "object";
-  });
-  players = _.map(players, function(p) {
-    return p.player;
-  });
-  players = _.map(players, function(p) {
-    var player = self.mapPlayer(p[0]);
+export const parseCollection = (ps, subresources) => {
+  const count = ps.count;
+  const players = [];
 
-    _.forEach(subresources, function(resource, idx) {
+  for (let i = 0; i < count; i++) {
+    players.push(ps[i]);
+  }
+
+  return players.map(p => {
+    let player = mapPlayer(p.player[0]);
+
+    subresources.forEach((resource, idx) => {
       switch (resource) {
         case "stats":
-          player.stats = self.mapStats(p[idx + 1].player_stats);
+          player.stats = mapStats(p.player[idx + 1].player_stats);
           break;
 
         case "percent_owned": // todo: clean this up and in resource
-          player.percent_owned = p[idx + 1].percent_owned;
+          player.percent_owned = p.player[idx + 1].percent_owned;
           break;
 
         case "ownership":
-          player.ownership = self.mapOwnership(p[idx + 1].ownership);
+          player.ownership = mapOwnership(p.player[idx + 1].ownership);
           break;
 
         case "draft_analysis":
-          player.draft_analysis = self.mapDraftAnalysis(
-            p[idx + 1].draft_analysis
+          player.draft_analysis = mapDraftAnalysis(
+            p.player[idx + 1].draft_analysis
           );
           break;
 
@@ -89,45 +89,36 @@ exports.parseCollection = function(players, subresources) {
 
     return player;
   });
-
-  return players;
 };
 
-exports.parseLeagueCollection = function(leagues, subresources) {
-  var self = this;
+export const parseLeagueCollection = (ls, subresources) => {
+  const count = ls.count;
+  const leagues = [];
 
-  leagues = _.filter(leagues, function(l) {
-    return typeof l === "object";
-  });
-  leagues = _.map(leagues, function(l) {
-    return l.league;
-  });
-  leagues = _.map(leagues, function(l) {
-    var league = l[0];
-    league.players = self.parseCollection(l[1].players, subresources);
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
+
+  return leagues.map(l => {
+    let league = l.league[0];
+    league.players = parseCollection(l.league[1].players, subresources);
 
     return league;
   });
-
-  return leagues;
 };
 
-exports.parseTeamCollection = function(teams, subresources) {
-  var self = this;
+export const parseTeamCollection = (ts, subresources) => {
+  const count = ts.count;
+  const teams = [];
 
-  teams = _.filter(teams, function(t) {
-    return typeof t === "object";
-  });
-  teams = _.map(teams, function(t) {
-    return t.team;
-  });
-  teams = _.map(teams, function(t) {
-    var team = teamHelper.mapTeam(t[0]);
-    team.players = self.parseCollection(t[1].players, subresources);
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
+
+  return teams.map(t => {
+    let team = mapTeam(t.team[0]);
+    team.players = this.parseCollection(t.team[1].players, subresources);
 
     return team;
   });
-
-  return teams;
 };
- */

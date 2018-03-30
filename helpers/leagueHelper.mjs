@@ -113,50 +113,50 @@ export const mapTransactions = ts => {
   return transactions;
 };
 
-export const parseCollection = (leagues, subresources) => {
-  const self = this;
+export const parseCollection = (ls, subresources) => {
+  const count = ls.count;
+  const leagues = [];
 
-  leagues = leagues
-    .filter(l => "object" === typeof l)
-    .map(l => l.league)
-    .map(l => {
-      let league = l[0];
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
 
-      subresources.forEach((resource, idx) => {
-        switch (resource) {
-          case "settings":
-            league.settings = self.mapSettings(l[idx + 1].settings[0]);
-            break;
+  return leagues.map(l => {
+    let league = l.league[0];
 
-          case "standings":
-            league.standings = self.mapStandings(l[idx + 1].standings[0].teams);
-            break;
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "settings":
+          league.settings = mapSettings(l.league[idx + 1].settings[0]);
+          break;
 
-          case "scoreboard":
-            league.scoreboard = self.mapScoreboard(
-              l[idx + 1].scoreboard[0].matchups
-            );
-            break;
+        case "standings":
+          league.standings = mapStandings(l.league[idx + 1].standings[0].teams);
+          break;
 
-          case "teams":
-            league.teams = self.mapTeams(l[idx + 1].teams);
-            break;
+        case "scoreboard":
+          league.scoreboard = mapScoreboard(
+            l.league[idx + 1].scoreboard[0].matchups
+          );
+          break;
 
-          case "draftresults":
-            league.draftresults = self.mapDraft(l[idx + 1].draft_results);
-            break;
+        case "teams":
+          league.teams = mapTeams(l.league[idx + 1].teams);
+          break;
 
-          case "transactions":
-            league.transactions = self.mapTransactions(l[idx + 1].transactions);
-            break;
+        case "draftresults":
+          league.draftresults = mapDraft(l.league[idx + 1].draft_results);
+          break;
 
-          default:
-            break;
-        }
+        case "transactions":
+          league.transactions = mapTransactions(l.league[idx + 1].transactions);
+          break;
 
-        return league;
-      });
+        default:
+          break;
+      }
     });
 
-  return leagues;
+    return league;
+  });
 };

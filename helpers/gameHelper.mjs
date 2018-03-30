@@ -78,46 +78,52 @@ export const mapRosterPositions = positions => {
 //   return teams;
 // };
 
-export const parseCollection = (games, subresources) => {
-  var self = this;
+export const parseCollection = (gs, subresources) => {
+  const count = gs.count;
+  const games = [];
 
-  games = games.filter(g => typeof g === "object").map(g => {
-    let game = g.game[0];
+  for (let i = 0; i < count; i++) {
+    games.push(gs[i]);
+  }
+
+  return games.map(g => {
+    let game = Array.isArray(g.game) ? g.game[0] : g.game;
+    // TODO: figure out the "pick'em" subresources...
 
     subresources.forEach((resource, idx) => {
       switch (resource) {
         case "leagues":
-          game.leagues = self.mapLeagues(g[idx + 1].leagues);
+          game.leagues = mapLeagues(g.game[idx + 1].leagues);
           break;
 
         case "players":
-          game.players = self.mapPlayers(g[idx + 1].players);
+          game.players = mapPlayers(g.game[idx + 1].players);
           break;
 
         case "game_weeks":
-          game.game_weeks = self.mapWeeks(g[idx + 1].game_weeks);
+          game.game_weeks = mapWeeks(g.game[idx + 1].game_weeks);
           break;
 
         case "stat_categories":
-          game.stat_categories = self.mapStatCategories(
-            g[idx + 1].stat_categories.stats
+          game.stat_categories = mapStatCategories(
+            g.game[idx + 1].stat_categories.stats
           );
           break;
 
         case "position_types":
-          game.position_types = self.mapPositionTypes(
-            g[idx + 1].position_types
+          game.position_types = mapPositionTypes(
+            g.game[idx + 1].position_types
           );
           break;
 
         case "roster_positions":
-          game.roster_positions = self.mapRosterPositions(
-            g[idx + 1].roster_positions
+          game.roster_positions = mapRosterPositions(
+            g.game[idx + 1].roster_positions
           );
           break;
 
         case "teams":
-          game.teams = self.mapTeams(g[idx + 1].teams);
+          game.teams = mapTeams(g.game[idx + 1].teams);
           break;
 
         default:
@@ -127,6 +133,4 @@ export const parseCollection = (games, subresources) => {
 
     return game;
   });
-
-  return games;
 };
