@@ -30,6 +30,7 @@ class GameResource {
 
   /* league key can be an array of keys */
   leagues(gameKey, leagueKey, cb) {
+    // TODO: can this be cleaned up?
     if ("string" === typeof leagueKey) {
       leagueKey = [leagueKey];
     }
@@ -55,6 +56,7 @@ class GameResource {
   }
 
   players(gameKey, playerKey, cb) {
+    // TODO: can this be cleaned up?
     if ("string" === typeof playerKey) {
       playerKey = [playerKey];
     }

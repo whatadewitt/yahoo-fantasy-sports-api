@@ -11,23 +11,9 @@ import {
   User
 } from "./resources";
 
-import { Games, Leagues, Players } from "./collections";
-//Teams, Leagues, Transactions, Users } from "./collections";
+import { Games, Leagues, Players, Teams } from "./collections"; // Transactions, Users } from "./collections";
 
 import request from "request";
-//   GameResource = require("./resources/gameResource.js"),
-//   LeagueResource = require("./resources/leagueResource.js"),
-//   PlayerResource = require("./resources/playerResource.js"),
-//   RosterResource = require("./resources/rosterResource.js"),
-//   TeamResource = require("./resources/teamResource.js"),
-//   TransactionResource = require("./resources/transactionResource.js"),
-//   UserResource = require("./resources/userResource.js"),
-//   PlayersCollection = require("./collections/playersCollection.js"),
-//   GamesCollection = require("./collections/gamesCollection.js"),
-//   TeamsCollection = require("./collections/teamsCollection.js"),
-//   LeaguesCollection = require("./collections/leaguesCollection.js"),
-//   TransactionsCollection = require("./collections/transactionsCollection.js");
-// usersCollection = require('./collections/usersCollection.js');
 
 class YahooFantasy {
   constructor(consumerKey, consumerSecret) {
@@ -44,7 +30,7 @@ class YahooFantasy {
     this.players = new Players(this);
 
     this.team = new Team(this);
-    // this.teams = new Teams(this);
+    this.teams = new Teams(this);
 
     this.transaction = new Transaction(this);
     // this.transactions = new Transactions(this);
@@ -61,10 +47,14 @@ class YahooFantasy {
     this.yahooUserToken = token;
   }
 
-  api(method, url, postData, cb) {
-    if (arguments.length == 3) {
-      cb = postData;
-      postData = null;
+  api(...args) {
+    const method = args.shift();
+    const url = args.shift();
+    const cb = args.pop();
+    let postData = false;
+
+    if (args.length) {
+      postData = args.pop();
     }
 
     var options = {

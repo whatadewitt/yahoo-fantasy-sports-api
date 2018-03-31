@@ -117,7 +117,7 @@ export const parseTeamCollection = (ts, subresources) => {
 
   return teams.map(t => {
     let team = mapTeam(t.team[0]);
-    team.players = this.parseCollection(t.team[1].players, subresources);
+    team.players = parseCollection(t.team[1].players, subresources);
 
     return team;
   });

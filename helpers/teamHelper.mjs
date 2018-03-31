@@ -1,6 +1,3 @@
-// var _ = require('lodash');
-// var leagueHelper = require('./leagueHelper.js');
-// var playerHelper = require('./playerHelper.js');
 import { mapPlayer } from "./playerHelper.mjs";
 import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
 
@@ -53,7 +50,6 @@ export const mapDraft = d => {
 };
 
 export const mapMatchups = ms => {
-  // TODO: clean this up?
   const count = ms.count;
   const matchups = [];
 
@@ -86,23 +82,6 @@ export const mapMatchups = ms => {
   }
 
   return matchups;
-
-  matchups = _.map(matchups, function(m) {
-    var teams = _.filter(m[0].teams, function(t) {
-      return typeof t === "object";
-    });
-
-    m.teams = _.map(teams, function(t) {
-      var team = self.mapTeam(t.team[0]);
-      team = self.mapTeamPoints(team, t.team[1]);
-
-      return team;
-    });
-
-    return m;
-  });
-
-  return matchups;
 };
 
 export const mapTeamPoints = (team, points) => {
@@ -119,92 +98,104 @@ export const mapTeamPoints = (team, points) => {
   return team;
 };
 
-// exports.parseCollection = function(teams, subresources) {
-//   var self = this;
+export const parseCollection = (ts, subresources) => {
+  const count = ts.count;
+  const teams = [];
 
-//   teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
-//   teams = _.map(teams, function(t) { return t.team; });
-//   teams = _.map(teams, function(t) {
-//     // this is only here because user games collection is adding an extra null
-//     // and I cannot for the life of me figure out why.
-//     _.remove(t, function(o) { return _.isNull(o); });
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
 
-//     var team = self.mapTeam(t[0]);
+  return teams.map(t => {
+    // this is only here because user games collection is adding an extra null
+    // and I cannot for the life of me figure out why.
+    t.team = t.team.filter(o => null !== o);
 
-//     _.forEach(subresources, function(resource, idx) {
-//       switch (resource) {
-//         case 'stats':
-//           team.stats = self.mapStats(t[idx + 1].team_stats);
-//           break;
+    let team = mapTeam(t.team[0]);
 
-//         case 'standings':
-//           team.standings = t[idx + 1].team_standings;
-//           break;
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "stats":
+          // TODO: this could be cleaner...
+          if (t.team[idx + 1].team_stats) {
+            team.stats = mapStats(t.team[idx + 1].team_stats.stats);
+          }
 
-//         case 'roster':
-//           team.roster = self.mapRoster(t[idx + 1].roster);
-//           break;
+          if (t.team[idx + 1].team_points) {
+            team.points = t.team[idx + 1].team_points;
+          }
 
-//         case 'draftresults':
-//           team.draftresults = self.mapDraft(t[idx + 1].draft_results);
-//           break;
+          break;
 
-//         case 'matchups':
-//           team.matchups = self.mapMatchups(t[idx + 1].matchups);
-//           break;
+        case "standings":
+          team.standings = t.team[idx + 1].team_standings;
+          break;
 
-//         default:
-//           break;
-//       }
-//     });
+        case "roster":
+          team.roster = mapRoster(t.team[idx + 1].roster);
+          break;
 
-//     return team;
-//   });
+        case "draftresults":
+          team.draftresults = mapDraft(t.team[idx + 1].draft_results);
+          break;
 
-//   return teams;
-// };
+        case "matchups":
+          team.matchups = mapMatchups(t.team[idx + 1].matchups);
+          break;
 
-// exports.parseLeagueCollection = function(leagues, subresources) {
-//   var self = this;
+        default:
+          break;
+      }
+    });
 
-//   leagues = _.filter(leagues, function(l) { return typeof(l) === 'object'; });
-//   leagues = _.map(leagues, function(l) { return l.league; });
-//   leagues = _.map(leagues, function(l) {
-//     var league = l[0];
-//     league.teams = self.parseCollection(l[1].teams, subresources);
+    return team;
+  });
+};
 
-//     return league;
-//   });
+export const parseLeagueCollection = (ls, subresources) => {
+  const count = ls.count;
+  const leagues = [];
 
-//   return leagues;
-// };
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
 
-// exports.parseTeamCollection = function(teams, subresources) {
-//   var self = this;
+  return leagues.map(l => {
+    let league = l.league[0];
+    league.teams = parseCollection(l.league[1].teams, subresources);
 
-//   teams = _.filter(teams, function(t) { return typeof(t) === 'object'; });
-//   teams = _.map(teams, function(t) { return t.team; });
-//   teams = _.map(teams, function(t) {
-//     var team = teamHelper.mapTeam(t[0]);
-//     team.players = self.parseCollection(t[1].players, subresources);
+    return league;
+  });
+};
 
-//     return team;
-//   });
+export const parseTeamCollection = (ts, subresources) => {
+  const count = ts.count;
+  const teams = [];
 
-//   return teams;
-// };
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
 
-// exports.parseGameCollection = function(games, subresources) {
-//   var self = this;
+  return teams.map(t => {
+    let team = teamHelper.mapTeam(t.team[0]);
+    team.players = parseCollection(t.team[1].players, subresources);
 
-//   games = _.filter(games, function(g) { return typeof(g) === 'object'; });
-//   games = _.map(games, function(g) { return g.game; });
-//   games = _.map(games, function(g) {
-//     var game = g[0];
-//     game.teams = self.parseCollection(g[1].teams, subresources);
+    return team;
+  });
+};
 
-//     return game;
-//   });
+export const parseGameCollection = (gs, subresources) => {
+  const count = gs.count;
+  const games = [];
 
-//   return games;
-// };
+  for (let i = 0; i < count; i++) {
+    games.push(gs[i]);
+  }
+
+  return games.map(g => {
+    let game = g.game[0];
+    game.teams = parseCollection(g.game[1].teams, subresources);
+
+    return game;
+  });
+};

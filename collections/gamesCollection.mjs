@@ -12,7 +12,7 @@ class GamesCollection {
       filters = {};
     const cb = args.pop();
 
-    if ("string" == typeof args[0]) {
+    if ("string" === typeof args[0]) {
       gameKeys = args.shift().split(",");
     } else {
       filters = args.shift();
@@ -22,7 +22,7 @@ class GamesCollection {
       subresources = args.pop();
 
       // needs to be an array
-      if ("string" == typeof subresources) {
+      if ("string" === typeof subresources) {
         subresources = [subresources];
       }
     }
@@ -64,7 +64,7 @@ class GamesCollection {
     switch (args.length) {
       case 1:
         if (Array.isArray(args[0])) {
-          subresources = args.shift();
+          subresources = args.shift().split(",");
         } else {
           filters = args.shift();
         }
@@ -73,7 +73,7 @@ class GamesCollection {
 
       case 2:
         filters = args.shift();
-        subresources = args.shift();
+        subresources = args.shift().split(",");
 
         break;
 
@@ -88,10 +88,6 @@ class GamesCollection {
       Object.keys(filters).forEach(key => {
         url += `;${key}=${filters[key]}`;
       });
-    }
-
-    if ("string" == typeof subresources) {
-      subresources = [subresources];
     }
 
     if (subresources.length) {
@@ -116,7 +112,7 @@ class GamesCollection {
 
   userFetch(...args) {
     // no filters...
-    let gameKeys = args.shift(),
+    let gameKeys = args.shift().split(","),
       subresources = [];
     const cb = args.pop();
 
@@ -126,10 +122,6 @@ class GamesCollection {
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=";
-
-    if ("string" === typeof gameKeys) {
-      gameKeys = [gameKeys];
-    }
 
     url += gameKeys.join(",");
 

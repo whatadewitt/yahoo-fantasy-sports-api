@@ -10,16 +10,12 @@ class PlayersCollection {
   }
 
   fetch(...args) {
-    let playerKeys = args.shift(),
+    let playerKeys = args.shift().split(","),
       subresources = args.length > 1 ? args.shift() : [];
     const cb = args.pop();
 
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=";
-
-    if ("string" === typeof playerKeys) {
-      playerKeys = [playerKeys];
-    }
 
     url += playerKeys.join(",");
 
@@ -49,15 +45,9 @@ class PlayersCollection {
 
   // ignoring the single b/c filters
   leagues(...args) {
-    let leagueKeys = args.shift(),
+    let leagueKeys = args.shift().split(","),
       filters = false,
-      // arguments.length > 1
-      //   ? arguments[0]
-      //   : arguments.length > 1 && _.isObject(arguments[0]) ? arguments[0] : {},
       subresources = [];
-    // arguments.length > 1
-    //   ? arguments[1]
-    //   : arguments.length > 1 && _.isArray(arguments[0]) ? arguments[0] : []; // ugliest line of code ever?
     const cb = args.pop();
 
     if (args.length > 1) {
@@ -73,10 +63,6 @@ class PlayersCollection {
 
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
-
-    if ("string" === typeof leagueKeys) {
-      leagueKeys = [leagueKeys];
-    }
 
     url += leagueKeys.join(",");
     url += "/players";
@@ -111,9 +97,8 @@ class PlayersCollection {
     });
   }
 
-  // TODO: This is where I am
   teams(...args) {
-    let teamKeys = args.shift(),
+    let teamKeys = args.shift().split(","),
       filters = {},
       subresources = [];
     // filters =
@@ -130,12 +115,22 @@ class PlayersCollection {
 
     var url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
 
-    if ("string" === typeof teamKeys) {
-      teamKeys = [teamKeys];
-    }
-
     url += teamKeys.join(",");
     url += "/players";
+
+    if (args.length > 1) {
+      // both specified
+      filters = args.shift();
+      subresources = args.shift();
+    } else if (args.length) {
+      // only 1... if array, subresources
+      let arg = args.shift();
+      if (Array.isArray(arg) || "string" === typeof arg) {
+        subresources = arg;
+      } else {
+        filters = arg;
+      }
+    }
 
     if ("string" === typeof subresources) {
       subresources = [subresources];
