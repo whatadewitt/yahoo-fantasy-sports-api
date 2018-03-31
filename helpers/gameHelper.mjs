@@ -1,6 +1,6 @@
 import { mapPlayer } from "./playerHelper.mjs";
 
-export const mapLeagues = ls => {
+export function mapLeagues(ls) {
   // TODO: clean this up?
   const count = ls.count;
   const leagues = [];
@@ -10,10 +10,10 @@ export const mapLeagues = ls => {
   }
 
   return leagues;
-};
+}
 
 // todo: again, this should be more re-usable
-export const mapPlayers = ps => {
+export function mapPlayers(ps) {
   // TODO: clean this up?
   const count = ps.count;
   let players = [];
@@ -24,9 +24,9 @@ export const mapPlayers = ps => {
   players = players.map(p => mapPlayer(p));
 
   return players;
-};
+}
 
-export const mapWeeks = ws => {
+export function mapWeeks(ws) {
   // TODO: clean this up?
   const count = ws.count;
   const weeks = [];
@@ -36,9 +36,9 @@ export const mapWeeks = ws => {
   }
 
   return weeks;
-};
+}
 
-export const mapStatCategories = statcats => {
+export function mapStatCategories(statcats) {
   statcats = statcats.map(s => s.stat);
 
   // additional cleanup...
@@ -57,15 +57,15 @@ export const mapStatCategories = statcats => {
   });
 
   return statcats;
-};
+}
 
-export const mapPositionTypes = positions => {
+export function mapPositionTypes(positions) {
   return positions.map(p => p.position_type);
-};
+}
 
-export const mapRosterPositions = positions => {
+export function mapRosterPositions(positions) {
   return positions.map(p => p.roster_position);
-};
+}
 
 // exports.mapTeams = function(teams) {
 //   teams = _.filter(teams, function(t) {
@@ -78,7 +78,7 @@ export const mapRosterPositions = positions => {
 //   return teams;
 // };
 
-export const parseCollection = (gs, subresources) => {
+export function parseCollection(gs, subresources) {
   const count = gs.count;
   const games = [];
 
@@ -133,4 +133,4 @@ export const parseCollection = (gs, subresources) => {
 
     return game;
   });
-};
+}

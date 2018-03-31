@@ -1,4 +1,4 @@
-export const mergeObjects = arrayOfObjects => {
+export function mergeObjects(arrayOfObjects) {
   const destinationObj = {};
 
   if (arrayOfObjects) {
@@ -12,9 +12,9 @@ export const mergeObjects = arrayOfObjects => {
   }
 
   return destinationObj;
-};
+}
 
-export const flattenObject = obj => {
+export function flattenObject(obj) {
   let toReturn = {};
 
   for (let i in obj) {
@@ -33,4 +33,4 @@ export const flattenObject = obj => {
   }
 
   return toReturn;
-};
+}

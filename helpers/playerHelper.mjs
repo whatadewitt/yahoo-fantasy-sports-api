@@ -1,7 +1,7 @@
 import { mergeObjects } from "./sharedHelpers.mjs";
 import { mapTeam } from "./teamHelper.mjs";
 
-export const mapPlayer = p => {
+export function mapPlayer(p) {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
@@ -23,19 +23,19 @@ export const mapPlayer = p => {
   }
 
   return player;
-};
+}
 
-export const mapStats = stats => {
+export function mapStats(stats) {
   const coverage_type = stats[0].coverage_type;
   return {
     coverage_type: coverage_type,
     coverage_value: stats[0][coverage_type],
     stats: stats.stats.map(s => s.stat)
   };
-};
+}
 
-export const mapOwnership = ownership => {
-  var o = {
+export function mapOwnership(ownership) {
+  const o = {
     ownership_type: ownership.ownership_type
   };
 
@@ -45,13 +45,13 @@ export const mapOwnership = ownership => {
   }
 
   return o;
-};
+}
 
-export const mapDraftAnalysis = da => {
+export function mapDraftAnalysis(da) {
   return mergeObjects(da);
-};
+}
 
-export const parseCollection = (ps, subresources) => {
+export function parseCollection(ps, subresources) {
   const count = ps.count;
   const players = [];
 
@@ -89,9 +89,9 @@ export const parseCollection = (ps, subresources) => {
 
     return player;
   });
-};
+}
 
-export const parseLeagueCollection = (ls, subresources) => {
+export function parseLeagueCollection(ls, subresources) {
   const count = ls.count;
   const leagues = [];
 
@@ -105,9 +105,9 @@ export const parseLeagueCollection = (ls, subresources) => {
 
     return league;
   });
-};
+}
 
-export const parseTeamCollection = (ts, subresources) => {
+export function parseTeamCollection(ts, subresources) {
   const count = ts.count;
   const teams = [];
 
@@ -121,4 +121,4 @@ export const parseTeamCollection = (ts, subresources) => {
 
     return team;
   });
-};
+}

@@ -4,7 +4,7 @@ import { mapTransactionPlayers } from "./transactionHelper.mjs";
 /*
  * Helper function to map data to a "team"
  */
-export const mapTeams = ts => {
+export function mapTeams(ts) {
   const count = ts.count;
   const teams = [];
 
@@ -13,9 +13,9 @@ export const mapTeams = ts => {
   }
 
   return teams;
-};
+}
 
-export const mapStandings = ts => {
+export function mapStandings(ts) {
   const count = ts.count;
   const teams = [];
 
@@ -26,9 +26,9 @@ export const mapStandings = ts => {
   }
 
   return teams;
-};
+}
 
-export const mapSettings = settings => {
+export function mapSettings(settings) {
   settings.stat_categories = settings.stat_categories.stats.map(s => {
     s.stat.stat_position_types = s.stat.stat_position_types.map(
       pt => pt.stat_position_type
@@ -42,9 +42,9 @@ export const mapSettings = settings => {
   );
 
   return settings;
-};
+}
 
-export const mapDraft = function(d) {
+export function mapDraft(d) {
   const count = d.count;
   const draft = [];
 
@@ -53,9 +53,9 @@ export const mapDraft = function(d) {
   }
 
   return draft;
-};
+}
 
-export const mapScoreboard = scoreboard => {
+export function mapScoreboard(scoreboard) {
   const count = scoreboard.count;
   let matchups = [];
 
@@ -94,9 +94,9 @@ export const mapScoreboard = scoreboard => {
     matchups: matchups,
     week: scoreboard.week
   };
-};
+}
 
-export const mapTransactions = ts => {
+export function mapTransactions(ts) {
   const count = ts.count;
   const transactions = [];
 
@@ -111,9 +111,9 @@ export const mapTransactions = ts => {
   }
 
   return transactions;
-};
+}
 
-export const parseCollection = (ls, subresources) => {
+export function parseCollection(ls, subresources) {
   const count = ls.count;
   const leagues = [];
 
@@ -159,4 +159,4 @@ export const parseCollection = (ls, subresources) => {
 
     return league;
   });
-};
+}

@@ -1,7 +1,7 @@
 import { mapPlayer } from "./playerHelper.mjs";
 import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
 
-export const mapTeam = t => {
+export function mapTeam(t) {
   const team = mergeObjects(t);
   // clean up team_logos
   team.team_logos = team.team_logos.map(logo => logo.team_logo);
@@ -10,9 +10,9 @@ export const mapTeam = t => {
   team.managers = team.managers.map(manager => manager.manager);
 
   return team;
-};
+}
 
-export const mapRoster = r => {
+export function mapRoster(r) {
   let players = r[0].players;
 
   // TODO: clean this up?
@@ -27,15 +27,15 @@ export const mapRoster = r => {
   }
 
   return roster;
-};
+}
 
-export const mapStats = stats => {
+export function mapStats(stats) {
   stats = stats.map(s => s.stat);
 
   return stats;
-};
+}
 
-export const mapDraft = d => {
+export function mapDraft(d) {
   // TODO: clean this up?
   const count = d.count;
   const draft = [];
@@ -47,9 +47,9 @@ export const mapDraft = d => {
   }
 
   return draft;
-};
+}
 
-export const mapMatchups = ms => {
+export function mapMatchups(ms) {
   const count = ms.count;
   const matchups = [];
 
@@ -82,9 +82,9 @@ export const mapMatchups = ms => {
   }
 
   return matchups;
-};
+}
 
-export const mapTeamPoints = (team, points) => {
+export function mapTeamPoints(team, points) {
   team.points = points.team_points;
 
   if (points.team_stats) {
@@ -96,9 +96,9 @@ export const mapTeamPoints = (team, points) => {
   }
 
   return team;
-};
+}
 
-export const parseCollection = (ts, subresources) => {
+export function parseCollection(ts, subresources) {
   const count = ts.count;
   const teams = [];
 
@@ -150,9 +150,9 @@ export const parseCollection = (ts, subresources) => {
 
     return team;
   });
-};
+}
 
-export const parseLeagueCollection = (ls, subresources) => {
+export function parseLeagueCollection(ls, subresources) {
   const count = ls.count;
   const leagues = [];
 
@@ -166,9 +166,9 @@ export const parseLeagueCollection = (ls, subresources) => {
 
     return league;
   });
-};
+}
 
-export const parseTeamCollection = (ts, subresources) => {
+export function parseTeamCollection(ts, subresources) {
   const count = ts.count;
   const teams = [];
 
@@ -177,14 +177,14 @@ export const parseTeamCollection = (ts, subresources) => {
   }
 
   return teams.map(t => {
-    let team = teamHelper.mapTeam(t.team[0]);
+    let team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 
     return team;
   });
-};
+}
 
-export const parseGameCollection = (gs, subresources) => {
+export function parseGameCollection(gs, subresources) {
   const count = gs.count;
   const games = [];
 
@@ -198,4 +198,4 @@ export const parseGameCollection = (gs, subresources) => {
 
     return game;
   });
-};
+}

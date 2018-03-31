@@ -1,6 +1,6 @@
 import { mapTeam } from "./teamHelper.mjs";
 
-export const mapGames = gs => {
+export function mapGames(gs) {
   // TODO: clean this up?
   const count = gs.count;
   const games = [];
@@ -12,9 +12,9 @@ export const mapGames = gs => {
   }
 
   return games;
-};
+}
 
-export const mapUserLeagues = gs => {
+export function mapUserLeagues(gs) {
   // TODO: clean this up?
   const count = gs.count;
   const games = [];
@@ -34,9 +34,9 @@ export const mapUserLeagues = gs => {
   }
 
   return games;
-};
+}
 
-export const mapUserTeams = gs => {
+export function mapUserTeams(gs) {
   // TODO: clean this up?
   const count = gs.count;
   const games = [];
@@ -58,7 +58,7 @@ export const mapUserTeams = gs => {
   }
 
   return games;
-};
+}
 /**
 exports.parseCollection = function(user, subresources) {
   var self = this;

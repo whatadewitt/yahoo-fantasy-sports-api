@@ -1,6 +1,6 @@
 import { mapPlayer } from "./playerHelper.mjs";
 
-export const mapTransactionPlayers = ps => {
+export function mapTransactionPlayers(ps) {
   const count = ps.count;
   const players = [];
 
@@ -14,4 +14,4 @@ export const mapTransactionPlayers = ps => {
   }
 
   return players;
-};
+}
