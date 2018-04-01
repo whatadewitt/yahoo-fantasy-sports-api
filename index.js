@@ -1,5 +1,5 @@
 /* global module, require */
-require = require("@std/esm")(module, true);
+require = require("esm")(module, true);
 module.exports = require("./YahooFantasy.mjs").default;
 
 // TODO: league settings sample data
