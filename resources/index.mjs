@@ -3,8 +3,8 @@ import LeagueResource from "./leagueResource.mjs";
 import PlayerResource from "./playerResource.mjs";
 import RosterResource from "./rosterResource.mjs";
 import TransactionResource from "./transactionResource.mjs";
-import TeamResource from "./TeamResource.mjs";
-import UserResource from "./UserResource.mjs";
+import TeamResource from "./teamResource.mjs";
+import UserResource from "./userResource.mjs";
 
 export { GameResource as Game };
 export { LeagueResource as League };

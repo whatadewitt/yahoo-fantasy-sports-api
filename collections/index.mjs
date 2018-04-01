@@ -2,7 +2,7 @@ import GamesCollection from "./gamesCollection.mjs";
 import LeagueCollection from "./leaguesCollection.mjs";
 import PlayerCollection from "./playersCollection.mjs";
 // import TransactionCollection from "./transactionsCollection.mjs";
-import TeamCollection from "./TeamsCollection.mjs";
+import TeamCollection from "./teamsCollection.mjs";
 // import UserCollection from "./UserCollection.mjs";
 
 export { GamesCollection as Games };
