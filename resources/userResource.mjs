@@ -49,7 +49,7 @@ class UserResource {
           data.fantasy_content.users[0].user[1].games
         );
 
-        user.leagues = leagues;
+        user.games = leagues;
 
         return cb(null, user);
       }

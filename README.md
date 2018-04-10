@@ -53,6 +53,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 3.0.2
+
+* Fixed an issue with the `user.game_leagues` resource, where the data was not at all user friendly (renamed `leagues` to `games` at the top level of the return object)
+
 #### 3.0.1
 
 * Fixed some typos in some import statements which caused issues on some servers

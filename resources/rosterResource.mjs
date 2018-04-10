@@ -6,9 +6,7 @@ class RosterResource {
   }
 
   players(teamKey, ...args) {
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-      teamKey
-    }/roster`;
+    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
 
     const cb = args.pop();
 

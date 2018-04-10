@@ -14,9 +14,7 @@ class TeamResource {
   meta(teamKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-        teamKey
-      }/metadata?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -31,9 +29,7 @@ class TeamResource {
   stats(teamKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-        teamKey
-      }/stats?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -52,9 +48,7 @@ class TeamResource {
   standings(teamKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-        teamKey
-      }/standings?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -73,9 +67,7 @@ class TeamResource {
   roster(teamKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-        teamKey
-      }/roster?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -94,9 +86,7 @@ class TeamResource {
   draft_results(teamKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-        teamKey
-      }/draftresults?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -116,9 +106,7 @@ class TeamResource {
 
   // h2h leagues only...
   matchups(teamKey, ...args) {
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${
-      teamKey
-    }/matchups`;
+    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
 
     const cb = args.pop();
 

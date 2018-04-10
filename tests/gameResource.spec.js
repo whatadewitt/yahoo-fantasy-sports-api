@@ -1,4 +1,4 @@
-var YahooFantasy = require("../index.js");
+import YahooFantasy from "../YahooFantasy.mjs";
 var nock = require("nock");
 var q = require("q");
 
@@ -67,7 +67,7 @@ describe("resource : gameResource", function() {
   });
 
   beforeEach(function() {
-    spyOn(yf, "api").andCallThrough();
+    spyOn(yf, "api").and.callThrough();
   });
 
   // leagues

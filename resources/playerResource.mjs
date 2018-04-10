@@ -15,9 +15,7 @@ class PlayerResource {
   meta(playerKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${
-        playerKey
-      }/metadata?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -33,9 +31,7 @@ class PlayerResource {
   * Player stats and points (if in a league context).
   */
   stats(playerKey, ...args) {
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/player/${
-      playerKey
-    }/stats`;
+    let url = `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/stats`;
 
     const cb = args.pop();
 
@@ -66,9 +62,7 @@ class PlayerResource {
   percent_owned(playerKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${
-        playerKey
-      }/percent_owned?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -91,9 +85,7 @@ class PlayerResource {
   ownership(playerKey, leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/players;player_keys=${playerKey}/ownership?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKey}/ownership?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
@@ -122,9 +114,7 @@ class PlayerResource {
   draft_analysis(playerKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${
-        playerKey
-      }/draft_analysis?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);

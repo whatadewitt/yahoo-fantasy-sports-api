@@ -17,9 +17,7 @@ class LeagueResource {
   meta(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/metadata?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`,
       (e, data) => {
         if (e) {
           return cb(e);
@@ -34,9 +32,7 @@ class LeagueResource {
   settings(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/settings?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings?format=json`,
       (e, data) => {
         if (e) {
           return cb(e);
@@ -57,9 +53,7 @@ class LeagueResource {
   standings(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/standings?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings?format=json`,
       (e, data) => {
         if (e) {
           return cb(e);
@@ -79,9 +73,7 @@ class LeagueResource {
 
   // h2h only
   scoreboard(leagueKey, ...args) {
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-      leagueKey
-    }/scoreboard`;
+    let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/scoreboard`;
     const cb = args.pop();
 
     if (args.length) {
@@ -111,9 +103,7 @@ class LeagueResource {
   teams(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/teams?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams?format=json`,
       (e, data) => {
         if (e) {
           return cb(e);
@@ -131,9 +121,7 @@ class LeagueResource {
   draft_results(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/draftresults?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults?format=json`,
       (e, data) => {
         if (e) {
           return cb(e);
@@ -152,9 +140,7 @@ class LeagueResource {
   transactions(leagueKey, cb) {
     this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${
-        leagueKey
-      }/transactions?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`,
       (err, data) => {
         if (err) {
           return cb(err);
