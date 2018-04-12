@@ -73,7 +73,7 @@ describe("resource : gameResource", function() {
   // leagues
   describe(": leagues", function() {
     it("should build a proper url to retrieve league data for a single league using a numeric game key", function() {
-      game.leagues(328, "328.l.34014", null);
+      game.leagues(328, "328.l.34014", () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -83,7 +83,7 @@ describe("resource : gameResource", function() {
     });
 
     it("should build a proper url to retrieve league data for a single league using a string game key", function() {
-      game.leagues("mlb", "mlb.l.34014", null);
+      game.leagues("mlb", "mlb.l.34014", () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -93,7 +93,7 @@ describe("resource : gameResource", function() {
     });
 
     it("should build a proper url to retrieve league data for a single league using a numeric game key and league as an array", function() {
-      game.leagues(328, ["328.l.34014"], null);
+      game.leagues(328, ["328.l.34014"], () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -103,7 +103,7 @@ describe("resource : gameResource", function() {
     });
 
     it("should build a proper url to retrieve league data for a single league using a string game key and league as an array", function() {
-      game.leagues("mlb", ["mlb.l.34014"], null);
+      game.leagues("mlb", ["mlb.l.34014"], () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -113,7 +113,7 @@ describe("resource : gameResource", function() {
     });
 
     it("should build a proper url to retrieve league data for a multiple leagues using a numeric game key", function() {
-      game.leagues(328, ["328.l.34014", "328.l.24281"], null);
+      game.leagues(328, ["328.l.34014", "328.l.24281"], () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -123,7 +123,7 @@ describe("resource : gameResource", function() {
     });
 
     it("should build a proper url to retrieve league data for a multiple leagues using a string game key", function() {
-      game.leagues("mlb", ["mlb.l.34014", "mlb.l.24281"], null);
+      game.leagues("mlb", ["mlb.l.34014", "mlb.l.24281"], () => {});
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
@@ -135,7 +135,7 @@ describe("resource : gameResource", function() {
 
   // players
   it("should build a proper url to retrieve player data for a single player using a numeric game key", function() {
-    game.players(328, "328.p.6619", null);
+    game.players(328, "328.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -145,7 +145,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve player data for a single player using a string game key", function() {
-    game.players("mlb", "mlb.p.6619", null);
+    game.players("mlb", "mlb.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -155,7 +155,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve player data for a single player using a numeric game key and player as an array", function() {
-    game.players(328, ["328.p.6619"], null);
+    game.players(328, ["328.p.6619"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -165,7 +165,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve player data for a single player using a string game key and player as an array", function() {
-    game.players("mlb", ["mlb.p.6619"], null);
+    game.players("mlb", ["mlb.p.6619"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -175,7 +175,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve player data for a multiple players using a numeric game key", function() {
-    game.players(328, ["328.p.6619", "328.p.8172"], null);
+    game.players(328, ["328.p.6619", "328.p.8172"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -185,7 +185,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve player data for a multiple players using a string game key", function() {
-    game.players("mlb", ["mlb.p.6619", "mlb.p.8172"], null);
+    game.players("mlb", ["mlb.p.6619", "mlb.p.8172"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -196,7 +196,7 @@ describe("resource : gameResource", function() {
 
   // game_weeks
   it("should build a proper url to retrieve game weeks using a numeric game key", function() {
-    game.game_weeks(328, null);
+    game.game_weeks(328, () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -206,7 +206,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve game weeks using a string game key", function() {
-    game.game_weeks("nfl", null);
+    game.game_weeks("nfl", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -217,7 +217,7 @@ describe("resource : gameResource", function() {
 
   // stat_categories
   it("should build a proper url to retrieve stat categories using a numeric game key", function() {
-    game.stat_categories(328, null);
+    game.stat_categories(328, () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -227,7 +227,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve stat categories using a string game key", function() {
-    game.stat_categories("nfl", null);
+    game.stat_categories("nfl", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -238,7 +238,7 @@ describe("resource : gameResource", function() {
 
   // position_types
   it("should build a proper url to retrieve position types using a numeric game key", function() {
-    game.position_types(328, null);
+    game.position_types(328, () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -248,7 +248,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve position types using a string game key", function() {
-    game.position_types("nfl", null);
+    game.position_types("nfl", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -259,7 +259,7 @@ describe("resource : gameResource", function() {
 
   // roster_positions
   it("should build a proper url to retrieve roster positions using a numeric game key", function() {
-    game.roster_positions(328, null);
+    game.roster_positions(328, () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -269,7 +269,7 @@ describe("resource : gameResource", function() {
   });
 
   it("should build a proper url to retrieve roster positions using a string game key", function() {
-    game.roster_positions("nfl", null);
+    game.roster_positions("nfl", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",

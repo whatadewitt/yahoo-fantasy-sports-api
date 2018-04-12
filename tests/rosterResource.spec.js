@@ -25,7 +25,7 @@ describe("resource: rosterResource", function() {
       .get("/fantasy/v2/team/328.l.34014.t.1/roster/players?format=json")
       .reply(200, {});
 
-    roster.players("328.l.34014.t.1", null);
+    roster.players("328.l.34014.t.1", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",

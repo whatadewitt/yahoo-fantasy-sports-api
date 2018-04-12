@@ -5,7 +5,7 @@
     "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
-    "test": "node -r @std/esm jasmine-runner.js",
+    "test": "node -r esm jasmine-runner.js",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
   },
   "repository": {

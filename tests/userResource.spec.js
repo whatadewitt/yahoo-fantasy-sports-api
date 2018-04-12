@@ -31,9 +31,9 @@ describe("resource: userResource", function() {
   it("should build a proper url to retrieve games a user has played and is playing", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/users;use_login=1/games?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/userGames"));
 
-    user.games(null);
+    user.games(() => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -48,9 +48,9 @@ describe("resource: userResource", function() {
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328/leagues?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/userLeagues"));
 
-    user.game_leagues("328", null);
+    user.game_leagues("328", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -64,9 +64,9 @@ describe("resource: userResource", function() {
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/userLeagues"));
 
-    user.game_leagues(["328", "242"], null);
+    user.game_leagues(["328", "242"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -81,9 +81,9 @@ describe("resource: userResource", function() {
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328/teams?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/userTeams"));
 
-    user.game_teams("328", null);
+    user.game_teams("328", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -97,9 +97,9 @@ describe("resource: userResource", function() {
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/userTeams"));
 
-    user.game_teams(["328", "242"], null);
+    user.game_teams(["328", "242"], () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
