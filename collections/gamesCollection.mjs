@@ -1,4 +1,5 @@
 import { parseCollection } from "../helpers/gameHelper.mjs";
+import { extractCallback } from "../helpers/argsParser.mjs";
 
 class GamesCollection {
   constructor(yf) {
@@ -10,7 +11,7 @@ class GamesCollection {
     let gameKeys = [],
       subresources = [],
       filters = {};
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if ("string" === typeof args[0]) {
       gameKeys = args.shift().split(",");
@@ -45,21 +46,20 @@ class GamesCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const games = parseCollection(data.fantasy_content.games, subresources);
-      return cb(null, games);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => parseCollection(data.fantasy_content.games, subresources)
+      }, 
+      cb);
   }
 
   user(...args) {
     // no gamekeys...
     let subresources = [],
       filters = false;
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     switch (args.length) {
       case 1:
@@ -96,25 +96,23 @@ class GamesCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const games = parseCollection(
-        data.fantasy_content.users[0].user[1].games,
-        subresources
-      );
-
-      return cb(null, games);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => parseCollection(
+          data.fantasy_content.users[0].user[1].games,
+          subresources
+        )
+      }, 
+      cb);
   }
 
   userFetch(...args) {
     // no filters...
     let gameKeys = args.shift().split(","),
       subresources = [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (args.length) {
       subresources = args.pop();
@@ -131,19 +129,21 @@ class GamesCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => {
+          let user = data.fantasy_content.users[0].user[0];
+          user.games = parseCollection(
+            data.fantasy_content.users[0].user[1].games,
+            subresources
+          );
 
-      let user = data.fantasy_content.users[0].user[0];
-      user.games = parseCollection(
-        data.fantasy_content.users[0].user[1].games,
-        subresources
-      );
-
-      return cb(null, user);
-    });
+          return user;
+        }
+      }, 
+      cb);
   }
 }
 

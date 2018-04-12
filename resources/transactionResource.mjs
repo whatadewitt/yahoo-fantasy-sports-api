@@ -8,25 +8,23 @@ class TransactionResource {
   }
 
   meta(transactionKey, cb) {
-    this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url: `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players?format=json`,
+        responseMapper: data => {
+          const transaction = data.fantasy_content.transaction[0];
+
+          const players = mapTransactionPlayers(
+            data.fantasy_content.transaction[1].players
+          );
+
+          transaction.players = players;
+
+          return transaction;
         }
-
-        const transaction = data.fantasy_content.transaction[0];
-
-        const players = mapTransactionPlayers(
-          data.fantasy_content.transaction[1].players
-        );
-
-        transaction.players = players;
-
-        return cb(null, transaction);
-      }
-    );
+      }, 
+      cb);
   }
 
   players(transactionKey, cb) {

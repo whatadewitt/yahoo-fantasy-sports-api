@@ -48,34 +48,51 @@ class YahooFantasy {
   }
 
   api(...args) {
-    const method = args.shift();
-    const url = args.shift();
-    const cb = args.pop();
-    let postData = false;
-
-    if (args.length) {
-      postData = args.pop();
-    }
-
-    var options = {
-      url: url,
-      method: method,
-      json: true,
-      auth: {
-        bearer: this.yahooUserToken
-      }
-    };
-
-    request(options, (e, body, data) => {
-      if (e) {
-        return cb(e);
-      } else {
-        if (data.error) {
-          return cb(data.error);
+    var options = {};
+    let cb = () => {};
+    let responseMapper = x => x;
+    if (typeof args[0] === "object") {
+      const argOptions = args.shift();
+      options.method = argOptions.method;
+      options.url = argOptions.url;
+      responseMapper = argOptions.responseMapper;
+      cb = args.pop() || cb;
+    } else {
+      options = {};
+      options.method = args.shift();
+      options.url = args.shift();
+  
+      if (args.length) {
+        if (typeof args[args.length - 1] === "function") {
+          cb = args.pop();
         }
 
-        return cb(null, data);
+        if (args.length) {
+          options.body = args.pop();
+        }
       }
+    }
+
+    if (!options.body) {
+      options.json = true;
+    }
+
+    options.auth = { bearer: this.yahooUserToken };
+    return new Promise((resolve, reject) => {
+      request(options, (e, body, data) => {
+        if (e) {
+          reject(e);
+          return cb(e);
+        } else {
+          if (data.error) {
+            reject(data.error);
+            return cb(data.error);
+          }
+          const result = responseMapper(data);
+          resolve(result);
+          return cb(null, result);
+        }
+      });
     });
   }
 }

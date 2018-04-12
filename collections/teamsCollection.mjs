@@ -3,6 +3,7 @@ import {
   parseLeagueCollection,
   parseGameCollection
 } from "../helpers/teamHelper.mjs";
+import { extractCallback } from "../helpers/argsParser.mjs";
 
 class TeamsCollection {
   constructor(yf) {
@@ -12,7 +13,7 @@ class TeamsCollection {
   fetch(...args) {
     let teamKeys = args.shift().split(","),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=${teamKeys.join(
       ","
@@ -29,20 +30,19 @@ class TeamsCollection {
     url += "?format=json";
 
     console.log(url);
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const teams = parseCollection(data.fantasy_content.teams, subresources);
-      return cb(null, teams);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url, 
+        responseMapper: data => parseCollection(data.fantasy_content.teams, subresources)
+      }, 
+      cb);
   }
 
   leagues(...args) {
     let leagueKeys = args.shift().split(","),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=${leagueKeys.join(
       ","
@@ -58,22 +58,24 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const leagues = parseLeagueCollection(
-        data.fantasy_content.leagues,
-        subresources
-      );
-      return cb(null, leagues);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => {
+          const leagues = parseLeagueCollection(
+            data.fantasy_content.leagues,
+            subresources
+          );
+          return leagues;
+        }
+      }, 
+      cb);
   }
 
   userFetch(...args) {
     let subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams";
@@ -88,23 +90,25 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const games = parseGameCollection(
-        data.fantasy_content.users[0].user[1].games,
-        subresources
-      );
-      return cb(null, games);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => {
+          const games = parseGameCollection(
+            data.fantasy_content.users[0].user[1].games,
+            subresources
+          );
+          return games;
+        }
+      }, 
+      cb);
   }
 
   games(...args) {
     let gameKeys = args.shift().split(","),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKeys.join(
       ","
@@ -120,17 +124,19 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      const games = parseGameCollection(
-        data.fantasy_content.users[0].user[1].games,
-        subresources
-      );
-      return cb(null, games);
-    });
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => {
+          const games = parseGameCollection(
+            data.fantasy_content.users[0].user[1].games,
+            subresources
+          );
+          return games;
+        }
+      }, 
+      cb);
   }
 }
 

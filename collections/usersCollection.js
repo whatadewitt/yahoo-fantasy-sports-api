@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var userHelper = require('../helpers/userHelper.js');
+import { extractCallback } from "../helpers/argsParser.mjs";
 
 module.exports = UsersCollection;
 
@@ -9,9 +10,8 @@ function UsersCollection(yf) {
 
 // this doesn't seem super useful...
 UsersCollection.prototype.fetch = function() {
-  var subresources = ( arguments.length > 1 ) ? arguments[0] : [],
-    cb = arguments[arguments.length - 1],
-    apiCallback = this._fetch_callback.bind(this, cb);
+  var subresources = ( arguments.length > 1 ) ? arguments[0] : [];
+  const cb = extractCallback(arguments);
 
   var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
 
@@ -25,18 +25,11 @@ UsersCollection.prototype.fetch = function() {
 
   url += '?format=json';
 
-  this
-    .yf
-    .api(
-      this.yf.GET,
+  return this.yf.api(
+    {
+      method: this.yf.GET,
       url,
-      apiCallback
-    );
-};
-
-UsersCollection.prototype._fetch_callback = function(cb, e, data) {
-  if ( e ) return cb(e);
-  
-  var user = userHelper.parseCollection(data.fantasy_content.users[0].user);
-  return cb(user);
+      responseMapper: data => userHelper.parseCollection(data.fantasy_content.users[0].user)
+    },
+    cb);
 };

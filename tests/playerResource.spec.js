@@ -40,81 +40,91 @@ describe("resource: playerResource", function() {
   });
 
   // meta
-  it("should build a proper url to retrieve metadata via a player key", function() {
+  it("should build a proper url to retrieve metadata via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/metadata?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerMeta"));
 
-    player.meta("328.p.6619", null);
+    player.meta("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
-      "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata?format=json",
-      jasmine.any(Function)
-    );
+      {
+        method: "GET",
+        url: "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata?format=json",
+        responseMapper: jasmine.any(Function)
+      },
+      jasmine.any(Function));
   });
 
   // stats
-  it("should build a proper url to retrieve player stats via a player key", function() {
+  it("should build a proper url to retrieve player stats via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/stats?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerStats"));
 
-    player.stats("328.p.6619", null);
+    player.stats("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
-      "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats?format=json",
-      jasmine.any(Function)
-    );
+      {
+        method: "GET",
+        url: "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats?format=json",
+        responseMapper: jasmine.any(Function)
+      },
+      jasmine.any(Function));
   });
 
   // percent_owned
-  it("should build a proper url to retrieve player ownership percentage via a player key", function() {
+  it("should build a proper url to retrieve player ownership percentage via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/percent_owned?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerPercentOwned"));
 
-    player.percent_owned("328.p.6619", null);
+    player.percent_owned("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
-      "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned?format=json",
-      jasmine.any(Function)
-    );
+      {
+        method: "GET",
+        url: "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned?format=json",
+        responseMapper: jasmine.any(Function)
+      },
+      jasmine.any(Function));
   });
 
   // ownership
-  it("should build a proper url to retrieve player ownership in a given league via a player key and a league key", function() {
+  it("should build a proper url to retrieve player ownership in a given league via a player key and a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerOwnershipOwned"));
 
-    player.ownership("328.p.6619", "328.l.34014", null);
+    player.ownership("328.p.6619", "328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
-      "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json",
-      jasmine.any(Function)
-    );
+      {
+        method: "GET",
+        url: "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json",
+        responseMapper: jasmine.any(Function)
+      },
+      jasmine.any(Function));
   });
 
   // should fail without league key
 
   // draft_analysis
-  it("should build a proper url to retrieve player draft analysis via a player key", function() {
+  it("should build a proper url to retrieve player draft analysis via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/player/328.p.6619/teams?format=json")
-      .reply(200, {});
+      .get("/fantasy/v2/player/328.p.6619/draft_analysis?format=json")
+      .reply(200, require("./nock-data/playerDraftAnalysis"));
 
-    player.draft_analysis("328.p.6619", null);
+    player.draft_analysis("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
-      "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis?format=json",
-      jasmine.any(Function)
-    );
+      {
+        method: "GET",
+        url: "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis?format=json",
+        responseMapper: jasmine.any(Function)
+      },
+      jasmine.any(Function));
   });
 });

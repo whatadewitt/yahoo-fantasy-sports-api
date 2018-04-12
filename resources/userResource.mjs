@@ -10,22 +10,20 @@ class UserResource {
   }
 
   games(cb) {
-    this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url: `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json`,
+        responseMapper: data => {
+          const user = data.fantasy_content.users[0].user[0];
+          const games = mapGames(data.fantasy_content.users[0].user[1].games);
+
+          user.games = games;
+
+          return user;
         }
-
-        const user = data.fantasy_content.users[0].user[0];
-        const games = mapGames(data.fantasy_content.users[0].user[1].games);
-
-        user.games = games;
-
-        return cb(null, user);
-      }
-    );
+      }, 
+      cb);
   }
 
   game_leagues(gameKeys, cb) {
@@ -34,26 +32,24 @@ class UserResource {
       gameKeys = [gameKeys];
     }
 
-    this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKeys.join(
-        ","
-      )}/leagues?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url: `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKeys.join(
+          ","
+        )}/leagues?format=json`,
+        responseMapper: data => {
+          const user = data.fantasy_content.users[0].user[0];
+          const leagues = mapUserLeagues(
+            data.fantasy_content.users[0].user[1].games
+          );
+
+          user.games = leagues;
+
+          return user;
         }
-
-        const user = data.fantasy_content.users[0].user[0];
-        const leagues = mapUserLeagues(
-          data.fantasy_content.users[0].user[1].games
-        );
-
-        user.games = leagues;
-
-        return cb(null, user);
-      }
-    );
+      }, 
+      cb);
   }
 
   game_teams(gameKeys, cb) {
@@ -61,24 +57,22 @@ class UserResource {
       gameKeys = [gameKeys];
     }
 
-    this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKeys.join(
-        ","
-      )}/teams?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url: `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKeys.join(
+          ","
+        )}/teams?format=json`,
+        responseMapper: data => {
+          const user = data.fantasy_content.users[0].user[0];
+          const teams = mapUserTeams(data.fantasy_content.users[0].user[1].games);
+
+          user.teams = teams;
+
+          return user;
         }
-
-        const user = data.fantasy_content.users[0].user[0];
-        const teams = mapUserTeams(data.fantasy_content.users[0].user[1].games);
-
-        user.teams = teams;
-
-        return cb(null, user);
-      }
-    );
+      }, 
+      cb);
   }
 }
 

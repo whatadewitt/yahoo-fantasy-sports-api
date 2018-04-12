@@ -1,4 +1,5 @@
 import { parseCollection } from "../helpers/leagueHelper.mjs";
+import { extractCallback } from "../helpers/argsParser.mjs";
 
 class LeaguesCollection {
   constructor(yf) {
@@ -8,7 +9,7 @@ class LeaguesCollection {
   fetch(...args) {
     let leagueKeys = args.shift().split(","),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
@@ -25,18 +26,20 @@ class LeaguesCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(
+      {
+        method: this.yf.GET,
+        url,
+        responseMapper: data => {
+          const leagues = parseCollection(
+            data.fantasy_content.leagues,
+            subresources
+          );
 
-      const leagues = parseCollection(
-        data.fantasy_content.leagues,
-        subresources
-      );
-
-      return cb(null, leagues);
-    });
+          return leagues;
+        }
+      },
+      cb);
   }
 }
 
