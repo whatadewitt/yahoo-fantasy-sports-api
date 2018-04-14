@@ -49,8 +49,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata?format=json"
     );
   });
 
@@ -64,8 +63,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats?format=json"
     );
   });
 
@@ -79,8 +77,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned?format=json"
     );
   });
 
@@ -96,8 +93,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json"
     );
   });
 
@@ -113,8 +109,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis?format=json"
     );
   });
 });

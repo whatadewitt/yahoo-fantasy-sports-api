@@ -49,8 +49,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json"
     );
   });
 
@@ -64,8 +63,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json"
     );
   });
 
@@ -79,8 +77,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json"
     );
   });
 
@@ -94,8 +91,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json"
     );
   });
 
@@ -109,8 +105,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json"
     );
   });
 
@@ -124,8 +119,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json"
     );
   });
 });

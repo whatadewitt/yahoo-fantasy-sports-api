@@ -33,8 +33,7 @@ describe("resource: transactionResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json"
     );
   });
 
@@ -48,8 +47,7 @@ describe("resource: transactionResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json"
     );
   });
 });

@@ -46,22 +46,32 @@ describe("resource : gameResource", function() {
     it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
       nock("https://fantasysports.yahooapis.com")
         .get("/fantasy/v2/game/328/metadata?format=json")
+        .times(2)
         .reply(200, meta);
 
       game.meta(328, function(e, data) {
         expect(data).toEqual(meta.fantasy_content.game[0]);
-        done();
+        game.meta(328)
+          .then(data => {
+            expect(data).toEqual(meta.fantasy_content.game[0]);
+          })
+          .then(done);
       });
     });
 
     it("should build a proper url to retrieve metadata via a string game key", function(done) {
       nock("https://fantasysports.yahooapis.com")
         .get("/fantasy/v2/game/mlb/metadata?format=json")
+        .times(2)
         .reply(200, meta);
 
       game.meta("mlb", function(e, data) {
         expect(data).toEqual(meta.fantasy_content.game[0]);
-        done();
+        game.meta("mlb")
+          .then(data => {
+            expect(data).toEqual(meta.fantasy_content.game[0]);
+          })
+          .then(done);
       });
     });
   });
@@ -77,8 +87,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json"
       );
     });
 
@@ -87,8 +96,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json"
       );
     });
 
@@ -97,8 +105,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014?format=json"
       );
     });
 
@@ -107,8 +114,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014?format=json"
       );
     });
 
@@ -117,8 +123,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014,328.l.24281?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/328/leagues;league_keys=328.l.34014,328.l.24281?format=json"
       );
     });
 
@@ -127,8 +132,7 @@ describe("resource : gameResource", function() {
 
       expect(yf.api).toHaveBeenCalledWith(
         "GET",
-        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014,mlb.l.24281?format=json",
-        jasmine.any(Function)
+        "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/leagues;league_keys=mlb.l.34014,mlb.l.24281?format=json"
       );
     });
   });
@@ -139,8 +143,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json"
     );
   });
 
@@ -149,8 +152,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json"
     );
   });
 
@@ -159,8 +161,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619?format=json"
     );
   });
 
@@ -169,8 +170,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619?format=json"
     );
   });
 
@@ -179,8 +179,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619,328.p.8172?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/players;player_keys=328.p.6619,328.p.8172?format=json"
     );
   });
 
@@ -189,8 +188,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619,mlb.p.8172?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/mlb/players;player_keys=mlb.p.6619,mlb.p.8172?format=json"
     );
   });
 
@@ -200,8 +198,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/game_weeks?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/game_weeks?format=json"
     );
   });
 
@@ -210,8 +207,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/game_weeks?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/game_weeks?format=json"
     );
   });
 
@@ -221,8 +217,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/stat_categories?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/stat_categories?format=json"
     );
   });
 
@@ -231,8 +226,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/stat_categories?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/stat_categories?format=json"
     );
   });
 
@@ -242,8 +236,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/position_types?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/position_types?format=json"
     );
   });
 
@@ -252,8 +245,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types?format=json"
     );
   });
 
@@ -263,8 +255,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/roster_positions?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/328/roster_positions?format=json"
     );
   });
 
@@ -273,8 +264,7 @@ describe("resource : gameResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions?format=json"
     );
   });
 });

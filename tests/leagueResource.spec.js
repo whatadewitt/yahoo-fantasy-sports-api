@@ -57,8 +57,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata?format=json"
     );
   });
 
@@ -72,8 +71,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings?format=json"
     );
   });
 
@@ -87,8 +85,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings?format=json"
     );
   });
 
@@ -102,8 +99,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard?format=json"
     );
   });
 
@@ -117,8 +113,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams?format=json"
     );
   });
 
@@ -132,8 +127,7 @@ describe("resource: leagueResource", function() {
 
   //   expect(yf.api).toHaveBeenCalledWith(
   //     "GET",
-  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players?format=json",
-  //     jasmine.any(Function)
+  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players?format=json"
   //   );
   // });
 
@@ -147,8 +141,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults?format=json"
     );
   });
 
@@ -162,8 +155,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions?format=json"
     );
   });
 });
