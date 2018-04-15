@@ -58,11 +58,21 @@ describe("resource: playerResource", function() {
 
   // stats
   it("should build a proper url to retrieve player stats via a player key", function(done) {
+    var mockPlayerStats = require("./nock-data/playerStats");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/stats?format=json")
-      .reply(200, require("./nock-data/playerStats"));
+      .times(2)
+      .reply(200, mockPlayerStats);
 
-    player.stats("328.p.6619", done);
+    player.stats("328.p.6619", function(e, data) {
+      expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
+      player.stats("328.p.6619")
+        .then(data => {
+          expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
+        })
+        .then(done)
+        .catch(done);
+    });
 
     expect(yf.api).toHaveBeenCalledWith(
       {
