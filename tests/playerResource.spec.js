@@ -40,12 +40,12 @@ describe("resource: playerResource", function() {
   });
 
   // meta
-  it("should build a proper url to retrieve metadata via a player key", function() {
+  it("should build a proper url to retrieve metadata via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/metadata?format=json")
       .reply(200, require("./nock-data/playerMeta"));
 
-    player.meta("328.p.6619", () => {});
+    player.meta("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -54,12 +54,22 @@ describe("resource: playerResource", function() {
   });
 
   // stats
-  it("should build a proper url to retrieve player stats via a player key", function() {
+  it("should build a proper url to retrieve player stats via a player key", function(done) {
+    var mockPlayerStats = require("./nock-data/playerStats");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/stats?format=json")
-      .reply(200, require("./nock-data/playerStats"));
+      .times(2)
+      .reply(200, mockPlayerStats);
 
-    player.stats("328.p.6619", () => {});
+    player.stats("328.p.6619", function(e, data) {
+      expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
+      player.stats("328.p.6619")
+        .then(data => {
+          expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
+        })
+        .then(done)
+        .catch(done);
+    });
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -68,12 +78,12 @@ describe("resource: playerResource", function() {
   });
 
   // percent_owned
-  it("should build a proper url to retrieve player ownership percentage via a player key", function() {
+  it("should build a proper url to retrieve player ownership percentage via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/percent_owned?format=json")
       .reply(200, require("./nock-data/playerPercentOwned"));
 
-    player.percent_owned("328.p.6619", () => {});
+    player.percent_owned("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -82,14 +92,14 @@ describe("resource: playerResource", function() {
   });
 
   // ownership
-  it("should build a proper url to retrieve player ownership in a given league via a player key and a league key", function() {
+  it("should build a proper url to retrieve player ownership in a given league via a player key and a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json"
       )
       .reply(200, require("./nock-data/playerOwnershipOwned"));
 
-    player.ownership("328.p.6619", "328.l.34014", () => {});
+    player.ownership("328.p.6619", "328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -100,12 +110,12 @@ describe("resource: playerResource", function() {
   // should fail without league key
 
   // draft_analysis
-  it("should build a proper url to retrieve player draft analysis via a player key", function() {
+  it("should build a proper url to retrieve player draft analysis via a player key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/player/328.p.6619/teams?format=json")
+      .get("/fantasy/v2/player/328.p.6619/draft_analysis?format=json")
       .reply(200, require("./nock-data/playerDraftAnalysis"));
 
-    player.draft_analysis("328.p.6619", () => {});
+    player.draft_analysis("328.p.6619", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
