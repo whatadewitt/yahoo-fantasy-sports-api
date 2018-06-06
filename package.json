@@ -1,8 +1,7 @@
 {
   "name": "yahoo-fantasy",
-  "version": "3.0.2",
-  "description":
-    "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
+  "version": "3.0.3",
+  "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
     "test": "node -r @std/esm jasmine-runner.js",
@@ -12,7 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/whatadewitt/yfsapi.git"
   },
-  "keywords": ["yahoo", "fantasy sports", "sports", "fantasy"],
+  "keywords": [
+    "yahoo",
+    "fantasy sports",
+    "sports",
+    "fantasy"
+  ],
   "author": "Luke DeWitt <dewittl@gmail.com> (http://www.whatadewitt.ca/)",
   "license": "MIT",
   "bugs": {
@@ -21,13 +25,13 @@
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
     "esm": "^3.0.14",
-    "request": "^2.78.0"
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "istanbul": "^0.4.3",
     "jasmine": "^3.0.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^3.3.2",
+    "nock": "^9.3.0",
     "q": "^1.4.1"
   },
   "directories": {

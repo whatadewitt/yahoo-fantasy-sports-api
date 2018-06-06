@@ -26,23 +26,36 @@ class TeamResource {
     );
   }
 
-  stats(teamKey, cb) {
-    this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
+  stats(teamKey, ...args) {
+    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
 
-        const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
-        const team = mapTeam(data.fantasy_content.team[0]);
+    const cb = args.pop();
 
-        team.stats = stats;
-
-        return cb(null, team);
+    if (args.length) {
+      let date = args.pop();
+      if (date.indexOf("-") > 0) {
+        // string is date, of format y-m-d
+        url += `;type=date;date=${date}`;
+      } else {
+        // number is week...
+        url += `;type=week;week=${date}`;
       }
-    );
+    }
+
+    url += "?format=json";
+
+    this.yf.api(this.yf.GET, url, (err, data) => {
+      if (err) {
+        return cb(err);
+      }
+
+      const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
+      const team = mapTeam(data.fantasy_content.team[0]);
+
+      team.stats = stats;
+
+      return cb(null, team);
+    });
   }
 
   standings(teamKey, cb) {

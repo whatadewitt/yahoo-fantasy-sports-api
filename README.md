@@ -53,124 +53,130 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 3.0.3
+
+- Added the ability to specify a date or week when querying the `team.stats` resource.
+- Unit test fixes ([Issue #42](https://github.com/whatadewitt/yfsapi/issues/42)). Thanks [Marios](https://github.com/ryus08)!
+- Updated "vulnerable" dependencies.
+
 #### 3.0.2
 
-* Fixed an issue with the `user.game_leagues` resource, where the data was not at all user friendly (renamed `leagues` to `games` at the top level of the return object)
+- Fixed an issue with the `user.game_leagues` resource, where the data was not at all user friendly (renamed `leagues` to `games` at the top level of the return object)
 
 #### 3.0.1
 
-* Fixed some typos in some import statements which caused issues on some servers
+- Fixed some typos in some import statements which caused issues on some servers
 
 #### 3.0.0
 
-* Major refactor to use ES6?... 2015? ...2018? Whatever the hell they're calling it now...
-* Using ES Modules (mjs) files where possible
-* Removed transactions collections (they'll be back!)
+- Major refactor to use ES6?... 2015? ...2018? Whatever the hell they're calling it now...
+- Using ES Modules (mjs) files where possible
+- Removed transactions collections (they'll be back!)
 
 #### 2.0.4
 
-* Added a fix to give a cleaner value for the new "batting order" attribute in the player oject.
+- Added a fix to give a cleaner value for the new "batting order" attribute in the player oject.
 
 #### 2.0.3
 
-* Fixed a bug where the league players collection was not properly parsing the ownership subresource
+- Fixed a bug where the league players collection was not properly parsing the ownership subresource
 
 #### 2.0.2
 
-* Fixed a bug where "mapTeamPoints" helper function was not defining "self". Thanks [platky](https://github.com/platky)!
+- Fixed a bug where "mapTeamPoints" helper function was not defining "self". Thanks [platky](https://github.com/platky)!
 
 #### 2.0.1
 
-* Removed the code that added a "reason" to errors coming from Yahoo! as it was breaking other errors. Retry notifications should now be handled within the application using the module.
+- Removed the code that added a "reason" to errors coming from Yahoo! as it was breaking other errors. Retry notifications should now be handled within the application using the module.
 
 #### 2.0.0
 
-* Moved to Yahoo!'s OAuth2.0 authentication mechanism.
+- Moved to Yahoo!'s OAuth2.0 authentication mechanism.
 
 #### 1.0.2
 
-* Fixed game resource roster postions callback bug.
+- Fixed game resource roster postions callback bug.
 
 #### 1.0.1
 
-* Fixed a typo that was breaking team mapping.
+- Fixed a typo that was breaking team mapping.
 
 #### 1.0.0
 
-* Breaking changes
-* Fixed NFL scoreboard/matchups bug ([Issue #19](https://github.com/whatadewitt/yfsapi/issues/19))
-* In fixing this bug I realized that my "team" set up was really only useful for MLB fantasy, so I rewrote team mapping to work better across all sports and give additional details that weren't previously reported. This will cause errors if you are using the team.manager attribute in your code.
+- Breaking changes
+- Fixed NFL scoreboard/matchups bug ([Issue #19](https://github.com/whatadewitt/yfsapi/issues/19))
+- In fixing this bug I realized that my "team" set up was really only useful for MLB fantasy, so I rewrote team mapping to work better across all sports and give additional details that weren't previously reported. This will cause errors if you are using the team.manager attribute in your code.
 
 #### 0.5.3
 
-* Fixed a bug where leagueFetch was throwing an error, thanks [danielspector](https://github.com/danielspector)!
+- Fixed a bug where leagueFetch was throwing an error, thanks [danielspector](https://github.com/danielspector)!
 
 #### 0.5.2
 
-* Fixed a bug where player stats by week url was not being created properly, thanks [withsmilo](https://github.com/withsmilo)!
+- Fixed a bug where player stats by week url was not being created properly, thanks [withsmilo](https://github.com/withsmilo)!
 
 #### 0.5.1
 
-* Fixed a bug where collections that contained subresources would return no data.
+- Fixed a bug where collections that contained subresources would return no data.
 
 #### 0.5.0
 
-* Added "Transactions" collection with functionality to add players, drop players, and add/drop players, thanks again [githubsmilo](https://github.com/githubsmilo)!
+- Added "Transactions" collection with functionality to add players, drop players, and add/drop players, thanks again [githubsmilo](https://github.com/githubsmilo)!
 
 #### 0.4.4
 
-* Fixed a bug in player.draft_analysis, thanks [githubsmilo](https://github.com/githubsmilo)!
+- Fixed a bug in player.draft_analysis, thanks [githubsmilo](https://github.com/githubsmilo)!
 
 #### 0.4.3
 
-* Added weeks param for league.scoreboard
-* Added weeks param for team.matchups
-* Fixed a bug where individual players weren't mapping properly
-* Minor code cleanup
+- Added weeks param for league.scoreboard
+- Added weeks param for team.matchups
+- Fixed a bug where individual players weren't mapping properly
+- Minor code cleanup
 
 #### 0.4.2
 
-* Added the ability to specify a date or week when querying the roster resource.
-* Cleaned up the player normalization model
-* Fixed a bug where the team.roster call was erroring
+- Added the ability to specify a date or week when querying the roster resource.
+- Cleaned up the player normalization model
+- Fixed a bug where the team.roster call was erroring
 
 #### 0.4.1
 
-* Fixes to how POST data is handled
+- Fixes to how POST data is handled
 
 #### 0.4.0
 
-* Significantly restructured the code to have more consistency and set it up better for future plans, namely POST methods and proper unit testing
-* Removed the "refresh user token" and instead return the error to the user who can handle the refresh within their application.
+- Significantly restructured the code to have more consistency and set it up better for future plans, namely POST methods and proper unit testing
+- Removed the "refresh user token" and instead return the error to the user who can handle the refresh within their application.
 
 #### 0.3.1
 
-* Additional player attributes added, thanks [ryus08](https://github.com/ryus08)!
+- Additional player attributes added, thanks [ryus08](https://github.com/ryus08)!
 
 #### 0.3.0
 
-* Added a method to refresh the user's token if it has expired.
+- Added a method to refresh the user's token if it has expired.
 
 #### 0.2.2
 
-* Hotfix to fix "Teams" collection - use error first convention
+- Hotfix to fix "Teams" collection - use error first convention
 
 #### 0.2.0
 
-* Made helper classes more consistent
-* Added collections for games, leagues, players, and teams
-* Moved to error first convention because JavaScript
+- Made helper classes more consistent
+- Added collections for games, leagues, players, and teams
+- Moved to error first convention because JavaScript
 
 #### 0.1.2
 
-* Added 'Team Matchups' subresource
-* Added 'League Scoreboard' subresource
-* Minor code cleanup and improvements
+- Added 'Team Matchups' subresource
+- Added 'League Scoreboard' subresource
+- Minor code cleanup and improvements
 
 #### 0.1.1
 
-* Refactored module to fix a bug where user sessions were not necessarily unique because of require caching.
+- Refactored module to fix a bug where user sessions were not necessarily unique because of require caching.
 
 #### 0.1
 
-* Initial release.
+- Initial release.
