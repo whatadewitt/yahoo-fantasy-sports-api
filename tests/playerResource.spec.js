@@ -43,9 +43,9 @@ describe("resource: playerResource", function() {
   it("should build a proper url to retrieve metadata via a player key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/metadata?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerMeta"));
 
-    player.meta("328.p.6619", null);
+    player.meta("328.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -58,9 +58,9 @@ describe("resource: playerResource", function() {
   it("should build a proper url to retrieve player stats via a player key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/stats?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerStats"));
 
-    player.stats("328.p.6619", null);
+    player.stats("328.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -73,9 +73,9 @@ describe("resource: playerResource", function() {
   it("should build a proper url to retrieve player ownership percentage via a player key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/percent_owned?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerPercentOwned"));
 
-    player.percent_owned("328.p.6619", null);
+    player.percent_owned("328.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -90,9 +90,9 @@ describe("resource: playerResource", function() {
       .get(
         "/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json"
       )
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerOwnershipOwned"));
 
-    player.ownership("328.p.6619", "328.l.34014", null);
+    player.ownership("328.p.6619", "328.l.34014", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
@@ -107,9 +107,9 @@ describe("resource: playerResource", function() {
   it("should build a proper url to retrieve player draft analysis via a player key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/teams?format=json")
-      .reply(200, {});
+      .reply(200, require("./nock-data/playerDraftAnalysis"));
 
-    player.draft_analysis("328.p.6619", null);
+    player.draft_analysis("328.p.6619", () => {});
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",

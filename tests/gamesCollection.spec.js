@@ -33,7 +33,7 @@ describe("collection: gamesCollection", function() {
       .get("/fantasy/v2/game/328/metadata?format=json")
       .reply(200, {});
 
-    games.fetch(328, null);
+    games.fetch(328, () => {});
 
     // expect(yf.api)
     // .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/metadata?format=json");
