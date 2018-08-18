@@ -6,9 +6,13 @@ class LeaguesCollection {
   }
 
   fetch(...args) {
-    let leagueKeys = args.shift().split(","),
+    let leagueKeys = args.shift(),
       subresources = args.length > 1 ? args.shift() : [];
     const cb = args.pop();
+
+    if (!Array.isArray(leagueKeys)) {
+      leagueKeys = [leagueKeys];
+    }
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";

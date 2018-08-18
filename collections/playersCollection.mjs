@@ -10,9 +10,13 @@ class PlayersCollection {
   }
 
   fetch(...args) {
-    let playerKeys = args.shift().split(","),
+    let playerKeys = args.shift(),
       subresources = args.length > 1 ? args.shift() : [];
     const cb = args.pop();
+
+    if (!Array.isArray(playerKeys)) {
+      playerKeys = [playerKeys];
+    }
 
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=";
@@ -45,10 +49,14 @@ class PlayersCollection {
 
   // ignoring the single b/c filters
   leagues(...args) {
-    let leagueKeys = args.shift().split(","),
+    let leagueKeys = args.shift(),
       filters = false,
       subresources = [];
     const cb = args.pop();
+
+    if (!Array.isArray(leagueKeys)) {
+      leagueKeys = [leagueKeys];
+    }
 
     if (args.length > 1) {
       filters = args.shift();
@@ -98,9 +106,13 @@ class PlayersCollection {
   }
 
   teams(...args) {
-    let teamKeys = args.shift().split(","),
+    let teamKeys = args.shift(),
       filters = {},
       subresources = [];
+
+    if (!Array.isArray(teamKeys)) {
+      teamKeys = [teamKeys];
+    }
     // filters =
     //   arguments.length > 3
     //     ? arguments[1]

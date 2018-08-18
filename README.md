@@ -53,6 +53,11 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 3.0.4
+
+- Fixed a bug in the players.league collection call where it was trying to use split on an array... ([Issue #46](https://github.com/whatadewitt/yfsapi/pull/46")).
+- Fixed similar bugs in other places...
+
 #### 3.0.3
 
 - Added the ability to specify a date or week when querying the `team.stats` resource.

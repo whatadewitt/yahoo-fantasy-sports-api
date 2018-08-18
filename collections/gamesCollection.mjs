@@ -13,7 +13,11 @@ class GamesCollection {
     const cb = args.pop();
 
     if ("string" === typeof args[0]) {
-      gameKeys = args.shift().split(",");
+      gameKeys = args.shift();
+
+      if (!Array.isArray(gameKeys)) {
+        gameKeys = [gameKeys];
+      }
     } else {
       filters = args.shift();
     }
@@ -112,9 +116,13 @@ class GamesCollection {
 
   userFetch(...args) {
     // no filters...
-    let gameKeys = args.shift().split(","),
+    let gameKeys = args.shift(),
       subresources = [];
     const cb = args.pop();
+
+    if (!Array.isArray(gameKeys)) {
+      gameKeys = [gameKeys];
+    }
 
     if (args.length) {
       subresources = args.pop();
