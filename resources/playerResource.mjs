@@ -18,12 +18,12 @@ class PlayerResource {
     return this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata?format=json`)
-      .then(data => mapPlayer(data.fantasy_content.player[0]))
-      .then(meta => { 
-        cb(null, meta); 
-        return meta; 
+      .then(data => { 
+        const meta = mapPlayer(data.fantasy_content.player[0]);
+        cb(null, meta);
+        return meta;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -50,13 +50,10 @@ class PlayerResource {
         const player = mapPlayer(data.fantasy_content.player[0]);
 
         player.stats = stats;
+        cb(null, player);
         return player;
       })
-      .then(player => { 
-        cb(null, player); 
-        return player; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -75,13 +72,10 @@ class PlayerResource {
 
         // TODO: do we need coverage type and/or delta????
         player.percent_owned = percent_owned.value;
+        cb(null, player);
         return player;
       })
-      .then(player => { 
-        cb(null, player); 
-        return player; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -106,13 +100,10 @@ class PlayerResource {
 
         player.status = status;
         player.league = league;
+        cb(null, player);
         return player;
       })
-      .then(player => { 
-        cb(null, player); 
-        return player; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -132,11 +123,8 @@ class PlayerResource {
         const player = mapPlayer(data.fantasy_content.player[0]);
 
         player.draft_analysis = draft_analysis;
+        cb(null, player);
         return player;
-      })
-      .then(player => { 
-        cb(null, player); 
-        return player; 
       })
       .catch(e => { 
         cb(e);

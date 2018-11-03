@@ -30,13 +30,10 @@ class RosterResource {
         const team = mapTeam(data.fantasy_content.team[0]);
         const roster = mapRoster(data.fantasy_content.team[1].roster);
         team.roster = roster;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

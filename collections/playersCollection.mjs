@@ -42,9 +42,6 @@ class PlayersCollection {
           subresources
         );
 
-        return players;
-      })
-      .then(players => { 
         cb(null, players); 
         return players; 
       })
@@ -105,11 +102,8 @@ class PlayersCollection {
           subresources
         );
 
-        return leagues;
-      })
-      .then(leagues => { 
         cb(null, leagues); 
-        return leagues; 
+        return leagues;
       })
       .catch(e => { 
         cb(e);
@@ -177,9 +171,6 @@ class PlayersCollection {
           subresources
         );
 
-        return teams;
-      })
-      .then(teams => { 
         cb(null, teams); 
         return teams; 
       })

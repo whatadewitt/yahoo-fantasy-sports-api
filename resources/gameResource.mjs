@@ -17,8 +17,8 @@ class GameResource {
     return this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata?format=json`)
-      .then(data => data.fantasy_content.game[0])
-      .then(meta => { 
+      .then(data => { 
+        const meta = data.fantasy_content.game[0];
         cb(null, meta); 
         return meta; 
       })
@@ -45,13 +45,10 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.leagues = leagues;
+        cb(null, game);
         return game;
       })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -73,13 +70,10 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.players = players;
+        cb(null, game);
         return game;
       })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -94,11 +88,8 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.weeks = weeks;
+        cb(null, game);
         return game;
-      })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
       })
       .catch(e => { 
         cb(e);
@@ -117,13 +108,10 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.stat_categories = stat_categories;
+        cb(null, game);
         return game;
       })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -141,11 +129,8 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.position_types = position_types;
+        cb(null, game);
         return game;
-      })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
       })
       .catch(e => { 
         cb(e);
@@ -165,11 +150,8 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.roster_positions = roster_positions;
+        cb(null, game);
         return game;
-      })
-      .then(game => { 
-        cb(null, game); 
-        return game; 
       })
       .catch(e => { 
         cb(e);

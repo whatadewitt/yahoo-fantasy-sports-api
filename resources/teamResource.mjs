@@ -52,13 +52,10 @@ class TeamResource {
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.stats = stats;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });;
@@ -73,13 +70,10 @@ class TeamResource {
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.standings = standings;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -94,13 +88,10 @@ class TeamResource {
         const roster = mapRoster(data.fantasy_content.team[1].roster);
 
         team.roster = roster;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -117,13 +108,10 @@ class TeamResource {
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.draft_results = draft_results;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -153,13 +141,10 @@ class TeamResource {
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.matchups = matchups;
+        cb(null, team);
         return team;
       })
-      .then(team => { 
-        cb(null, team); 
-        return team; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

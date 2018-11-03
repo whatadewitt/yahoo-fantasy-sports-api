@@ -20,8 +20,8 @@ class LeagueResource {
     return this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`)
-      .then(data => data.fantasy_content.league[0])
-      .then(meta => { 
+      .then(data => { 
+        const meta = data.fantasy_content.league[0];
         cb(null, meta); 
         return meta; 
       })
@@ -42,13 +42,10 @@ class LeagueResource {
         const league = data.fantasy_content.league[0];
 
         league.settings = settings;
+        cb(null, league);
         return league;
       })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -65,11 +62,8 @@ class LeagueResource {
         const league = data.fantasy_content.league[0];
 
         league.standings = standings;
+        cb(null, league);
         return league;
-      })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
       })
       .catch(e => { 
         cb(e);
@@ -98,13 +92,10 @@ class LeagueResource {
 
         league.scoreboard = scoreboard;
         league.scoreboard.week = week;
+        cb(null, league);
         return league;
       })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -118,11 +109,8 @@ class LeagueResource {
         const teams = mapTeams(data.fantasy_content.league[1].teams);
         const league = data.fantasy_content.league[0];
         league.teams = teams;
+        cb(null, league);
         return league;
-      })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
       })
       .catch(e => { 
         cb(e);
@@ -139,13 +127,10 @@ class LeagueResource {
         const league = data.fantasy_content.league[0];
 
         league.draft_results = draft;
+        cb(null, league);
         return league;
       })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -162,11 +147,8 @@ class LeagueResource {
         const league = data.fantasy_content.league[0];
 
         league.transactions = transactions;
+        cb(null, league);
         return league;
-      })
-      .then(league => { 
-        cb(null, league); 
-        return league; 
       })
       .catch(e => { 
         cb(e);

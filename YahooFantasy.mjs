@@ -70,18 +70,13 @@ class YahooFantasy {
 
     return new Promise((resolve, reject) => {
       request(options, (e, body, data) => {
-        if (e) {
-          reject(e);
-          return cb(e);
-        } else {
-          if (data.error) {
-            reject(data.error);
-            return cb(data.error);
-          }
-
-          resolve(data);
-          return cb(null, data);
+        const err = e || data.error;
+        if (err) {
+          reject(err);
+          return cb(err);
         }
+        resolve(data);
+        return cb(null, data);
       });
     });
   }

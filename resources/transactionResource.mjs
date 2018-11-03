@@ -19,13 +19,10 @@ class TransactionResource {
         );
 
         transaction.players = players;
+        cb(null, transaction);
         return transaction;
       })
-      .then(transaction => { 
-        cb(null, transaction); 
-        return transaction; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

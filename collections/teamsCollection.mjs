@@ -35,8 +35,8 @@ class TeamsCollection {
     url += "?format=json";
 
     return this.yf.api(this.yf.GET, url)
-      .then(data => parseCollection(data.fantasy_content.teams, subresources))
-      .then(teams => { 
+      .then(data => {
+        const teams = parseCollection(data.fantasy_content.teams, subresources);
         cb(null, teams); 
         return teams; 
       })
@@ -75,11 +75,8 @@ class TeamsCollection {
           data.fantasy_content.leagues,
           subresources
         );
+        cb(null, leagues);
         return leagues;
-      })
-      .then(leagues => { 
-        cb(null, leagues); 
-        return leagues; 
       })
       .catch(e => { 
         cb(e);
@@ -110,11 +107,8 @@ class TeamsCollection {
           data.fantasy_content.users[0].user[1].games,
           subresources
         );
+        cb(null, games);
         return games;
-      })
-      .then(games => { 
-        cb(null, games); 
-        return games; 
       })
       .catch(e => { 
         cb(e);
@@ -151,11 +145,8 @@ class TeamsCollection {
           data.fantasy_content.users[0].user[1].games,
           subresources
         );
+        cb(null, games);
         return games;
-      })
-      .then(games => { 
-        cb(null, games); 
-        return games; 
       })
       .catch(e => { 
         cb(e);

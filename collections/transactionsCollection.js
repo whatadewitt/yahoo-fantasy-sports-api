@@ -34,8 +34,8 @@ class TransactionsCollection {
     url += "?format=json";
 
     return this.yf.api(this.yf.GET, url)
-      .then(data => data.fantasy_content)
-      .then(meta => { 
+      .then(data => {
+        const meta = data.fantasy_content;
         cb(null, meta); 
         return meta; 
       })
@@ -73,8 +73,8 @@ class TransactionsCollection {
     url += "?format=json";
 
     return this.yf.api(this.yf.GET, url)
-      .then(data => data.fantasy_content)
-      .then(meta => { 
+      .then(meta => {
+        const meta = data.fantasy_content;
         cb(null, meta); 
         return meta; 
       })
@@ -123,11 +123,8 @@ class TransactionsCollection {
           transaction[1].players
         );
         meta.players = players;
+        cb(null, meta);
         return meta;
-      })
-      .then(meta => { 
-        cb(null, meta); 
-        return meta; 
       })
       .catch(e => { 
         cb(e);
@@ -175,13 +172,10 @@ class TransactionsCollection {
         );
         meta.players = players;
 
+        cb(null, meta);
         return meta;
       })
-      .then(meta => { 
-        cb(null, meta); 
-        return meta; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -246,13 +240,10 @@ class TransactionsCollection {
         );
         meta.players = players;
 
+        cb(null, meta);
         return meta;
       })
-      .then(meta => { 
-        cb(null, meta); 
-        return meta; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

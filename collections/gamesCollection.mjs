@@ -52,8 +52,8 @@ class GamesCollection {
     url += "?format=json";
 
     return this.yf.api(this.yf.GET, url)
-      .then(data => parseCollection(data.fantasy_content.games, subresources))
-      .then(games => { 
+      .then(data => {
+        const games = parseCollection(data.fantasy_content.games, subresources);
         cb(null, games); 
         return games; 
       })
@@ -110,9 +110,6 @@ class GamesCollection {
           data.fantasy_content.users[0].user[1].games,
           subresources
         );
-        return games;
-      })
-      .then(games => { 
         cb(null, games); 
         return games; 
       })
@@ -155,9 +152,6 @@ class GamesCollection {
           subresources
         );
 
-        return user;
-      })
-      .then(user => { 
         cb(null, user); 
         return user; 
       })

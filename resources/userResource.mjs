@@ -18,13 +18,10 @@ class UserResource {
         const games = mapGames(data.fantasy_content.users[0].user[1].games);
 
         user.games = games;
+        cb(null, user);
         return user;
       })
-      .then(user => { 
-        cb(null, user); 
-        return user; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -48,11 +45,8 @@ class UserResource {
         );
 
         user.games = leagues;
+        cb(null, user);
         return user;
-      })
-      .then(user => { 
-        cb(null, user); 
-        return user; 
       })
       .catch(e => { 
         cb(e);
@@ -75,13 +69,10 @@ class UserResource {
         const teams = mapUserTeams(data.fantasy_content.users[0].user[1].games);
 
         user.teams = teams;
+        cb(null, user);
         return user;
       })
-      .then(user => { 
-        cb(null, user); 
-        return user; 
-      })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

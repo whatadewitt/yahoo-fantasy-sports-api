@@ -38,9 +38,6 @@ class LeaguesCollection {
           subresources
         );
 
-        return leagues;
-      })
-      .then(leagues => { 
         cb(null, leagues); 
         return leagues; 
       })
