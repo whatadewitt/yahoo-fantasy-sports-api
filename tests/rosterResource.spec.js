@@ -20,17 +20,16 @@ describe("resource: rosterResource", function() {
   });
 
   // meta
-  it("should build a proper url to retrieve players on a team", function() {
+  it("should build a proper url to retrieve players on a team", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/team/328.l.34014.t.1/roster/players?format=json")
-      .reply(200, {});
+      .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
+      .reply(200, require("./nock-data/teamRoster"));
 
-    roster.players("328.l.34014.t.1", () => {});
+    roster.players("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json"
     );
   });
 });

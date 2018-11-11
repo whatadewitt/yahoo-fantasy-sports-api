@@ -7,6 +7,8 @@ import {
   mapTransactions
 } from "../helpers/leagueHelper.mjs";
 
+import { extractCallback } from "../helpers/argsParser.mjs";
+
 // module.exports = LeagueResource;
 
 class LeagueResource {
@@ -14,67 +16,65 @@ class LeagueResource {
     this.yf = yf;
   }
 
-  meta(leagueKey, cb) {
-    this.yf.api(
+  meta(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`)
+      .then(data => { 
         const meta = data.fantasy_content.league[0];
-        return cb(null, meta);
-      }
-    );
+        cb(null, meta); 
+        return meta; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
-  settings(leagueKey, cb) {
-    this.yf.api(
+  settings(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings?format=json`)
+      .then(data => {
         const settings = mapSettings(
           data.fantasy_content.league[1].settings[0]
         );
         const league = data.fantasy_content.league[0];
 
         league.settings = settings;
-
-        return cb(null, league);
-      }
-    );
+        cb(null, league);
+        return league;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  standings(leagueKey, cb) {
-    this.yf.api(
+  standings(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings?format=json`)
+      .then(data => {
         const standings = mapStandings(
           data.fantasy_content.league[1].standings[0].teams
         );
         const league = data.fantasy_content.league[0];
 
         league.standings = standings;
-
-        return cb(null, league);
-      }
-    );
+        cb(null, league);
+        return league;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
   // h2h only
   scoreboard(leagueKey, ...args) {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/scoreboard`;
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (args.length) {
       url += `;week=${args.pop()}`;
@@ -82,80 +82,78 @@ class LeagueResource {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const week = data.fantasy_content.league[1].scoreboard.week;
+        const scoreboard = mapScoreboard(
+          data.fantasy_content.league[1].scoreboard[0].matchups
+        );
+        const league = data.fantasy_content.league[0];
 
-      const week = data.fantasy_content.league[1].scoreboard.week;
-      const scoreboard = mapScoreboard(
-        data.fantasy_content.league[1].scoreboard[0].matchups
-      );
-      const league = data.fantasy_content.league[0];
-
-      league.scoreboard = scoreboard;
-      league.scoreboard.week = week;
-
-      return cb(null, league);
-    });
+        league.scoreboard = scoreboard;
+        league.scoreboard.week = week;
+        cb(null, league);
+        return league;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  teams(leagueKey, cb) {
-    this.yf.api(
+  teams(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams?format=json`)
+      .then(data => {
         const teams = mapTeams(data.fantasy_content.league[1].teams);
         const league = data.fantasy_content.league[0];
         league.teams = teams;
-
-        return cb(null, league);
-      }
-    );
+        cb(null, league);
+        return league;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
-  draft_results(leagueKey, cb) {
-    this.yf.api(
+  draft_results(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults?format=json`)
+      .then(data => {
         const draft = mapDraft(data.fantasy_content.league[1].draft_results);
         const league = data.fantasy_content.league[0];
 
         league.draft_results = draft;
-
-        return cb(null, league);
-      }
-    );
+        cb(null, league);
+        return league;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  transactions(leagueKey, cb) {
-    this.yf.api(
+  transactions(leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`)
+      .then(data => {
         const transactions = mapTransactions(
           data.fantasy_content.league[1].transactions
         );
         const league = data.fantasy_content.league[0];
 
         league.transactions = transactions;
-
-        return cb(null, league);
-      }
-    );
+        cb(null, league);
+        return league;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 }
 

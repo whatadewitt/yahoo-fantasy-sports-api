@@ -1,5 +1,7 @@
 import { parseCollection } from "../helpers/leagueHelper.mjs";
 
+import { extractCallback } from "../helpers/argsParser.mjs";
+
 class LeaguesCollection {
   constructor(yf) {
     this.yf = yf;
@@ -8,7 +10,7 @@ class LeaguesCollection {
   fetch(...args) {
     let leagueKeys = args.shift(),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (!Array.isArray(leagueKeys)) {
       leagueKeys = [leagueKeys];
@@ -29,18 +31,20 @@ class LeaguesCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const leagues = parseCollection(
+          data.fantasy_content.leagues,
+          subresources
+        );
 
-      const leagues = parseCollection(
-        data.fantasy_content.leagues,
-        subresources
-      );
-
-      return cb(null, leagues);
-    });
+        cb(null, leagues); 
+        return leagues; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 }
 

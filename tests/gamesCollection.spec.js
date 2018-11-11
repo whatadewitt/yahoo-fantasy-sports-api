@@ -28,14 +28,17 @@ describe("collection: gamesCollection", function() {
   });
 
   // fetch
-  it("should build a proper url to retrieve metadata via a numeric game key", function() {
-    nock("http://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/game/328/metadata?format=json")
-      .reply(200, {});
+  it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/games?format=json")
+      .reply(200, { fantasy_content: { games: [] } });
 
-    games.fetch(328, () => {});
+    games.fetch(328, done);
 
-    // expect(yf.api)
-    // .toHaveBeenCalledWith("http://fantasysports.yahooapis.com/fantasy/v2/game/328/metadata?format=json");
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/games?format=json"
+    );
   });
 });

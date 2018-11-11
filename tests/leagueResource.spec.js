@@ -48,122 +48,114 @@ describe("resource: leagueResource", function() {
   });
 
   // meta
-  it("should build a proper url to retrieve metadata via a league key", function() {
+  it("should build a proper url to retrieve metadata via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/metadata?format=json")
       .reply(200, require("./nock-data/leagueMeta").meta);
 
-    league.meta("328.l.34014", () => {});
+    league.meta("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata?format=json"
     );
   });
 
   // settings
-  it("should build a proper url to retrieve settings via a league key", function() {
+  it("should build a proper url to retrieve settings via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/settings?format=json")
       .reply(200, require("./nock-data/leagueSettings"));
 
-    league.settings("328.l.34014", () => {});
+    league.settings("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings?format=json"
     );
   });
 
   // standings
-  it("should build a proper url to retrieve standings via a league key", function() {
+  it("should build a proper url to retrieve standings via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/standings?format=json")
       .reply(200, require("./nock-data/leagueStandings"));
 
-    league.standings("328.l.34014", () => {});
+    league.standings("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings?format=json"
     );
   });
 
   // scoreboard
-  it("should build a proper url to retrieve scoreboard via a league key", function() {
+  it("should build a proper url to retrieve scoreboard via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/scoreboard?format=json")
       .reply(200, require("./nock-data/leagueScoreboard"));
 
-    league.scoreboard("328.l.34014", () => {});
+    league.scoreboard("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard?format=json"
     );
   });
 
   // teams
-  it("should build a proper url to retrieve teams via a league key", function() {
+  it("should build a proper url to retrieve teams via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/teams?format=json")
       .reply(200, require("./nock-data/leagueTeams"));
 
-    league.teams("328.l.34014", () => {});
+    league.teams("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams?format=json"
     );
   });
 
   // // players
-  // it("should build a proper url to retrieve players via a league key", function() {
+  // it("should build a proper url to retrieve players via a league key", function(done) {
   //   nock("https://fantasysports.yahooapis.com")
   //     .get("/fantasy/v2/league/328.l.34014/players?format=json")
   //     .reply(200, {});
 
-  //   league.players("328.l.34014", () => {});
+  //   league.players("328.l.34014", done);
 
   //   expect(yf.api).toHaveBeenCalledWith(
   //     "GET",
-  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players?format=json",
-  //     jasmine.any(Function)
+  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players?format=json"
   //   );
   // });
 
   // draft_results
-  it("should build a proper url to retrieve draft_results via a league key", function() {
+  it("should build a proper url to retrieve draft_results via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/league/328.l.34014/draft_results?format=json")
+      .get("/fantasy/v2/league/328.l.34014/draftresults?format=json")
       .reply(200, require("./nock-data/leagueDraftResults"));
 
-    league.draft_results("328.l.34014", () => {});
+    league.draft_results("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults?format=json"
     );
   });
 
   // transactions
-  it("should build a proper url to retrieve transactions via a league key", function() {
+  it("should build a proper url to retrieve transactions via a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/transactions?format=json")
       .reply(200, require("./nock-data/leagueTransaction"));
 
-    league.transactions("328.l.34014", () => {});
+    league.transactions("328.l.34014", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions?format=json"
     );
   });
 });

@@ -28,83 +28,79 @@ describe("resource: userResource", function() {
   });
 
   // games
-  it("should build a proper url to retrieve games a user has played and is playing", function() {
+  it("should build a proper url to retrieve games a user has played and is playing", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/users;use_login=1/games?format=json")
       .reply(200, require("./nock-data/userGames"));
 
-    user.games(() => {});
+    user.games(done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json"
     );
   });
 
   // game_leagues
-  it("should build a proper url to retrieve leagues a user plays in for a given game", function() {
+  it("should build a proper url to retrieve leagues a user plays in for a given game", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328/leagues?format=json"
       )
       .reply(200, require("./nock-data/userLeagues"));
 
-    user.game_leagues("328", () => {});
+    user.game_leagues("328", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/leagues?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/leagues?format=json"
     );
   });
 
-  it("should build a proper url to retrieve leagues a user plays in for given games", function() {
+  it("should build a proper url to retrieve leagues a user plays in for given games", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues?format=json"
       )
       .reply(200, require("./nock-data/userLeagues"));
 
-    user.game_leagues(["328", "242"], () => {});
+    user.game_leagues(["328", "242"], done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues?format=json"
     );
   });
 
   // game_teams
-  it("should build a proper url to retrieve teams a user owns in for a given game", function() {
+  it("should build a proper url to retrieve teams a user owns in for a given game", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328/teams?format=json"
       )
       .reply(200, require("./nock-data/userTeams"));
 
-    user.game_teams("328", () => {});
+
+    user.game_teams("328", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/teams?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/teams?format=json"
     );
   });
 
-  it("should build a proper url to retrieve teams a user owns in for given games", function() {
+  it("should build a proper url to retrieve teams a user owns in for given games", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get(
         "/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams?format=json"
       )
       .reply(200, require("./nock-data/userTeams"));
 
-    user.game_teams(["328", "242"], () => {});
+    user.game_teams(["328", "242"], done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams?format=json"
     );
   });
 });

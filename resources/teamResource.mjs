@@ -6,30 +6,32 @@ import {
   mapMatchups
 } from "../helpers/teamHelper.mjs";
 
+import { extractCallback } from "../helpers/argsParser.mjs";
+
 class TeamResource {
   constructor(yf) {
     this.yf = yf;
   }
 
-  meta(teamKey, cb) {
-    this.yf.api(
+  meta(teamKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
-        const meta = mapTeam(data.fantasy_content.team[0]);
-        return cb(null, meta);
-      }
-    );
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata?format=json`)
+      .then(data => mapTeam(data.fantasy_content.team[0]))
+      .then(meta => { 
+        cb(null, meta); 
+        return meta; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
   stats(teamKey, ...args) {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
 
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (args.length) {
       let date = args.pop();
@@ -44,84 +46,82 @@ class TeamResource {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (err, data) => {
-      if (err) {
-        return cb(err);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
+        const team = mapTeam(data.fantasy_content.team[0]);
 
-      const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
-      const team = mapTeam(data.fantasy_content.team[0]);
-
-      team.stats = stats;
-
-      return cb(null, team);
-    });
+        team.stats = stats;
+        cb(null, team);
+        return team;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });;
   }
 
-  standings(teamKey, cb) {
-    this.yf.api(
+  standings(teamKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings?format=json`)
+      .then(data => {
         const standings = data.fantasy_content.team[1].team_standings;
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.standings = standings;
-
-        return cb(null, team);
-      }
-    );
+        cb(null, team);
+        return team;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  roster(teamKey, cb) {
-    this.yf.api(
+  roster(teamKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster?format=json`)
+      .then(data => {
         const team = mapTeam(data.fantasy_content.team[0]);
         const roster = mapRoster(data.fantasy_content.team[1].roster);
 
         team.roster = roster;
-
-        return cb(null, team);
-      }
-    );
+        cb(null, team);
+        return team;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  draft_results(teamKey, cb) {
-    this.yf.api(
+  draft_results(teamKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults?format=json`)
+      .then(data => {
         const draft_results = mapDraft(
           data.fantasy_content.team[1].draft_results
         );
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.draft_results = draft_results;
-
-        return cb(null, team);
-      }
-    );
+        cb(null, team);
+        return team;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
   // h2h leagues only...
   matchups(teamKey, ...args) {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
 
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (args.length) {
       let weeks = args.pop();
@@ -135,18 +135,19 @@ class TeamResource {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (err, data) => {
-      if (err) {
-        return cb(err);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const matchups = mapMatchups(data.fantasy_content.team[1].matchups);
+        const team = mapTeam(data.fantasy_content.team[0]);
 
-      const matchups = mapMatchups(data.fantasy_content.team[1].matchups);
-      const team = mapTeam(data.fantasy_content.team[0]);
-
-      team.matchups = matchups;
-
-      return cb(null, team);
-    });
+        team.matchups = matchups;
+        cb(null, team);
+        return team;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 }
 

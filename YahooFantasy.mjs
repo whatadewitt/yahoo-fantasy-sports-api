@@ -13,6 +13,8 @@ import {
 
 import { Games, Leagues, Players, Teams } from "./collections"; // Transactions, Users } from "./collections";
 
+import { extractCallback } from "./helpers/argsParser.mjs";
+
 import request from "request";
 
 class YahooFantasy {
@@ -50,7 +52,7 @@ class YahooFantasy {
   api(...args) {
     const method = args.shift();
     const url = args.shift();
-    const cb = args.pop();
+    const cb = extractCallback(args);
     let postData = false;
 
     if (args.length) {
@@ -66,16 +68,16 @@ class YahooFantasy {
       }
     };
 
-    request(options, (e, body, data) => {
-      if (e) {
-        return cb(e);
-      } else {
-        if (data.error) {
-          return cb(data.error);
+    return new Promise((resolve, reject) => {
+      request(options, (e, body, data) => {
+        const err = e || data.error;
+        if (err) {
+          reject(err);
+          return cb(err);
         }
-
+        resolve(data);
         return cb(null, data);
-      }
+      });
     });
   }
 }
