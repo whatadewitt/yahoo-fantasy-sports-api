@@ -7,10 +7,9 @@ class TransactionsCollection {
     this.yf = yf;
   }
 
-  fetch(transactionKeys, resources, filters, cb) {
+  fetch(transactionKeys, resources, filters, cb = () => {}) {
     var url =
-        "https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=",
-      apiCallback = this._fetch_callback.bind(this, cb);
+        "https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=";
 
     if (_.isString(transactionKeys)) {
       transactionKeys = [transactionKeys];
@@ -34,20 +33,21 @@ class TransactionsCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      var meta = data.fantasy_content;
-      return cb(null, meta);
-    });
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const meta = data.fantasy_content;
+        cb(null, meta); 
+        return meta; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
-  leagueFetch = function(leagueKeys, resources, filters, cb) {
+  leagueFetch = function(leagueKeys, resources, filters, cb = () => {}) {
     var url =
-        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=",
-      apiCallback = this._leagueFetch_callback.bind(this, cb);
+        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
     if (_.isString(leagueKeys)) {
       leagueKeys = [leagueKeys];
@@ -72,22 +72,23 @@ class TransactionsCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      var meta = data.fantasy_content;
-      return cb(null, meta);
-    });
+    return this.yf.api(this.yf.GET, url)
+      .then(meta => {
+        const meta = data.fantasy_content;
+        cb(null, meta); 
+        return meta; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   };
 
-  add_player = function(leagueKey, teamKey, playerKey, cb) {
+  add_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
       leagueKey +
       "/transactions?format=json";
-    var apiCallback = this._add_player_callback.bind(this, cb);
     var xmlData =
       " \
       <fantasy_content> \
@@ -107,35 +108,35 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    this.yf.api(this.yf.POST, url, xmlData, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
-
-      var transactions = data.fantasy_content.league[1].transactions;
-      transactions = _.filter(transactions, function(p) {
-        return typeof p === "object";
+    return this.yf.api(this.yf.POST, url, xmlData)
+      .then(data => {
+        var transactions = data.fantasy_content.league[1].transactions;
+        transactions = _.filter(transactions, function(p) {
+          return typeof p === "object";
+        });
+        transactions = _.map(transactions, function(p) {
+          return p.transaction;
+        });
+        var transaction = transactions[0];
+        var meta = transaction[0];
+        var players = transactionHelper.mapTransactionPlayers(
+          transaction[1].players
+        );
+        meta.players = players;
+        cb(null, meta);
+        return meta;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
       });
-      transactions = _.map(transactions, function(p) {
-        return p.transaction;
-      });
-      var transaction = transactions[0];
-      var meta = transaction[0];
-      var players = transactionHelper.mapTransactionPlayers(
-        transaction[1].players
-      );
-      meta.players = players;
-
-      return cb(null, meta);
-    });
   };
 
-  drop_player = function(leagueKey, teamKey, playerKey, cb) {
+  drop_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
       leagueKey +
       "/transactions?format=json";
-    var apiCallback = this._drop_player_callback.bind(this, cb);
     var xmlData =
       " \
       <fantasy_content> \
@@ -155,27 +156,29 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    this.yf.api(this.yf.POST, url, xmlData, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.POST, url, xmlData)
+      .then(data => {
+        var transactions = data.fantasy_content.league[1].transactions;
+        transactions = _.filter(transactions, function(p) {
+          return typeof p === "object";
+        });
+        transactions = _.map(transactions, function(p) {
+          return p.transaction;
+        });
+        var transaction = transactions[0];
+        var meta = transaction[0];
+        var players = transactionHelper.mapTransactionPlayers(
+          transaction[1].players
+        );
+        meta.players = players;
 
-      var transactions = data.fantasy_content.league[1].transactions;
-      transactions = _.filter(transactions, function(p) {
-        return typeof p === "object";
+        cb(null, meta);
+        return meta;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
       });
-      transactions = _.map(transactions, function(p) {
-        return p.transaction;
-      });
-      var transaction = transactions[0];
-      var meta = transaction[0];
-      var players = transactionHelper.mapTransactionPlayers(
-        transaction[1].players
-      );
-      meta.players = players;
-
-      return cb(null, meta);
-    });
   };
 
   adddrop_players = function(
@@ -183,13 +186,12 @@ class TransactionsCollection {
     teamKey,
     addPlayerKey,
     dropPlayerKey,
-    cb
+    cb = () => {}
   ) {
     var url =
       "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
       leagueKey +
       "/transactions?format=json";
-    var apiCallback = this._adddrop_players_callback.bind(this, cb);
     var xmlData =
       " \
       <fantasy_content> \
@@ -222,27 +224,29 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    this.yf.api(this.yf.POST, url, xmlData, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.POST, url, xmlData)
+      .then(data => {
+        var transactions = data.fantasy_content.league[1].transactions;
+        transactions = _.filter(transactions, function(p) {
+          return typeof p === "object";
+        });
+        transactions = _.map(transactions, function(p) {
+          return p.transaction;
+        });
+        var transaction = transactions[0];
+        var meta = transaction[0];
+        var players = transactionHelper.mapTransactionPlayers(
+          transaction[1].players
+        );
+        meta.players = players;
 
-      var transactions = data.fantasy_content.league[1].transactions;
-      transactions = _.filter(transactions, function(p) {
-        return typeof p === "object";
+        cb(null, meta);
+        return meta;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
       });
-      transactions = _.map(transactions, function(p) {
-        return p.transaction;
-      });
-      var transaction = transactions[0];
-      var meta = transaction[0];
-      var players = transactionHelper.mapTransactionPlayers(
-        transaction[1].players
-      );
-      meta.players = players;
-
-      return cb(null, meta);
-    });
   };
 }
 

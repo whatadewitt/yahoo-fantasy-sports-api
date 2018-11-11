@@ -4,6 +4,8 @@ import {
   mapDraftAnalysis
 } from "../helpers/playerHelper.mjs";
 
+import { extractCallback } from "../helpers/argsParser.mjs";
+
 class PlayerResource {
   constructor(yf) {
     this.yf = yf;
@@ -12,19 +14,19 @@ class PlayerResource {
   /*
   * Includes player key, id, name, editorial information, image, eligible positions, etc.
   */
-  meta(playerKey, cb) {
-    this.yf.api(
+  meta(playerKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata?format=json`)
+      .then(data => { 
         const meta = mapPlayer(data.fantasy_content.player[0]);
-        return cb(null, meta);
-      }
-    );
+        cb(null, meta);
+        return meta;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
   /*
@@ -33,7 +35,7 @@ class PlayerResource {
   stats(playerKey, ...args) {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/stats`;
 
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (args.length) {
       url += `;type=week;week=${args.pop()}`;
@@ -41,56 +43,52 @@ class PlayerResource {
 
     url += "?format=json";
     console.log(url);
-    this.yf.api(this.yf.GET, url, (err, data) => {
-      if (err) {
-        return cb(err);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const stats = mapStats(data.fantasy_content.player[1].player_stats);
 
-      const stats = mapStats(data.fantasy_content.player[1].player_stats);
+        const player = mapPlayer(data.fantasy_content.player[0]);
 
-      const player = mapPlayer(data.fantasy_content.player[0]);
-
-      player.stats = stats;
-
-      return cb(null, player);
-    });
+        player.stats = stats;
+        cb(null, player);
+        return player;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
   /*
   * Data about ownership percentage of the player
   */
-  percent_owned(playerKey, cb) {
-    this.yf.api(
+  percent_owned(playerKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned?format=json`)
+      .then(data => {
         const percent_owned = data.fantasy_content.player[1].percent_owned[1];
         const player = mapPlayer(data.fantasy_content.player[0]);
 
         // TODO: do we need coverage type and/or delta????
         player.percent_owned = percent_owned.value;
-
-        return cb(null, player);
-      }
-    );
+        cb(null, player);
+        return player;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
   /*
   * The player ownership status within a league (whether they're owned by a team, on waivers, or free agents). Only relevant within a league.
   */
-  ownership(playerKey, leagueKey, cb) {
-    this.yf.api(
+  ownership(playerKey, leagueKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKey}/ownership?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKey}/ownership?format=json`)
+      .then(data => {
         const league = data.fantasy_content.league[0];
         const player = mapPlayer(
           data.fantasy_content.league[1].players[0].player[0]
@@ -102,34 +100,36 @@ class PlayerResource {
 
         player.status = status;
         player.league = league;
-
-        return cb(null, player);
-      }
-    );
+        cb(null, player);
+        return player;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
   /*
   * Average pick, Average round and Percent Drafted.
   */
-  draft_analysis(playerKey, cb) {
-    this.yf.api(
+  draft_analysis(playerKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis?format=json`,
-      (err, data) => {
-        if (err) {
-          return cb(err);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis?format=json`)
+      .then(data => {
         const draft_analysis = mapDraftAnalysis(
           data.fantasy_content.player[1].draft_analysis
         );
         const player = mapPlayer(data.fantasy_content.player[0]);
 
         player.draft_analysis = draft_analysis;
-
-        return cb(null, player);
-      }
-    );
+        cb(null, player);
+        return player;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 }
 

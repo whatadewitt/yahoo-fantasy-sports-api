@@ -4,6 +4,8 @@ import {
   parseTeamCollection
 } from "../helpers/playerHelper.mjs";
 
+import { extractCallback } from "../helpers/argsParser.mjs";
+
 class PlayersCollection {
   constructor(yf) {
     this.yf = yf;
@@ -12,7 +14,7 @@ class PlayersCollection {
   fetch(...args) {
     let playerKeys = args.shift(),
       subresources = args.length > 1 ? args.shift() : [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (!Array.isArray(playerKeys)) {
       playerKeys = [playerKeys];
@@ -33,18 +35,20 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const players = parseCollection(
+          data.fantasy_content.players,
+          subresources
+        );
 
-      const players = parseCollection(
-        data.fantasy_content.players,
-        subresources
-      );
-
-      return cb(null, players);
-    });
+        cb(null, players); 
+        return players; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
   // ignoring the single b/c filters
@@ -52,7 +56,7 @@ class PlayersCollection {
     let leagueKeys = args.shift(),
       filters = false,
       subresources = [];
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     if (!Array.isArray(leagueKeys)) {
       leagueKeys = [leagueKeys];
@@ -91,18 +95,20 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const leagues = parseLeagueCollection(
+          data.fantasy_content.leagues,
+          subresources
+        );
 
-      const leagues = parseLeagueCollection(
-        data.fantasy_content.leagues,
-        subresources
-      );
-
-      return cb(null, leagues);
-    });
+        cb(null, leagues); 
+        return leagues;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
   teams(...args) {
@@ -123,7 +129,7 @@ class PlayersCollection {
     //   arguments.length > 3
     //     ? arguments[2]
     //     : arguments.length > 2 && _.isArray(arguments[1]) ? arguments[1] : []; // ugliest line of code ever?
-    const cb = args.pop();
+    const cb = extractCallback(args);
 
     var url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
 
@@ -158,18 +164,20 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    this.yf.api(this.yf.GET, url, (e, data) => {
-      if (e) {
-        return cb(e);
-      }
+    return this.yf.api(this.yf.GET, url)
+      .then(data => {
+        const teams = parseTeamCollection(
+          data.fantasy_content.teams,
+          subresources
+        );
 
-      const teams = parseTeamCollection(
-        data.fantasy_content.teams,
-        subresources
-      );
-
-      return cb(null, teams);
-    });
+        cb(null, teams); 
+        return teams; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 }
 

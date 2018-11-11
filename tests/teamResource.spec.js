@@ -40,92 +40,86 @@ describe("resource: teamResource", function() {
   });
 
   // meta
-  it("should build a proper url to retrieve metadata via a team key", function() {
+  it("should build a proper url to retrieve metadata via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/metadata?format=json")
       .reply(200, require("./nock-data/teamMeta"));
 
-    team.meta("328.l.34014.t.1", () => {});
+    team.meta("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json"
     );
   });
 
   // stats
-  it("should build a proper url to retrieve team stats via a team key", function() {
+  it("should build a proper url to retrieve team stats via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/stats?format=json")
       .reply(200, require("./nock-data/teamStats"));
 
-    team.stats("328.l.34014.t.1", () => {});
+    team.stats("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json"
     );
   });
 
   // standings
-  it("should build a proper url to retrieve team standings via a team key", function() {
+  it("should build a proper url to retrieve team standings via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/standings?format=json")
       .reply(200, require("./nock-data/teamStandings"));
 
-    team.standings("328.l.34014.t.1", () => {});
+    team.standings("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json"
     );
   });
 
   // roster
-  it("should build a proper url to retrieve team ownership in a given league via a team key and a league key", function() {
+  it("should build a proper url to retrieve team ownership in a given league via a team key and a league key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
       .reply(200, require("./nock-data/teamRoster"));
 
-    team.roster("328.l.34014.t.1", () => {});
+    team.roster("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json"
     );
   });
 
   // draft_results
-  it("should build a proper url to retrieve team draft analysis via a team key", function() {
+  it("should build a proper url to retrieve team draft analysis via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json")
       .reply(200, require("./nock-data/teamDraftResults"));
 
-    team.draft_results("328.l.34014.t.1", () => {});
+    team.draft_results("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json"
     );
   });
 
   // matchups
-  it("should build a proper url to retrieve team draft analysis via a team key", function() {
+  it("should build a proper url to retrieve team draft analysis via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/matchups?format=json")
       .reply(200, require("./nock-data/teamMatchups"));
 
-    team.matchups("328.l.34014.t.1", () => {});
+    team.matchups("328.l.34014.t.1", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json",
-      jasmine.any(Function)
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json"
     );
   });
 });

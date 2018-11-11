@@ -13,123 +13,115 @@ class GameResource {
   }
 
   /* gameKey can be game_key or league (ie/ nfl, mlb) */
-  meta(gameKey, cb) {
-    this.yf.api(
+  meta(gameKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata?format=json`)
+      .then(data => { 
         const meta = data.fantasy_content.game[0];
-        return cb(null, meta);
-      }
-    );
+        cb(null, meta); 
+        return meta; 
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
   /* league key can be an array of keys */
-  leagues(gameKey, leagueKey, cb) {
+  leagues(gameKey, leagueKey, cb = () => {}) {
     // TODO: can this be cleaned up?
     if ("string" === typeof leagueKey) {
       leagueKey = [leagueKey];
     }
 
-    this.yf.api(
+    return this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/leagues;league_keys=${leagueKey.join(
         ","
-      )}?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      )}?format=json`)
+      .then(data => { 
         const leagues = mapLeagues(data.fantasy_content.game[1].leagues);
         const game = data.fantasy_content.game[0];
 
         game.leagues = leagues;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  players(gameKey, playerKey, cb) {
+  players(gameKey, playerKey, cb = () => {}) {
     // TODO: can this be cleaned up?
     if ("string" === typeof playerKey) {
       playerKey = [playerKey];
     }
 
-    this.yf.api(
+    return this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/players;player_keys=${playerKey.join(
         ","
-      )}?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      )}?format=json`)
+      .then(data => { 
         const players = mapPlayers(data.fantasy_content.game[1].players);
         const game = data.fantasy_content.game[0];
 
         game.players = players;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  game_weeks(gameKey, cb) {
-    this.yf.api(
+  game_weeks(gameKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/game_weeks?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/game_weeks?format=json`)
+      .then(data => {
         const weeks = mapWeeks(data.fantasy_content.game[1].game_weeks);
         const game = data.fantasy_content.game[0];
 
         game.weeks = weeks;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
-  stat_categories(gameKey, cb) {
-    this.yf.api(
+  stat_categories(gameKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/stat_categories?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/stat_categories?format=json`)
+      .then(data => {
         const stat_categories = mapStatCategories(
           data.fantasy_content.game[1].stat_categories.stats
         );
         const game = data.fantasy_content.game[0];
 
         game.stat_categories = stat_categories;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => {
+        cb(e);
+        throw e;
+      });
   }
 
-  position_types(gameKey, cb) {
-    this.yf.api(
+  position_types(gameKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/position_types?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/position_types?format=json`)
+      .then(data => {
         const position_types = mapPositionTypes(
           data.fantasy_content.game[1].position_types
         );
@@ -137,21 +129,20 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.position_types = position_types;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 
-  roster_positions(gameKey, cb) {
-    this.yf.api(
+  roster_positions(gameKey, cb = () => {}) {
+    return this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/roster_positions?format=json`,
-      (e, data) => {
-        if (e) {
-          return cb(e);
-        }
-
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/roster_positions?format=json`)
+      .then(data => {
         const roster_positions = mapRosterPositions(
           data.fantasy_content.game[1].roster_positions
         );
@@ -159,10 +150,13 @@ class GameResource {
         const game = data.fantasy_content.game[0];
 
         game.roster_positions = roster_positions;
-
-        return cb(null, game);
-      }
-    );
+        cb(null, game);
+        return game;
+      })
+      .catch(e => { 
+        cb(e);
+        throw e;
+      });
   }
 }
 
