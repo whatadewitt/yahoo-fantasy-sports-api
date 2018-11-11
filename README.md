@@ -53,6 +53,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 3.1.0
+
+- Introduced `promise` based flow for all endpoints as an alternative to callbacks. Thanks [Marois](https://github.com/ryus08)!
+
 #### 3.0.4
 
 - Fixed a bug in the players.league collection call where it was trying to use split on an array... ([Issue #46](https://github.com/whatadewitt/yfsapi/pull/46")).
