@@ -12,7 +12,9 @@ You can install the module via npm by running:
 
 ## Usage Note
 
-I've created a customized version of the [Passport Strategy for Yahoo! OAuth](https://github.com/whatadewitt/passport-yahoo-oauth) to help me when I developed this module. It's a fork of the strategy on the PassportJS homepage, which simply fixed a couple of issues. It would appear that the original creator is no longer supporting the strategy, and I may have missed some things, but it has worked as much as I've needed it. Please let me know if you have any questions about it.
+<s>I've created a customized version of the [Passport Strategy for Yahoo! OAuth](https://github.com/whatadewitt/passport-yahoo-oauth) to help me when I developed this module. It's a fork of the strategy on the PassportJS homepage, which simply fixed a couple of issues. It would appear that the original creator is no longer supporting the strategy, and I may have missed some things, but it has worked as much as I've needed it. Please let me know if you have any questions about it.</s>
+
+I recommend using the Passport Strategy for OAuth2 with the updates I've made to this project over the... years now... wow...
 
 ## Licence
 
@@ -46,6 +48,26 @@ The API can be used by simply importing the module and querying data
         // do your thing
       }
     );
+
+### Starting with v3.1.0 you can also use a promise chain to query resources and subresources
+
+    yf.{resource}.{subresource} (
+      {possible argument(s)}
+    )
+    .then(data => // do your thing)
+    .catch(err => // handle error)
+
+### This also opens the door to use async/await in version of node that support it
+
+    try {
+      let data = await yf.{resource}.{subresource} (
+        {possible argument(s)}
+      )
+
+      // do your thing
+    } catch(err) {
+      // handle error
+    }
 
 ## Bugs & Issues
 
