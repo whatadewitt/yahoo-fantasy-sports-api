@@ -4,7 +4,12 @@ import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
 export function mapTeam(t) {
   const team = mergeObjects(t);
   // clean up team_logos
-  team.team_logos = team.team_logos.map(logo => logo.team_logo);
+  if (team.team_logos.length) {
+    team.team_logos = team.team_logos.map(logo => logo.team_logo);
+  } else {
+    // fix issue #49 -- no team logo throwing error
+    team.team_logos = [];
+  }
 
   // clean up managers
   team.managers = team.managers.map(manager => manager.manager);
