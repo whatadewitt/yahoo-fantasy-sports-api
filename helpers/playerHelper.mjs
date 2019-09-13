@@ -4,6 +4,12 @@ import { mapTeam } from "./teamHelper.mjs";
 export function mapPlayer(p) {
   const player = mergeObjects(p);
 
+  console.log("=-=-=-=-");
+  console.log(JSON.stringify(p));
+  console.log("=-=-=-=-");
+  console.log(JSON.stringify(player));
+  console.log("=-=-=-=-");
+
   if (player.eligible_positions) {
     player.eligible_positions = player.eligible_positions.map(p => p.position);
   }

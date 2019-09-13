@@ -60,29 +60,3 @@ export function mapUserTeams(gs) {
 
   return games;
 }
-/**
-exports.parseCollection = function(user, subresources) {
-  var self = this;
-
-  _.forEach(subresources, function(resource, idx) {
-    switch (resource) {
-      case 'games':
-        user.games = self.mapGames(t[idx + 1].games);
-        break;
-
-      case 'leagues':
-        user.leagues = self.mapUserLeagues(t[idx + 1].leagues);
-        break;
-
-      case 'teams':
-        user.teams = self.mapUserTeams(t[idx + 1].teams);
-        break;
-
-      default:
-        break;
-    }
-  });
-
-  return user;
-};
- */

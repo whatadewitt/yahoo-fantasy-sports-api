@@ -24,14 +24,16 @@
   },
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
-    "esm": "^3.0.14",
-    "request": "^2.87.0"
+    "axios": "^0.19.0",
+    "esm": "^3.2.25",
+    "r2": "^2.0.1",
+    "request": "^2.88.0"
   },
   "devDependencies": {
-    "istanbul": "^0.4.3",
-    "jasmine": "^3.0.0",
+    "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.3.0",
+    "nock": "^9.6.1",
+    "prettier": "^1.18.2",
     "q": "^1.4.1"
   },
   "directories": {

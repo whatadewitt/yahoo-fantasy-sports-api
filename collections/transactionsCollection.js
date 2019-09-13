@@ -1,4 +1,5 @@
 var transactionHelper = require("../helpers/transactionHelper.js");
+var isEmpty = require("../helpers/isEmpty.js");
 
 // TODO: https://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
 // TODO: fetch multiple front end
@@ -9,37 +10,38 @@ class TransactionsCollection {
 
   fetch(transactionKeys, resources, filters, cb = () => {}) {
     var url =
-        "https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=";
+      "https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=";
 
-    if (_.isString(transactionKeys)) {
+    if ("string" === typeof transactionKeys) {
       transactionKeys = [transactionKeys];
     }
 
     url += transactionKeys.join(",");
 
-    if (!_.isEmpty(resources)) {
-      if (_.isString(resources)) {
+    if (!isEmpty(resources)) {
+      if ("string" === typeof resources) {
         resources = [resources];
       }
 
       url += ";out=" + resources.join(",");
     }
 
-    if (!_.isEmpty(filters)) {
-      _.each(Object.keys(filters), function(key) {
+    if (!isEmpty(filters)) {
+      Object.keys(filters).forEach(function(key) {
         url += ";" + key + "=" + filters[key];
       });
     }
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const meta = data.fantasy_content;
-        cb(null, meta); 
-        return meta; 
+        cb(null, meta);
+        return meta;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -47,38 +49,39 @@ class TransactionsCollection {
 
   leagueFetch = function(leagueKeys, resources, filters, cb = () => {}) {
     var url =
-        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
+      "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
-    if (_.isString(leagueKeys)) {
+    if ("string" === typeof leagueKeys) {
       leagueKeys = [leagueKeys];
     }
 
     url += leagueKeys.join(",");
     url += "/transactions";
 
-    if (!_.isEmpty(resources)) {
-      if (_.isString(resources)) {
+    if (!isEmpty(resources)) {
+      if ("string" === typeof resources) {
         resources = [resources];
       }
 
       url += ";out=" + resources.join(",");
     }
 
-    if (!_.isEmpty(filters)) {
-      _.each(Object.keys(filters), function(key) {
+    if (!isEmpty(filters)) {
+      Object.keys(filters).forEach(function(key) {
         url += ";" + key + "=" + filters[key];
       });
     }
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(meta => {
         const meta = data.fantasy_content;
-        cb(null, meta); 
-        return meta; 
+        cb(null, meta);
+        return meta;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -108,13 +111,15 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    return this.yf.api(this.yf.POST, url, xmlData)
+    return this.yf
+      .api(this.yf.POST, url, xmlData)
       .then(data => {
         var transactions = data.fantasy_content.league[1].transactions;
-        transactions = _.filter(transactions, function(p) {
+        // TODO: chain dat!
+        transactions = transactions.filter(function(p) {
           return typeof p === "object";
         });
-        transactions = _.map(transactions, function(p) {
+        transactions = transactions.map(function(p) {
           return p.transaction;
         });
         var transaction = transactions[0];
@@ -126,7 +131,7 @@ class TransactionsCollection {
         cb(null, meta);
         return meta;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -156,13 +161,14 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    return this.yf.api(this.yf.POST, url, xmlData)
+    return this.yf
+      .api(this.yf.POST, url, xmlData)
       .then(data => {
         var transactions = data.fantasy_content.league[1].transactions;
-        transactions = _.filter(transactions, function(p) {
+        transactions = transactions.filter(function(p) {
           return typeof p === "object";
         });
-        transactions = _.map(transactions, function(p) {
+        transactions = transactions.map(function(p) {
           return p.transaction;
         });
         var transaction = transactions[0];
@@ -224,13 +230,14 @@ class TransactionsCollection {
         </transaction> \
       </fantasy_content>";
 
-    return this.yf.api(this.yf.POST, url, xmlData)
+    return this.yf
+      .api(this.yf.POST, url, xmlData)
       .then(data => {
         var transactions = data.fantasy_content.league[1].transactions;
-        transactions = _.filter(transactions, function(p) {
+        transactions = transactions.filter(function(p) {
           return typeof p === "object";
         });
-        transactions = _.map(transactions, function(p) {
+        transactions = transactions.map(function(p) {
           return p.transaction;
         });
         var transaction = transactions[0];

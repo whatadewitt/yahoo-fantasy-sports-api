@@ -12,9 +12,9 @@ class TeamsCollection {
   }
 
   fetch(...args) {
-    let teamKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let teamKeys = args.shift(),
+      subresources = args.length ? args.shift() : [];
 
     if (!Array.isArray(teamKeys)) {
       teamKeys = [teamKeys];
@@ -34,22 +34,23 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const teams = parseCollection(data.fantasy_content.teams, subresources);
-        cb(null, teams); 
-        return teams; 
+        cb(null, teams);
+        return teams;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
   }
 
   leagues(...args) {
-    let leagueKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let leagueKeys = args.shift(),
+      subresources = args.length ? args.shift() : [];
 
     if (!Array.isArray(leagueKeys)) {
       leagueKeys = [leagueKeys];
@@ -69,7 +70,8 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const leagues = parseLeagueCollection(
           data.fantasy_content.leagues,
@@ -78,15 +80,15 @@ class TeamsCollection {
         cb(null, leagues);
         return leagues;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
   }
 
   userFetch(...args) {
-    let subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let subresources = args.length ? args.shift() : [];
 
     let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams";
@@ -101,7 +103,8 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const games = parseGameCollection(
           data.fantasy_content.users[0].user[1].games,
@@ -110,16 +113,16 @@ class TeamsCollection {
         cb(null, games);
         return games;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
   }
 
   games(...args) {
-    let gameKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let gameKeys = args.shift(),
+      subresources = args.length ? args.shift() : [];
 
     if (!Array.isArray(gameKeys)) {
       gameKeys = [gameKeys];
@@ -139,7 +142,8 @@ class TeamsCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const games = parseGameCollection(
           data.fantasy_content.users[0].user[1].games,
@@ -148,7 +152,7 @@ class TeamsCollection {
         cb(null, games);
         return games;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

@@ -8,9 +8,9 @@ class LeaguesCollection {
   }
 
   fetch(...args) {
-    let leagueKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let leagueKeys = args.shift(),
+      subresources = args.length ? args.shift() : [];
 
     if (!Array.isArray(leagueKeys)) {
       leagueKeys = [leagueKeys];
@@ -31,17 +31,18 @@ class LeaguesCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const leagues = parseCollection(
           data.fantasy_content.leagues,
           subresources
         );
 
-        cb(null, leagues); 
-        return leagues; 
+        cb(null, leagues);
+        return leagues;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

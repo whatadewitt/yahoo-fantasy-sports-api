@@ -67,17 +67,6 @@ export function mapRosterPositions(positions) {
   return positions.map(p => p.roster_position);
 }
 
-// exports.mapTeams = function(teams) {
-//   teams = _.filter(teams, function(t) {
-//     return typeof t === "object";
-//   });
-//   teams = _.map(teams, function(t) {
-//     return teamHelper.mapTeam(t.team[0]);
-//   });
-
-//   return teams;
-// };
-
 export function parseCollection(gs, subresources) {
   const count = gs.count;
   const games = [];

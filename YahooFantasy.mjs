@@ -15,7 +15,9 @@ import { Games, Leagues, Players, Teams } from "./collections"; // Transactions,
 
 import { extractCallback } from "./helpers/argsParser.mjs";
 
-import request from "request";
+// import request from "request";
+// import axios from "axios";
+import https from "https";
 
 class YahooFantasy {
   constructor(consumerKey, consumerSecret) {
@@ -59,25 +61,41 @@ class YahooFantasy {
       postData = args.pop();
     }
 
-    var options = {
-      url: url,
+    const options = {
+      hostname: "fantasysports.yahooapis.com",
+      path: url.replace("https://fantasysports.yahooapis.com", ""),
       method: method,
-      json: true,
-      auth: {
-        bearer: this.yahooUserToken
+      headers: {
+        Authorization: ` Bearer ${this.yahooUserToken}`
       }
     };
 
     return new Promise((resolve, reject) => {
-      request(options, (e, body, data) => {
-        const err = e || data.error;
-        if (err) {
-          reject(err);
-          return cb(err);
-        }
-        resolve(data);
-        return cb(null, data);
-      });
+      https
+        .request(options, resp => {
+          let data = "";
+
+          resp.on("data", chunk => {
+            data += chunk;
+          });
+
+          resp.on("end", () => {
+            data = JSON.parse(data);
+
+            if (data.err) {
+              cb(data.err);
+              return reject(data.err);
+            }
+
+            cb(null, data);
+            return resolve(data);
+          });
+        })
+        .on("error", err => {
+          cb(err.message);
+          return reject(err.message);
+        })
+        .end();
     });
   }
 }
