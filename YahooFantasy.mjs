@@ -54,7 +54,6 @@ class YahooFantasy {
   api(...args) {
     const method = args.shift();
     const url = args.shift();
-    const cb = extractCallback(args);
     let postData = false;
 
     if (args.length) {
@@ -87,12 +86,10 @@ class YahooFantasy {
               return reject(data.err);
             }
 
-            cb(null, data);
             return resolve(data);
           });
         })
         .on("error", err => {
-          cb(err.message);
           return reject(err.message);
         })
         .end();
