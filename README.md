@@ -75,6 +75,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 3.1.2
+
+- Updated outdated dependencies
+
 #### 3.1.1
 
 - Resolve error when no team logo is present ([Issue #42](https://github.com/whatadewitt/yfsapi/issues/42))
