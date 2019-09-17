@@ -1,5 +1,5 @@
 /* global module, require */
-// ("use strict");
+import https from "https";
 
 import {
   Game,
@@ -12,12 +12,6 @@ import {
 } from "./resources";
 
 import { Games, Leagues, Players, Teams } from "./collections"; // Transactions, Users } from "./collections";
-
-import { extractCallback } from "./helpers/argsParser.mjs";
-
-// import request from "request";
-// import axios from "axios";
-import https from "https";
 
 class YahooFantasy {
   constructor(consumerKey, consumerSecret) {
