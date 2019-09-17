@@ -26,9 +26,9 @@ More complete documentation can be found using the application sandbox. This san
 
 The API can be used by simply importing the module and querying data
 
-    var YahooFantasy = require('yahoo-fantasy');
+    const YahooFantasy = require('yahoo-fantasy');
     // you can get an application key/secret by creating a new application on Yahoo!
-    var yf = new YahooFantasy(
+    const yf = new YahooFantasy(
       Y!APPLICATION_KEY,
       Y!APPLICATION_SECRET
     );

@@ -20,7 +20,7 @@ class PlayersCollection {
       playerKeys = [playerKeys];
     }
 
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=";
 
     url += playerKeys.join(",");
@@ -74,7 +74,7 @@ class PlayersCollection {
       }
     }
 
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
     url += leagueKeys.join(",");
@@ -124,7 +124,7 @@ class PlayersCollection {
 
     const cb = extractCallback(args);
 
-    var url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
+    let url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
 
     url += teamKeys.join(",");
     url += "/players";

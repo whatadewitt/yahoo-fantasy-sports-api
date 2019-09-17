@@ -1,5 +1,5 @@
-var transactionHelper = require("../helpers/transactionHelper.js");
-var isEmpty = require("../helpers/isEmpty.js");
+const transactionHelper = require("../helpers/transactionHelper.js");
+const isEmpty = require("../helpers/isEmpty.js");
 
 // TODO: https://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
 // TODO: fetch multiple front end
@@ -9,7 +9,7 @@ class TransactionsCollection {
   }
 
   fetch(transactionKeys, resources, filters, cb = () => {}) {
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=";
 
     if ("string" === typeof transactionKeys) {
@@ -48,7 +48,7 @@ class TransactionsCollection {
   }
 
   leagueFetch = function(leagueKeys, resources, filters, cb = () => {}) {
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
     if ("string" === typeof leagueKeys) {
@@ -88,45 +88,35 @@ class TransactionsCollection {
   };
 
   add_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
-    var url =
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
-      leagueKey +
-      "/transactions?format=json";
-    var xmlData =
-      " \
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+
+    const xmlData = ` \
       <fantasy_content> \
         <transaction> \
           <type>add</type> \
           <player> \
-            <player_key>" +
-      playerKey +
-      "</player_key> \
+            <player_key>${playerKey}</player_key> \
             <transaction_data> \
               <type>add</type> \
-              <destination_team_key>" +
-      teamKey +
-      "</destination_team_key> \
+              <destination_team_key>${teamKey}</destination_team_key> \
             </transaction_data> \
           </player> \
         </transaction> \
-      </fantasy_content>";
+      </fantasy_content>`;
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
       .then(data => {
-        var transactions = data.fantasy_content.league[1].transactions;
-        // TODO: chain dat!
-        transactions = transactions.filter(function(p) {
-          return typeof p === "object";
-        });
-        transactions = transactions.map(function(p) {
-          return p.transaction;
-        });
-        var transaction = transactions[0];
-        var meta = transaction[0];
-        var players = transactionHelper.mapTransactionPlayers(
+        const transactions = data.fantasy_content.league[1].transactions
+          .filter(p => typeof p === "object")
+          .map(({ transaction }) => transaction);
+
+        const transaction = transactions[0];
+        const meta = transaction[0];
+        const players = transactionHelper.mapTransactionPlayers(
           transaction[1].players
         );
+
         meta.players = players;
         cb(null, meta);
         return meta;
@@ -138,42 +128,31 @@ class TransactionsCollection {
   };
 
   drop_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
-    var url =
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
-      leagueKey +
-      "/transactions?format=json";
-    var xmlData =
-      " \
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+    const xmlData = ` \
       <fantasy_content> \
         <transaction> \
           <type>drop</type> \
           <player> \
-            <player_key>" +
-      playerKey +
-      "</player_key> \
+            <player_key>${playerKey}</player_key> \
             <transaction_data> \
               <type>drop</type> \
-              <source_team_key>" +
-      teamKey +
-      "</source_team_key> \
+              <source_team_key>${teamKey}</source_team_key> \
             </transaction_data> \
           </player> \
         </transaction> \
-      </fantasy_content>";
+      </fantasy_content>`;
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
       .then(data => {
-        var transactions = data.fantasy_content.league[1].transactions;
-        transactions = transactions.filter(function(p) {
-          return typeof p === "object";
-        });
-        transactions = transactions.map(function(p) {
-          return p.transaction;
-        });
-        var transaction = transactions[0];
-        var meta = transaction[0];
-        var players = transactionHelper.mapTransactionPlayers(
+        const transactions = data.fantasy_content.league[1].transactions
+          .filter(p => typeof p === "object")
+          .map(({ transaction }) => transaction);
+
+        const transaction = transactions[0];
+        const meta = transaction[0];
+        const players = transactionHelper.mapTransactionPlayers(
           transaction[1].players
         );
         meta.players = players;
@@ -194,55 +173,39 @@ class TransactionsCollection {
     dropPlayerKey,
     cb = () => {}
   ) {
-    var url =
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/" +
-      leagueKey +
-      "/transactions?format=json";
-    var xmlData =
-      " \
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+    const xmlData = ` \
       <fantasy_content> \
         <transaction> \
           <type>add/drop</type> \
           <players> \
             <player> \
-              <player_key>" +
-      addPlayerKey +
-      "</player_key> \
+              <player_key>${addPlayerKey}</player_key> \
               <transaction_data> \
                 <type>add</type> \
-                <destination_team_key>" +
-      teamKey +
-      "</destination_team_key> \
+                <destination_team_key>${teamKey}</destination_team_key> \
               </transaction_data> \
             </player> \
             <player> \
-              <player_key>" +
-      dropPlayerKey +
-      "</player_key> \
+              <player_key>${dropPlayerKey}</player_key> \
               <transaction_data> \
                 <type>drop</type> \
-                <source_team_key>" +
-      teamKey +
-      "</source_team_key> \
+                <source_team_key>${teamKey}</source_team_key> \
               </transaction_data> \
             </player> \
           </players> \
         </transaction> \
-      </fantasy_content>";
+      </fantasy_content>`;
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
       .then(data => {
-        var transactions = data.fantasy_content.league[1].transactions;
-        transactions = transactions.filter(function(p) {
-          return typeof p === "object";
-        });
-        transactions = transactions.map(function(p) {
-          return p.transaction;
-        });
-        var transaction = transactions[0];
-        var meta = transaction[0];
-        var players = transactionHelper.mapTransactionPlayers(
+        const transactions = data.fantasy_content.league[1].transactions
+          .filter(p => typeof p === "object")
+          .map(({ transaction }) => transaction);
+        const transaction = transactions[0];
+        const meta = transaction[0];
+        const players = transactionHelper.mapTransactionPlayers(
           transaction[1].players
         );
         meta.players = players;
