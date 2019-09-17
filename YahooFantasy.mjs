@@ -82,7 +82,6 @@ class YahooFantasy {
             data = JSON.parse(data);
 
             if (data.err) {
-              cb(data.err);
               return reject(data.err);
             }
 
