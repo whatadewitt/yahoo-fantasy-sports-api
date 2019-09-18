@@ -188,17 +188,17 @@ class LeagueResource {
 
     url += `player_keys=${playerKeys.join(",")}`;
 
+    url += "/stats";
+
     if (week) {
-      url += `;week=${week}`;
+      url += `;type=week;week=${week}`;
     }
 
-    url += "/stats?format=json";
-    console.log(url);
+    url += "?format=json";
 
     return this.yf
       .api(this.yf.GET, url)
       .then(data => {
-        console.log(JSON.stringify(data.fantasy_content.league[1].players));
         const players = mapPlayers(data.fantasy_content.league[1].players);
 
         const league = data.fantasy_content.league[0];

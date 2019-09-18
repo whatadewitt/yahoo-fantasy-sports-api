@@ -22,6 +22,18 @@ export function mapPlayer(p) {
     }
   }
 
+  if (player.player_stats) {
+    player.player_stats = mapStats(player.player_stats);
+  }
+
+  if (player.player_advanced_stats) {
+    player.player_advanced_stats = mapStats(player.player_advanced_stats);
+  }
+
+  if (player.player_points) {
+    player.player_points = mapPoints(player.player_points);
+  }
+
   return player;
 }
 
@@ -31,6 +43,15 @@ export function mapStats(stats) {
     coverage_type: coverage_type,
     coverage_value: stats[0][coverage_type],
     stats: stats.stats.map(s => s.stat)
+  };
+}
+
+export function mapPoints(points) {
+  const { coverage_type } = points[0];
+  return {
+    coverage_type,
+    coverage_value: points[0][coverage_type],
+    total: points.total
   };
 }
 

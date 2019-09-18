@@ -19,7 +19,14 @@ export function mapPlayers(ps) {
   let players = [];
 
   for (let i = 0; i < count; i++) {
-    players.push(ps[i].player[0]);
+    let player = ps[i].player[0];
+
+    // TODO: i hate this, it can def be better...
+    for (let j = ps[i].player.length - 1; j > 0; j--) {
+      player.push(ps[i].player[j]);
+    }
+
+    players.push(player);
   }
   players = players.map(p => mapPlayer(p));
 
