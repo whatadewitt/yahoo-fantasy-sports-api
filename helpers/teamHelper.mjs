@@ -1,5 +1,6 @@
 import { mapPlayer } from "./playerHelper.mjs";
 import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
+import { mapPlayers } from "./gameHelper.mjs";
 
 export function mapTeam(t) {
   const team = mergeObjects(t);
@@ -19,19 +20,7 @@ export function mapTeam(t) {
 
 export function mapRoster(r) {
   let players = r[0].players;
-
-  // TODO: clean this up?
-  const count = players.count;
-  const roster = [];
-
-  for (let i = 0; i < count; i++) {
-    let player = players[i].player[0];
-    player = mapPlayer(player);
-
-    roster.push(player);
-  }
-
-  return roster;
+  return mapPlayers(players);
 }
 
 export function mapStats(stats) {
