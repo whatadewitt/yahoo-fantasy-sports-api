@@ -83,7 +83,6 @@ class YahooFantasy {
           });
         })
         .on("error", err => {
-          console.log(err);
           return reject(err.message);
         })
         .end();

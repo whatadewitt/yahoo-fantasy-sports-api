@@ -23,14 +23,12 @@ class LeagueResource {
         `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`
       )
       .then(data => {
-        console.log(data);
         const meta = data.fantasy_content.league[0];
 
         cb(null, meta);
         return meta;
       })
       .catch(e => {
-        console.log(e);
         cb(e);
         throw e;
       });
