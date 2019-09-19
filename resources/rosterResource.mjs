@@ -9,7 +9,6 @@ class RosterResource {
 
   players(teamKey, ...args) {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
-
     const cb = extractCallback(args);
 
     if (args.length) {
@@ -25,7 +24,8 @@ class RosterResource {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const team = mapTeam(data.fantasy_content.team[0]);
         const roster = mapRoster(data.fantasy_content.team[1].roster);

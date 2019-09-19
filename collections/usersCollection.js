@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var userHelper = require('../helpers/userHelper.js');
+const userHelper = require("../helpers/userHelper.js");
+const isEmpty = require("../helpers/isEmpty.js");
 
 import { extractCallback } from "../helpers/argsParser.mjs";
 
@@ -11,24 +11,28 @@ function UsersCollection(yf) {
 
 // this doesn't seem super useful...
 UsersCollection.prototype.fetch = function() {
-  var subresources = ( arguments.length > 1 ) ? arguments[0] : [];
   const cb = extractCallback(args);
+  let subresources = arguments.length ? arguments[0] : [];
 
-  var url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1';
+  let url = "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1";
 
-  if ( !( _.isEmpty(subresources) )  ) {
-    if ( _.isString(subresources) ) {
+  if (!isEmpty(subresources)) {
+    if ("string" === typeof subresources) {
       subresources = [subresources];
     }
 
-    url += ';out=' + subresources.join(',');
+    url += `;out=${subresources.join(",")}`;
   }
 
-  url += '?format=json';
+  url += "?format=json";
 
-  return this.yf.api(this.yf.GET, url)
+  return this.yf
+    .api(this.yf.GET, url)
     .then(data => {
-      const user = userHelper.parseCollection(data.fantasy_content.users[0].user);
+      const user = userHelper.parseCollection(
+        data.fantasy_content.users[0].user
+      );
+
       cb(null, user);
       return user;
     })

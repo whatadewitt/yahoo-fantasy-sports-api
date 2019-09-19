@@ -1,6 +1,6 @@
 {
   "name": "yahoo-fantasy",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "index.js",
   "scripts": {
@@ -24,14 +24,13 @@
   },
   "homepage": "https://github.com/whatadewitt/yfsapi",
   "dependencies": {
-    "esm": "^3.2.25",
-    "request": "^2.87.0"
+    "esm": "^3.2.25"
   },
   "devDependencies": {
-    "istanbul": "^0.4.3",
-    "jasmine": "^3.0.0",
+    "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.3.0",
+    "nock": "^9.6.1",
+    "prettier": "^1.18.2",
     "q": "^1.4.1"
   },
   "directories": {

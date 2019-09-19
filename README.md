@@ -26,9 +26,9 @@ More complete documentation can be found using the application sandbox. This san
 
 The API can be used by simply importing the module and querying data
 
-    var YahooFantasy = require('yahoo-fantasy');
+    const YahooFantasy = require('yahoo-fantasy');
     // you can get an application key/secret by creating a new application on Yahoo!
-    var yf = new YahooFantasy(
+    const yf = new YahooFantasy(
       Y!APPLICATION_KEY,
       Y!APPLICATION_SECRET
     );
@@ -74,6 +74,13 @@ The API can be used by simply importing the module and querying data
 This project is very much still a work in progress, please report any issues via the [GitHub issues page](https://github.com/whatadewitt/yfsapi/issues).
 
 ## Changelog
+
+#### 3.2.0
+
+- Added "players" subresource to "league" in order to obtain weekly / season stats for a player based on league settings
+- Fixed a bug where the starting status wasn't properly being returned due to a shift in how the data was being returned
+- Removed use of "request" library for size and performance reasons
+- General code optimizations and improvements
 
 #### 3.1.2
 

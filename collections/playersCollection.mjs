@@ -12,15 +12,15 @@ class PlayersCollection {
   }
 
   fetch(...args) {
-    let playerKeys = args.shift(),
-      subresources = args.length > 1 ? args.shift() : [];
     const cb = extractCallback(args);
+    let playerKeys = args.shift(),
+      subresources = args.length ? args.shift() : [];
 
     if (!Array.isArray(playerKeys)) {
       playerKeys = [playerKeys];
     }
 
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=";
 
     url += playerKeys.join(",");
@@ -35,17 +35,18 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const players = parseCollection(
           data.fantasy_content.players,
           subresources
         );
 
-        cb(null, players); 
-        return players; 
+        cb(null, players);
+        return players;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -73,7 +74,7 @@ class PlayersCollection {
       }
     }
 
-    var url =
+    let url =
       "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
     url += leagueKeys.join(",");
@@ -95,17 +96,18 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const leagues = parseLeagueCollection(
           data.fantasy_content.leagues,
           subresources
         );
 
-        cb(null, leagues); 
+        cb(null, leagues);
         return leagues;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });
@@ -119,19 +121,10 @@ class PlayersCollection {
     if (!Array.isArray(teamKeys)) {
       teamKeys = [teamKeys];
     }
-    // filters =
-    //   arguments.length > 3
-    //     ? arguments[1]
-    //     : arguments.length > 2 && _.isObject(arguments[1])
-    //       ? arguments[1]
-    //       : {},
-    // subresources =
-    //   arguments.length > 3
-    //     ? arguments[2]
-    //     : arguments.length > 2 && _.isArray(arguments[1]) ? arguments[1] : []; // ugliest line of code ever?
+
     const cb = extractCallback(args);
 
-    var url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
+    let url = "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=";
 
     url += teamKeys.join(",");
     url += "/players";
@@ -164,17 +157,18 @@ class PlayersCollection {
 
     url += "?format=json";
 
-    return this.yf.api(this.yf.GET, url)
+    return this.yf
+      .api(this.yf.GET, url)
       .then(data => {
         const teams = parseTeamCollection(
           data.fantasy_content.teams,
           subresources
         );
 
-        cb(null, teams); 
-        return teams; 
+        cb(null, teams);
+        return teams;
       })
-      .catch(e => { 
+      .catch(e => {
         cb(e);
         throw e;
       });

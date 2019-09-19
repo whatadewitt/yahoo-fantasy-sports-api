@@ -1,5 +1,5 @@
 /* global module, require */
-// ("use strict");
+import https from "https";
 
 import {
   Game,
@@ -12,10 +12,6 @@ import {
 } from "./resources";
 
 import { Games, Leagues, Players, Teams } from "./collections"; // Transactions, Users } from "./collections";
-
-import { extractCallback } from "./helpers/argsParser.mjs";
-
-import request from "request";
 
 class YahooFantasy {
   constructor(consumerKey, consumerSecret) {
@@ -52,32 +48,44 @@ class YahooFantasy {
   api(...args) {
     const method = args.shift();
     const url = args.shift();
-    const cb = extractCallback(args);
     let postData = false;
 
     if (args.length) {
       postData = args.pop();
     }
 
-    var options = {
-      url: url,
+    const options = {
+      hostname: "fantasysports.yahooapis.com",
+      path: url.replace("https://fantasysports.yahooapis.com", ""),
       method: method,
-      json: true,
-      auth: {
-        bearer: this.yahooUserToken
+      headers: {
+        Authorization: ` Bearer ${this.yahooUserToken}`
       }
     };
 
     return new Promise((resolve, reject) => {
-      request(options, (e, body, data) => {
-        const err = e || data.error;
-        if (err) {
-          reject(err);
-          return cb(err);
-        }
-        resolve(data);
-        return cb(null, data);
-      });
+      https
+        .request(options, resp => {
+          let data = "";
+
+          resp.on("data", chunk => {
+            data += chunk;
+          });
+
+          resp.on("end", () => {
+            data = JSON.parse(data);
+
+            if (data.error) {
+              return reject(data.error);
+            }
+
+            return resolve(data);
+          });
+        })
+        .on("error", err => {
+          return reject(err.message);
+        })
+        .end();
     });
   }
 }
