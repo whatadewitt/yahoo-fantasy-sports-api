@@ -75,14 +75,15 @@ class YahooFantasy {
           resp.on("end", () => {
             data = JSON.parse(data);
 
-            if (data.err) {
-              return reject(data.err);
+            if (data.error) {
+              return reject(data.error);
             }
 
             return resolve(data);
           });
         })
         .on("error", err => {
+          console.log(err);
           return reject(err.message);
         })
         .end();
