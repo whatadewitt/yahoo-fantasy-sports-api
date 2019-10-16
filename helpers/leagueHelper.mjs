@@ -9,7 +9,7 @@ export function mapTeams(ts) {
 
   return teams.reduce((result, t) => {
     if (t.team) {
-      result.push(t.team[0]);
+      result.push(mapTeam(t.team[0]));
     }
 
     return result;
