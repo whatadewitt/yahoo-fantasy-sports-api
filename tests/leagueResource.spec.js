@@ -91,11 +91,17 @@ describe("resource: leagueResource", function() {
 
   // scoreboard
   it("should build a proper url to retrieve scoreboard via a league key", function(done) {
+    var mockLeagueScoreboard = require("./nock-data/leagueScoreboard");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/scoreboard?format=json")
-      .reply(200, require("./nock-data/leagueScoreboard"));
+      .reply(200, mockLeagueScoreboard);
 
-    league.scoreboard("328.l.34014", done);
+    league.scoreboard("328.l.34014", function(e, data) {
+      expect(data.league_key).toEqual(mockLeagueScoreboard.fantasy_content.league[0].league_key);
+      expect(data.scoreboard.matchups[0].teams[0].name).toEqual(mockLeagueScoreboard.fantasy_content.league[1].scoreboard[0].matchups[0].matchup[0].teams[0].team[0][2].name);
+
+      done();
+    });
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",

@@ -61,7 +61,7 @@ export function mapScoreboard(sb) {
   const scoreboard = Object.values(sb);
 
   // TODO this is still gross... 3 array iterations :(
-  const matchups = scoreboard.reduce((result, m) => {
+  const matchups = scoreboard.reduce((matchupsResult, m) => {
     if (m.matchup) {
       m = m.matchup;
       if (m.matchup_grades) {
@@ -74,20 +74,24 @@ export function mapScoreboard(sb) {
       }
 
       const teams = Object.values(m[0].teams);
-      m.teams = teams.reduce((result, t) => {
+
+      // Remove raw data entry from the matchup
+      delete m[0];
+
+      m.teams = teams.reduce((teamsResult, t) => {
         if (t.team) {
           let team = mapTeam(t.team[0]);
           team = mapTeamPoints(team, t.team[1]);
-          result.push(team);
+          teamsResult.push(team);
         }
 
-        return result;
+        return teamsResult;
       }, []);
 
-      result.push(m);
+      matchupsResult.push(m);
     }
 
-    return result;
+    return matchupsResult;
   }, []);
 
   return {
