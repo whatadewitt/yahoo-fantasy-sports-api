@@ -5,14 +5,15 @@ import { mapTransactionPlayers } from "./transactionHelper.mjs";
  * Helper function to map data to a "team"
  */
 export function mapTeams(ts) {
-  const count = ts.count;
-  const teams = [];
+  const teams = Object.values(ts);
 
-  for (let i = 0; i < count; i++) {
-    teams.push(mapTeam(ts[i].team[0]));
-  }
+  return teams.reduce((result, t) => {
+    if (t.team) {
+      result.push(mapTeam(t.team[0]));
+    }
 
-  return teams;
+    return result;
+  }, []);
 }
 
 export function mapStandings(ts) {
@@ -45,50 +46,53 @@ export function mapSettings(settings) {
 }
 
 export function mapDraft(d) {
-  const count = d.count;
-  const draft = [];
+  const draft = Object.values(d);
 
-  for (let i = 0; i < count; i++) {
-    draft.push(d[i].draft_result);
-  }
+  return draft.reduce((result, d) => {
+    if (d.draft_result) {
+      result.push(d.draft_result);
+    }
 
-  return draft;
+    return result;
+  }, []);
 }
 
-export function mapScoreboard(scoreboard) {
-  const count = scoreboard.count;
-  let matchups = [];
+export function mapScoreboard(sb) {
+  const scoreboard = Object.values(sb);
 
-  for (let i = 0; i < count; i++) {
-    matchups.push(scoreboard[i].matchup);
-  }
+  // TODO this is still gross... 3 array iterations :(
+  const matchups = scoreboard.reduce((matchupsResult, m) => {
+    if (m.matchup) {
+      m = m.matchup;
+      if (m.matchup_grades) {
+        m.matchup_grades = m.matchup_grades.map(grade => {
+          return {
+            team_key: grade.matchup_grade.team_key,
+            grade: grade.matchup_grade.grade
+          };
+        });
+      }
 
-  matchups = matchups.map(m => {
-    if (m.matchup_grades) {
-      m.matchup_grades = m.matchup_grades.map(grade => {
-        return {
-          team_key: grade.matchup_grade.team_key,
-          grade: grade.matchup_grade.grade
-        };
-      });
+      const teams = Object.values(m[0].teams);
+
+      // Remove raw data entry from the matchup
+      delete m[0];
+
+      m.teams = teams.reduce((teamsResult, t) => {
+        if (t.team) {
+          let team = mapTeam(t.team[0]);
+          team = mapTeamPoints(team, t.team[1]);
+          teamsResult.push(team);
+        }
+
+        return teamsResult;
+      }, []);
+
+      matchupsResult.push(m);
     }
 
-    // TODO: i feel like i should be able to use map teams here...
-    const count = m[0].teams.count;
-    let teams = [];
-
-    for (let i = 0; i < count; i++) {
-      let team = mapTeam(m[0].teams[i].team[0]);
-      team = mapTeamPoints(team, m[0].teams[i].team[1]);
-
-      teams.push(team);
-    }
-
-    delete m[0];
-    m.teams = teams;
-
-    return m;
-  });
+    return matchupsResult;
+  }, []);
 
   return {
     matchups: matchups,

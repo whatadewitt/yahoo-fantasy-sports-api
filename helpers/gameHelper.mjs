@@ -1,48 +1,39 @@
 import { mapPlayer } from "./playerHelper.mjs";
 
 export function mapLeagues(ls) {
-  // TODO: clean this up?
-  const count = ls.count;
-  const leagues = [];
+  const leagues = Object.values(ls);
 
-  for (let i = 0; i < count; i++) {
-    leagues.push(ls[i].league[0]);
-  }
-
-  return leagues;
-}
-
-// todo: again, this should be more re-usable
-export function mapPlayers(ps) {
-  // TODO: clean this up?
-  const count = ps.count;
-  let players = [];
-
-  for (let i = 0; i < count; i++) {
-    let player = ps[i].player[0];
-
-    // TODO: i hate this, it can def be better...
-    for (let j = ps[i].player.length - 1; j > 0; j--) {
-      player.push(ps[i].player[j]);
+  return leagues.reduce((result, l) => {
+    if (l.league) {
+      result.push(l.league[0]);
     }
 
-    players.push(player);
-  }
-  players = players.map(p => mapPlayer(p));
+    return result;
+  }, []);
+}
 
-  return players;
+export function mapPlayers(ps) {
+  const players = Object.values(ps);
+
+  return players.reduce((result, p) => {
+    if (p.player) {
+      result.push(mapPlayer(p.player[0]));
+    }
+
+    return result;
+  }, []);
 }
 
 export function mapWeeks(ws) {
-  // TODO: clean this up?
-  const count = ws.count;
-  const weeks = [];
+  const weeks = Object.values(ws);
 
-  for (let i = 0; i < count; i++) {
-    weeks.push(ws[i].game_week);
-  }
+  return weeks.reduce((result, w) => {
+    if (w.game_week) {
+      result.push(w.game_week);
+    }
 
-  return weeks;
+    return result;
+  }, []);
 }
 
 export function mapStatCategories(statcats) {
