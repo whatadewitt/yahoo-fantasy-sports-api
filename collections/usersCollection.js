@@ -24,11 +24,9 @@ UsersCollection.prototype.fetch = function() {
     url += `;out=${subresources.join(",")}`;
   }
 
-  url += "?format=json";
-
   return this.yf
     .api(this.yf.GET, url)
-    .then(data => {
+    .then((data) => {
       const user = userHelper.parseCollection(
         data.fantasy_content.users[0].user
       );
@@ -36,7 +34,7 @@ UsersCollection.prototype.fetch = function() {
       cb(null, user);
       return user;
     })
-    .catch(e => {
+    .catch((e) => {
       cb(e);
       throw e;
     });

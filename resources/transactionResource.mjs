@@ -8,10 +8,12 @@ class TransactionResource {
   }
 
   meta(transactionKey, cb = () => {}) {
-    return this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players?format=json`)
-      .then(data => {
+    return this.yf
+      .api(
+        this.yf.GET,
+        `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players`
+      )
+      .then((data) => {
         const transaction = data.fantasy_content.transaction[0];
 
         const players = mapTransactionPlayers(
@@ -22,7 +24,7 @@ class TransactionResource {
         cb(null, transaction);
         return transaction;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

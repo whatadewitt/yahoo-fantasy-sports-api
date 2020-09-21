@@ -30,15 +30,14 @@ describe("collection: gamesCollection", function() {
   // fetch
   it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/games?format=json")
+      .get("/fantasy/v2/games")
       .reply(200, { fantasy_content: { games: [] } });
 
     games.fetch(328, done);
 
-
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/games?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/games"
     );
   });
 });

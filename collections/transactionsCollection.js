@@ -32,16 +32,14 @@ class TransactionsCollection {
       });
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const meta = data.fantasy_content;
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -72,23 +70,21 @@ class TransactionsCollection {
       });
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(meta => {
+      .then((meta) => {
         const meta = data.fantasy_content;
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
   };
 
   add_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
-    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
 
     const xmlData = ` \
       <fantasy_content> \
@@ -106,9 +102,9 @@ class TransactionsCollection {
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
-      .then(data => {
+      .then((data) => {
         const transactions = data.fantasy_content.league[1].transactions
-          .filter(p => typeof p === "object")
+          .filter((p) => typeof p === "object")
           .map(({ transaction }) => transaction);
 
         const transaction = transactions[0];
@@ -121,14 +117,14 @@ class TransactionsCollection {
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
   };
 
   drop_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
-    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
     const xmlData = ` \
       <fantasy_content> \
         <transaction> \
@@ -145,9 +141,9 @@ class TransactionsCollection {
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
-      .then(data => {
+      .then((data) => {
         const transactions = data.fantasy_content.league[1].transactions
-          .filter(p => typeof p === "object")
+          .filter((p) => typeof p === "object")
           .map(({ transaction }) => transaction);
 
         const transaction = transactions[0];
@@ -160,7 +156,7 @@ class TransactionsCollection {
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -173,7 +169,7 @@ class TransactionsCollection {
     dropPlayerKey,
     cb = () => {}
   ) {
-    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`;
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
     const xmlData = ` \
       <fantasy_content> \
         <transaction> \
@@ -199,9 +195,9 @@ class TransactionsCollection {
 
     return this.yf
       .api(this.yf.POST, url, xmlData)
-      .then(data => {
+      .then((data) => {
         const transactions = data.fantasy_content.league[1].transactions
-          .filter(p => typeof p === "object")
+          .filter((p) => typeof p === "object")
           .map(({ transaction }) => transaction);
         const transaction = transactions[0];
         const meta = transaction[0];
@@ -213,7 +209,7 @@ class TransactionsCollection {
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

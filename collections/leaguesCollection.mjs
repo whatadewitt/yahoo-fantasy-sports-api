@@ -29,11 +29,9 @@ class LeaguesCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const leagues = parseCollection(
           data.fantasy_content.leagues,
           subresources
@@ -42,7 +40,7 @@ class LeaguesCollection {
         cb(null, leagues);
         return leagues;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
