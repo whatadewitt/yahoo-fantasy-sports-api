@@ -24,13 +24,14 @@ describe("collection: gamesCollection", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testuser.token==");
     spyOn(yf, "api").and.callThrough();
   });
 
   // fetch
   it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/games")
+      .get("/fantasy/v2/games?format=json")
       .reply(200, { fantasy_content: { games: [] } });
 
     games.fetch(328, done);

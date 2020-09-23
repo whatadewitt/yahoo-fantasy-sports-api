@@ -44,6 +44,7 @@ describe("resource: leagueResource", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -57,7 +58,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata"
     );
   });
 
@@ -71,7 +72,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings"
     );
   });
 
@@ -85,7 +86,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings"
     );
   });
 
@@ -97,15 +98,20 @@ describe("resource: leagueResource", function() {
       .reply(200, mockLeagueScoreboard);
 
     league.scoreboard("328.l.34014", function(e, data) {
-      expect(data.league_key).toEqual(mockLeagueScoreboard.fantasy_content.league[0].league_key);
-      expect(data.scoreboard.matchups[0].teams[0].name).toEqual(mockLeagueScoreboard.fantasy_content.league[1].scoreboard[0].matchups[0].matchup[0].teams[0].team[0][2].name);
+      expect(data.league_key).toEqual(
+        mockLeagueScoreboard.fantasy_content.league[0].league_key
+      );
+      expect(data.scoreboard.matchups[0].teams[0].name).toEqual(
+        mockLeagueScoreboard.fantasy_content.league[1].scoreboard[0].matchups[0]
+          .matchup[0].teams[0].team[0][2].name
+      );
 
       done();
     });
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard"
     );
   });
 
@@ -119,7 +125,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams"
     );
   });
 
@@ -133,7 +139,7 @@ describe("resource: leagueResource", function() {
 
   //   expect(yf.api).toHaveBeenCalledWith(
   //     "GET",
-  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players?format=json"
+  //     "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players"
   //   );
   // });
 
@@ -147,7 +153,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults"
     );
   });
 
@@ -161,7 +167,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions"
     );
   });
 });

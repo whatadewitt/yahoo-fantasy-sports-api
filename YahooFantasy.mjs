@@ -23,9 +23,8 @@ class YahooFantasy {
   constructor(consumerKey, consumerSecret, tokenCallbackFn, redirectUri) {
     this.CONSUMER_KEY = consumerKey;
     this.CONSUMER_SECRET = consumerSecret;
-    this.refrerefreshTokenCallback = tokenCallbackFn;
-    // tokenCallbackFn("AF", "RT");
     this.REDIRECT_URI = redirectUri;
+    this.refreshTokenCallback = tokenCallbackFn;
 
     this.GET = "GET";
     this.POST = "POST";
@@ -55,8 +54,7 @@ class YahooFantasy {
   }
 
   // oauth2 authentication function -- follow redirect to yahoo login
-  // TODO: handle errors? (repeated below so you know it should be done!!)
-  auth(req, res) {
+  auth(res) {
     const authData = stringify({
       client_id: this.CONSUMER_KEY,
       redirect_uri: this.REDIRECT_URI,
@@ -79,20 +77,19 @@ class YahooFantasy {
         if (302 === authResponse.statusCode) {
           res.redirect(authResponse.headers.location);
         } else {
-          // TODO:
+          throw new Error("authentication error");
         }
       });
     });
 
     authRequest.on("error", (e) => {
-      // TODO:
-      console.error(e);
+      throw new Error(e);
     });
 
     authRequest.end();
   }
 
-  authCallback(req, res, next) {
+  authCallback(req, cb) {
     const tokenData = stringify({
       client_id: this.CONSUMER_KEY,
       client_secret: this.CONSUMER_SECRET,
@@ -117,7 +114,6 @@ class YahooFantasy {
     const tokenRequest = https.request(options, (tokenReponse) => {
       const chunks = [];
       tokenReponse.on("data", (d) => {
-        // process.stdout.write(d);
         chunks.push(d);
       });
 
@@ -126,14 +122,14 @@ class YahooFantasy {
         this.yahooUserToken = tokenData.access_token;
         this.yahooRefreshToken = tokenData.refresh_token;
 
-        // this.refreshTokenCallback(tokenData);
+        this.refreshTokenCallback(tokenData);
 
-        next();
+        cb();
       });
     });
 
     tokenRequest.on("error", (e) => {
-      console.error(e);
+      cb(e);
     });
 
     tokenRequest.write(tokenData);
@@ -179,7 +175,7 @@ class YahooFantasy {
 
         this.setUserToken(tokenData.access_token);
         this.setRefreshToken(tokenData.refresh_token);
-        // this.refreshTokenCallback(tokenData);
+        this.refreshTokenCallback(tokenData);
 
         cb(null, tokenData);
       });
