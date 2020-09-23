@@ -24,7 +24,12 @@ class YahooFantasy {
     this.CONSUMER_KEY = consumerKey;
     this.CONSUMER_SECRET = consumerSecret;
     this.REDIRECT_URI = redirectUri;
-    this.refreshTokenCallback = tokenCallbackFn;
+
+    this.refreshTokenCallback = () => {};
+
+    if (tokenCallbackFn) {
+      this.refreshTokenCallback = tokenCallbackFn;
+    }
 
     this.GET = "GET";
     this.POST = "POST";

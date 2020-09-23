@@ -10,33 +10,55 @@ You can install the module via npm by running:
 
     $ npm install yahoo-fantasy
 
-## Usage Note
-
-<s>I've created a customized version of the [Passport Strategy for Yahoo! OAuth](https://github.com/whatadewitt/passport-yahoo-oauth) to help me when I developed this module. It's a fork of the strategy on the PassportJS homepage, which simply fixed a couple of issues. It would appear that the original creator is no longer supporting the strategy, and I may have missed some things, but it has worked as much as I've needed it. Please let me know if you have any questions about it.</s>
-
-I recommend using the Passport Strategy for OAuth2 with the updates I've made to this project over the... years now... wow...
-
 ## Licence
 
 This module is available under the [MIT Licence](http://opensource.org/licenses/MIT)
 
 ## Documentation
 
-More complete documentation can be found using the application sandbox. This sandbox is also a work in progress, but it is my hope going forward to complete it.
+More complete documentation can be found using the application sandbox. This sandbox is always a work in progress, if I've learned anything it's that nothing is ever complete.
 
-The API can be used by simply importing the module and querying data
+The API can be used by simply importing the module and querying data, since version 4.0 the authentication flow has been built into the library to make things easier for users.
 
+    // import the library
     const YahooFantasy = require('yahoo-fantasy');
+
     // you can get an application key/secret by creating a new application on Yahoo!
     const yf = new YahooFantasy(
-      Y!APPLICATION_KEY,
-      Y!APPLICATION_SECRET
+      Y!APPLICATION_KEY, // Yahoo! Application Key
+      Y!APPLICATION_SECRET, // Yahoo! Application Secret
+      tokenCallbackFunction, // callback function when user token is refreshed (optional)
+      redirectUri // redirect endpoint when user authenticates (optional)
     );
 
-    // if a user has logged in (not required for all endpoints)
+    // you can authenticate a user by setting a route to call the auth function
+    // note: from v4.0 on, public queries are now supported; that is, you can query
+    // public resources without authenticating a user (ie/ game meta, player meta,
+    // and information from public leagues)
+    yf.auth(
+      response // response object to redirect the user to the Yahoo! login screen
+    )
+
+    // you also need to set up the callback route (defined as the redirect uri above)
+    // note: this will automatically set the user and refresh token if the request is
+    // successful, but you can also call them manually, described below
+    yf.authCallback(
+      request, // the request will contain the auth code from Yahoo!
+      callback // callback function that will be called after the token has been retrieved
+    )
+
+    // if you're not authenticating via the library you'll need to set the Yahoo!
+    // token for the user
     yf.setUserToken(
-      Y!CLIENT_TOKEN,
-      Y!CLIENT_SECRET
+      Y!CLIENT_TOKEN
+    );
+
+    // you can do the same for the refresh token...
+    // if you set this and the token expires (lasts an hour) then the token will automatically
+    // refresh and call the above "tokenCallbackFunction" that you've specified to persist the
+    // token elsewhere
+    yf.setRefreshToken(
+      Y!CLIENT_REFRESH_TOKEN
     );
 
     // query a resource/subresource
@@ -74,6 +96,13 @@ The API can be used by simply importing the module and querying data
 This project is very much still a work in progress, please report any issues via the [GitHub issues page](https://github.com/whatadewitt/yfsapi/issues).
 
 ## Changelog
+
+#### 4.0.0
+
+- Added auth(), authCallback, setRefreshToken() functions to the library
+- Automatically handle refreshing of the token and call a user defined function when the token has expired
+- Added support for public queries
+- General cleanup
 
 #### 3.2.0
 
