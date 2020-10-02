@@ -13,7 +13,7 @@ class RosterResource {
 
     if (args.length) {
       let date = args.pop();
-      if (date.indexOf("-") > 0) {
+      if (!Number.isInteger(date) && date.indexOf("-") > 0) {
         // string is date, of format y-m-d
         url += `;date=${date}`;
       } else {
