@@ -74,15 +74,17 @@ class YahooFantasy {
     };
 
     const authRequest = https.request(options, (authResponse) => {
-      authResponse.on("data", (d) => {
-        process.stdout.write(d);
+      let data;
+      authResponse.on("data", (chunk) => {
+        // process.stdout.write(d);
+        data += chunk;
       });
 
       authResponse.on("end", () => {
         if (302 === authResponse.statusCode) {
           res.redirect(authResponse.headers.location);
         } else {
-          throw new Error("authentication error");
+          res.send(data);
         }
       });
     });
@@ -122,12 +124,15 @@ class YahooFantasy {
         chunks.push(d);
       });
 
-      tokenReponse.on("end", () => {
+      tokenReponse.on("end", async () => {
         const tokenData = JSON.parse(Buffer.concat(chunks));
         this.yahooUserToken = tokenData.access_token;
         this.yahooRefreshToken = tokenData.refresh_token;
 
-        this.refreshTokenCallback(tokenData);
+        if (this.refreshTokenCallback) {
+          // run the callback before moving on
+          await this.refreshTokenCallback(tokenData);
+        }
 
         cb();
       });
@@ -175,12 +180,16 @@ class YahooFantasy {
         chunks.push(d);
       });
 
-      tokenReponse.on("end", () => {
+      tokenReponse.on("end", async () => {
         const tokenData = JSON.parse(Buffer.concat(chunks));
 
         this.setUserToken(tokenData.access_token);
         this.setRefreshToken(tokenData.refresh_token);
-        this.refreshTokenCallback(tokenData);
+
+        if (this.refreshTokenCallback) {
+          // run the callback before moving on
+          await this.refreshTokenCallback(tokenData);
+        }
 
         cb(null, tokenData);
       });
