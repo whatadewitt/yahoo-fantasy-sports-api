@@ -16,6 +16,7 @@ describe("resource: rosterResource", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -29,7 +30,7 @@ describe("resource: rosterResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster"
     );
   });
 });

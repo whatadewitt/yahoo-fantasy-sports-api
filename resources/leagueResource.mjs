@@ -4,7 +4,7 @@ import {
   mapScoreboard,
   mapTeams,
   mapDraft,
-  mapTransactions
+  mapTransactions,
 } from "../helpers/leagueHelper.mjs";
 
 import { mapPlayers } from "../helpers/gameHelper.mjs";
@@ -20,15 +20,15 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata`
       )
-      .then(data => {
+      .then((data) => {
         const meta = data.fantasy_content.league[0];
 
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -38,9 +38,9 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings`
       )
-      .then(data => {
+      .then((data) => {
         const settings = mapSettings(
           data.fantasy_content.league[1].settings[0]
         );
@@ -50,7 +50,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -60,9 +60,9 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings`
       )
-      .then(data => {
+      .then((data) => {
         const standings = mapStandings(
           data.fantasy_content.league[1].standings[0].teams
         );
@@ -72,7 +72,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -87,11 +87,11 @@ class LeagueResource {
       url += `;week=${args.pop()}`;
     }
 
-    url += "?format=json";
+    url += "";
 
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const week = data.fantasy_content.league[1].scoreboard.week;
         const scoreboard = mapScoreboard(
           data.fantasy_content.league[1].scoreboard[0].matchups
@@ -103,7 +103,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -113,16 +113,16 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`
       )
-      .then(data => {
+      .then((data) => {
         const teams = mapTeams(data.fantasy_content.league[1].teams);
         const league = data.fantasy_content.league[0];
         league.teams = teams;
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -132,9 +132,9 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults`
       )
-      .then(data => {
+      .then((data) => {
         const draft = mapDraft(data.fantasy_content.league[1].draft_results);
         const league = data.fantasy_content.league[0];
 
@@ -142,7 +142,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -152,9 +152,9 @@ class LeagueResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`
       )
-      .then(data => {
+      .then((data) => {
         const transactions = mapTransactions(
           data.fantasy_content.league[1].transactions
         );
@@ -164,7 +164,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -194,11 +194,9 @@ class LeagueResource {
       url += `;type=week;week=${week}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const players = mapPlayers(data.fantasy_content.league[1].players);
 
         const league = data.fantasy_content.league[0];
@@ -208,7 +206,7 @@ class LeagueResource {
         cb(null, league);
         return league;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

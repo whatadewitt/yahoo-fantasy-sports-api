@@ -3,7 +3,7 @@ import {
   mapStats,
   mapRoster,
   mapDraft,
-  mapMatchups
+  mapMatchups,
 } from "../helpers/teamHelper.mjs";
 
 import { extractCallback } from "../helpers/argsParser.mjs";
@@ -17,14 +17,14 @@ class TeamResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata`
       )
-      .then(data => mapTeam(data.fantasy_content.team[0]))
-      .then(meta => {
+      .then((data) => mapTeam(data.fantasy_content.team[0]))
+      .then((meta) => {
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -45,11 +45,9 @@ class TeamResource {
       }
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
         const team = mapTeam(data.fantasy_content.team[0]);
 
@@ -57,7 +55,7 @@ class TeamResource {
         cb(null, team);
         return team;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -67,9 +65,9 @@ class TeamResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings`
       )
-      .then(data => {
+      .then((data) => {
         const standings = data.fantasy_content.team[1].team_standings;
         const team = mapTeam(data.fantasy_content.team[0]);
 
@@ -77,7 +75,7 @@ class TeamResource {
         cb(null, team);
         return team;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -87,9 +85,9 @@ class TeamResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`
       )
-      .then(data => {
+      .then((data) => {
         const team = mapTeam(data.fantasy_content.team[0]);
         const roster = mapRoster(data.fantasy_content.team[1].roster);
 
@@ -97,7 +95,7 @@ class TeamResource {
         cb(null, team);
         return team;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -107,9 +105,9 @@ class TeamResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`
       )
-      .then(data => {
+      .then((data) => {
         const draft_results = mapDraft(
           data.fantasy_content.team[1].draft_results
         );
@@ -119,7 +117,7 @@ class TeamResource {
         cb(null, team);
         return team;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -140,11 +138,9 @@ class TeamResource {
       url += ";weeks=" + weeks;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const matchups = mapMatchups(data.fantasy_content.team[1].matchups);
         const team = mapTeam(data.fantasy_content.team[0]);
 
@@ -152,7 +148,7 @@ class TeamResource {
         cb(null, team);
         return team;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

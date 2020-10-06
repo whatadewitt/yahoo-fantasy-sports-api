@@ -1,7 +1,7 @@
 import {
   parseCollection,
   parseLeagueCollection,
-  parseGameCollection
+  parseGameCollection,
 } from "../helpers/teamHelper.mjs";
 
 import { extractCallback } from "../helpers/argsParser.mjs";
@@ -32,16 +32,14 @@ class TeamsCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const teams = parseCollection(data.fantasy_content.teams, subresources);
         cb(null, teams);
         return teams;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -68,11 +66,9 @@ class TeamsCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const leagues = parseLeagueCollection(
           data.fantasy_content.leagues,
           subresources
@@ -80,7 +76,7 @@ class TeamsCollection {
         cb(null, leagues);
         return leagues;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -101,11 +97,9 @@ class TeamsCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const games = parseGameCollection(
           data.fantasy_content.users[0].user[1].games,
           subresources
@@ -113,7 +107,7 @@ class TeamsCollection {
         cb(null, games);
         return games;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -140,11 +134,9 @@ class TeamsCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const games = parseGameCollection(
           data.fantasy_content.users[0].user[1].games,
           subresources
@@ -152,7 +144,7 @@ class TeamsCollection {
         cb(null, games);
         return games;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

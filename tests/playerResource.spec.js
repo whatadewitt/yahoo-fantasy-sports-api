@@ -36,6 +36,7 @@ describe("resource: playerResource", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -49,7 +50,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/metadata"
     );
   });
 
@@ -62,10 +63,16 @@ describe("resource: playerResource", function() {
       .reply(200, mockPlayerStats);
 
     player.stats("328.p.6619", function(e, data) {
-      expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
-      player.stats("328.p.6619")
-        .then(data => {
-          expect(data.stats.coverage_type).toEqual(mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type);
+      expect(data.stats.coverage_type).toEqual(
+        mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type
+      );
+      player
+        .stats("328.p.6619")
+        .then((data) => {
+          expect(data.stats.coverage_type).toEqual(
+            mockPlayerStats.fantasy_content.player[1].player_stats[0]
+              .coverage_type
+          );
         })
         .then(done)
         .catch(done);
@@ -73,7 +80,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats"
     );
   });
 
@@ -87,7 +94,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/percent_owned"
     );
   });
 
@@ -103,7 +110,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.6619/ownership"
     );
   });
 
@@ -119,7 +126,7 @@ describe("resource: playerResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis"
     );
   });
 });
