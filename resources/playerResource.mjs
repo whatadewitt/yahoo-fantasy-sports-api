@@ -1,7 +1,7 @@
 import {
   mapPlayer,
   mapStats,
-  mapDraftAnalysis
+  mapDraftAnalysis,
 } from "../helpers/playerHelper.mjs";
 
 import { extractCallback } from "../helpers/argsParser.mjs";
@@ -18,14 +18,14 @@ class PlayerResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata`
       )
-      .then(data => {
+      .then((data) => {
         const meta = mapPlayer(data.fantasy_content.player[0]);
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -42,10 +42,9 @@ class PlayerResource {
       url += `;type=week;week=${args.pop()}`;
     }
 
-    url += "?format=json";
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const stats = mapStats(data.fantasy_content.player[1].player_stats);
 
         const player = mapPlayer(data.fantasy_content.player[0]);
@@ -54,7 +53,7 @@ class PlayerResource {
         cb(null, player);
         return player;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -67,9 +66,9 @@ class PlayerResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned`
       )
-      .then(data => {
+      .then((data) => {
         const percent_owned = data.fantasy_content.player[1].percent_owned[1];
         const player = mapPlayer(data.fantasy_content.player[0]);
 
@@ -78,7 +77,7 @@ class PlayerResource {
         cb(null, player);
         return player;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -91,9 +90,9 @@ class PlayerResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKey}/ownership?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKey}/ownership`
       )
-      .then(data => {
+      .then((data) => {
         const league = data.fantasy_content.league[0];
         const player = mapPlayer(
           data.fantasy_content.league[1].players[0].player[0]
@@ -108,7 +107,7 @@ class PlayerResource {
         cb(null, player);
         return player;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -121,9 +120,9 @@ class PlayerResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis`
       )
-      .then(data => {
+      .then((data) => {
         const draft_analysis = mapDraftAnalysis(
           data.fantasy_content.player[1].draft_analysis
         );
@@ -133,7 +132,7 @@ class PlayerResource {
         cb(null, player);
         return player;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

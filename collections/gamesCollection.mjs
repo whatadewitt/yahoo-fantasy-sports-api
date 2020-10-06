@@ -40,7 +40,7 @@ class GamesCollection {
     }
 
     if (Object.keys(filters).length) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         url += `;${key}=${filters[key]}`;
       });
     }
@@ -49,15 +49,14 @@ class GamesCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
-    return this.yf.api(this.yf.GET, url)
-      .then(data => {
+    return this.yf
+      .api(this.yf.GET, url)
+      .then((data) => {
         const games = parseCollection(data.fantasy_content.games, subresources);
-        cb(null, games); 
-        return games; 
+        cb(null, games);
+        return games;
       })
-      .catch(e => { 
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -93,7 +92,7 @@ class GamesCollection {
       "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games";
 
     if (filters) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         url += `;${key}=${filters[key]}`;
       });
     }
@@ -102,18 +101,17 @@ class GamesCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
-    return this.yf.api(this.yf.GET, url)
-      .then(data => {
+    return this.yf
+      .api(this.yf.GET, url)
+      .then((data) => {
         const games = parseCollection(
           data.fantasy_content.users[0].user[1].games,
           subresources
         );
-        cb(null, games); 
-        return games; 
+        cb(null, games);
+        return games;
       })
-      .catch(e => { 
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -142,20 +140,19 @@ class GamesCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
-    return this.yf.api(this.yf.GET, url)
-      .then(data => {
+    return this.yf
+      .api(this.yf.GET, url)
+      .then((data) => {
         let user = data.fantasy_content.users[0].user[0];
         user.games = parseCollection(
           data.fantasy_content.users[0].user[1].games,
           subresources
         );
 
-        cb(null, user); 
-        return user; 
+        cb(null, user);
+        return user;
       })
-      .catch(e => { 
+      .catch((e) => {
         cb(e);
         throw e;
       });

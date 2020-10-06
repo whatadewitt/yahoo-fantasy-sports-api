@@ -24,6 +24,7 @@ describe("resource: userResource", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -37,7 +38,7 @@ describe("resource: userResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games"
     );
   });
 
@@ -53,7 +54,7 @@ describe("resource: userResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/leagues?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/leagues"
     );
   });
 
@@ -68,7 +69,7 @@ describe("resource: userResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/leagues"
     );
   });
 
@@ -80,12 +81,11 @@ describe("resource: userResource", function() {
       )
       .reply(200, require("./nock-data/userTeams"));
 
-
     user.game_teams("328", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/teams?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328/teams"
     );
   });
 
@@ -100,7 +100,7 @@ describe("resource: userResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=328,242/teams"
     );
   });
 });

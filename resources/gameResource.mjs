@@ -4,7 +4,7 @@ import {
   mapWeeks,
   mapStatCategories,
   mapPositionTypes,
-  mapRosterPositions
+  mapRosterPositions,
 } from "../helpers/gameHelper.mjs";
 
 class GameResource {
@@ -17,15 +17,15 @@ class GameResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata`
       )
-      .then(data => {
+      .then((data) => {
         const meta = data.fantasy_content.game[0];
 
         cb(null, meta);
         return meta;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -43,9 +43,9 @@ class GameResource {
         this.yf.GET,
         `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/leagues;league_keys=${leagueKey.join(
           ","
-        )}?format=json`
+        )}`
       )
-      .then(data => {
+      .then((data) => {
         const leagues = mapLeagues(data.fantasy_content.game[1].leagues);
         const game = data.fantasy_content.game[0];
 
@@ -53,7 +53,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -70,9 +70,9 @@ class GameResource {
         this.yf.GET,
         `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/players;player_keys=${playerKey.join(
           ","
-        )}?format=json`
+        )}`
       )
-      .then(data => {
+      .then((data) => {
         const players = mapPlayers(data.fantasy_content.game[1].players);
         const game = data.fantasy_content.game[0];
 
@@ -80,7 +80,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -90,9 +90,9 @@ class GameResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/game_weeks?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/game_weeks`
       )
-      .then(data => {
+      .then((data) => {
         const weeks = mapWeeks(data.fantasy_content.game[1].game_weeks);
         const game = data.fantasy_content.game[0];
 
@@ -100,7 +100,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -110,9 +110,9 @@ class GameResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/stat_categories?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/stat_categories`
       )
-      .then(data => {
+      .then((data) => {
         const stat_categories = mapStatCategories(
           data.fantasy_content.game[1].stat_categories.stats
         );
@@ -122,7 +122,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -132,9 +132,9 @@ class GameResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/position_types?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/position_types`
       )
-      .then(data => {
+      .then((data) => {
         const position_types = mapPositionTypes(
           data.fantasy_content.game[1].position_types
         );
@@ -145,7 +145,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -155,9 +155,9 @@ class GameResource {
     return this.yf
       .api(
         this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/roster_positions?format=json`
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/roster_positions`
       )
-      .then(data => {
+      .then((data) => {
         const roster_positions = mapRosterPositions(
           data.fantasy_content.game[1].roster_positions
         );
@@ -168,7 +168,7 @@ class GameResource {
         cb(null, game);
         return game;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

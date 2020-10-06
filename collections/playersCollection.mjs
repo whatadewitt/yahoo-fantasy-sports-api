@@ -1,7 +1,7 @@
 import {
   parseCollection,
   parseLeagueCollection,
-  parseTeamCollection
+  parseTeamCollection,
 } from "../helpers/playerHelper.mjs";
 
 import { extractCallback } from "../helpers/argsParser.mjs";
@@ -33,11 +33,9 @@ class PlayersCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const players = parseCollection(
           data.fantasy_content.players,
           subresources
@@ -46,7 +44,7 @@ class PlayersCollection {
         cb(null, players);
         return players;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -89,16 +87,14 @@ class PlayersCollection {
     }
 
     if (Object.keys(filters).length) {
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         url += `;${key}=${filters[key]}`;
       });
     }
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const leagues = parseLeagueCollection(
           data.fantasy_content.leagues,
           subresources
@@ -107,7 +103,7 @@ class PlayersCollection {
         cb(null, leagues);
         return leagues;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });
@@ -151,15 +147,13 @@ class PlayersCollection {
       url += `;out=${subresources.join(",")}`;
     }
 
-    Object.keys(filters).forEach(key => {
+    Object.keys(filters).forEach((key) => {
       url += `;${key}=${filters[key]}`;
     });
 
-    url += "?format=json";
-
     return this.yf
       .api(this.yf.GET, url)
-      .then(data => {
+      .then((data) => {
         const teams = parseTeamCollection(
           data.fantasy_content.teams,
           subresources
@@ -168,7 +162,7 @@ class PlayersCollection {
         cb(null, teams);
         return teams;
       })
-      .catch(e => {
+      .catch((e) => {
         cb(e);
         throw e;
       });

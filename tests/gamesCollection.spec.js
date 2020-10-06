@@ -24,6 +24,7 @@ describe("collection: gamesCollection", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testuser.token==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -35,10 +36,9 @@ describe("collection: gamesCollection", function() {
 
     games.fetch(328, done);
 
-
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/games?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/games"
     );
   });
 });

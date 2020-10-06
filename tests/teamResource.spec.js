@@ -36,6 +36,7 @@ describe("resource: teamResource", function() {
 
   // building urls
   beforeEach(function() {
+    yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
@@ -49,7 +50,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata"
     );
   });
 
@@ -63,7 +64,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats"
     );
   });
 
@@ -77,7 +78,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings"
     );
   });
 
@@ -91,7 +92,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster"
     );
   });
 
@@ -105,7 +106,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults"
     );
   });
 
@@ -119,7 +120,7 @@ describe("resource: teamResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups?format=json"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups"
     );
   });
 });
