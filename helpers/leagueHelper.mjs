@@ -30,17 +30,21 @@ export function mapStandings(ts) {
 }
 
 export function mapSettings(settings) {
-  settings.stat_categories = settings.stat_categories.stats.map(s => {
+  settings.stat_categories = settings.stat_categories.stats.map((s) => {
     s.stat.stat_position_types = s.stat.stat_position_types.map(
-      pt => pt.stat_position_type
+      (pt) => pt.stat_position_type.position_type
     );
 
     return s.stat;
   });
 
   settings.roster_positions = settings.roster_positions.map(
-    p => p.roster_position
+    (p) => p.roster_position
   );
+
+  if (settings.waiver_days) {
+    settings.waiver_days = settings.waiver_days.map((d) => d.day);
+  }
 
   return settings;
 }
@@ -65,10 +69,10 @@ export function mapScoreboard(sb) {
     if (m.matchup) {
       m = m.matchup;
       if (m.matchup_grades) {
-        m.matchup_grades = m.matchup_grades.map(grade => {
+        m.matchup_grades = m.matchup_grades.map((grade) => {
           return {
             team_key: grade.matchup_grade.team_key,
-            grade: grade.matchup_grade.grade
+            grade: grade.matchup_grade.grade,
           };
         });
       }
@@ -96,7 +100,7 @@ export function mapScoreboard(sb) {
 
   return {
     matchups: matchups,
-    week: scoreboard.week
+    week: scoreboard.week,
   };
 }
 
@@ -125,7 +129,7 @@ export function parseCollection(ls, subresources) {
     leagues.push(ls[i]);
   }
 
-  return leagues.map(l => {
+  return leagues.map((l) => {
     let league = l.league[0];
 
     subresources.forEach((resource, idx) => {
