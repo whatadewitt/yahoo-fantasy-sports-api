@@ -60,7 +60,6 @@ class YahooFantasy {
 
   // oauth2 authenticatiocn function -- follow redirect to yahoo login
   auth(res, state = null) {
-    console.log("SETTING STATE", state);
     const authData = {
       client_id: this.CONSUMER_KEY,
       redirect_uri: this.REDIRECT_URI,

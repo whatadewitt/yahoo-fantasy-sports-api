@@ -19,7 +19,6 @@ class UserResource {
         const user = data.fantasy_content.users[0].user[0];
         const games = mapGames(data.fantasy_content.users[0].user[1].games);
 
-        console.log(cb);
         user.games = games;
         cb(null, user);
         return user;
