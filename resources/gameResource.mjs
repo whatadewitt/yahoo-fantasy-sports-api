@@ -33,6 +33,9 @@ class GameResource {
 
   /* league key can be an array of keys */
   leagues(gameKey, leagueKey, cb = () => {}) {
+    console.warn(
+      "WARNING: game.leagues will be DEPRECATED in an upcoming release, you can use league.meta to retrieve the same information (or more) with less params."
+    );
     // TODO: can this be cleaned up?
     if ("string" === typeof leagueKey) {
       leagueKey = [leagueKey];
@@ -60,6 +63,9 @@ class GameResource {
   }
 
   players(gameKey, playerKey, cb = () => {}) {
+    console.warn(
+      "WARNING: game.players will be DEPRECATED in an upcoming release, you can use player.meta to retrieve the same information (or more) with less params."
+    );
     // TODO: can this be cleaned up?
     if ("string" === typeof playerKey) {
       playerKey = [playerKey];

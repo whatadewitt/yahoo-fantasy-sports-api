@@ -97,6 +97,15 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 4.1.0
+
+- Maybe would have made sense as a 5.0.0 as there may be breaking changes, but I haven't been able to find any yet...
+- the authCallback() function will now return an object with the user's access_token and refresh_token
+- the auth() function will accept a "state" string, allowing for state persistence through the authentication process
+- re-enabled the transactions.fetch() collection call
+- cleaned up the "wavier_days" and "stat_categories" objects on league resources
+- added deprecation warnings to the game.leagues and game.players functions as they're not very useful in that context
+
 #### 4.0.0
 
 - Added auth(), authCallback, setRefreshToken() functions to the library

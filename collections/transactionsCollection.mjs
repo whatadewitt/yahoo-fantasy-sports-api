@@ -1,5 +1,6 @@
-const transactionHelper = require("../helpers/transactionHelper.js");
-const isEmpty = require("../helpers/isEmpty.js");
+import { mapTransactionPlayers } from "../helpers/transactionHelper.mjs";
+
+import { isEmpty } from "../helpers/isEmpty.mjs";
 
 // TODO: https://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}
 // TODO: fetch multiple front end
@@ -45,44 +46,46 @@ class TransactionsCollection {
       });
   }
 
-  leagueFetch = function(leagueKeys, resources, filters, cb = () => {}) {
-    let url =
-      "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
+  // leagueFetch = function(leagueKeys, resources, filters, cb = () => {}) {
+  //   let url =
+  //     "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 
-    if ("string" === typeof leagueKeys) {
-      leagueKeys = [leagueKeys];
-    }
+  //   if ("string" === typeof leagueKeys) {
+  //     leagueKeys = [leagueKeys];
+  //   }
 
-    url += leagueKeys.join(",");
-    url += "/transactions";
+  //   url += leagueKeys.join(",");
+  //   url += "/transactions";
 
-    if (!isEmpty(resources)) {
-      if ("string" === typeof resources) {
-        resources = [resources];
-      }
+  //   if (!isEmpty(resources)) {
+  //     if ("string" === typeof resources) {
+  //       resources = [resources];
+  //     }
 
-      url += ";out=" + resources.join(",");
-    }
+  //     url += ";out=" + resources.join(",");
+  //   }
 
-    if (!isEmpty(filters)) {
-      Object.keys(filters).forEach(function(key) {
-        url += ";" + key + "=" + filters[key];
-      });
-    }
+  //   if (!isEmpty(filters)) {
+  //     Object.keys(filters).forEach(function(key) {
+  //       url += ";" + key + "=" + filters[key];
+  //     });
+  //   }
 
-    return this.yf
-      .api(this.yf.GET, url)
-      .then((meta) => {
-        const meta = data.fantasy_content;
-        cb(null, meta);
-        return meta;
-      })
-      .catch((e) => {
-        cb(e);
-        throw e;
-      });
-  };
+  //   return this.yf
+  //     .api(this.yf.GET, url)
+  //     .then((meta) => {
+  //       const meta = data.fantasy_content;
 
+  //       cb(null, meta);
+  //       return meta;
+  //     })
+  //     .catch((e) => {
+  //       cb(e);
+  //       throw e;
+  //     });
+  // };
+
+  /**
   add_player = function(leagueKey, teamKey, playerKey, cb = () => {}) {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
 
@@ -214,6 +217,7 @@ class TransactionsCollection {
         throw e;
       });
   };
+   */
 }
 
 export default TransactionsCollection;

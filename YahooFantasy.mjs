@@ -16,7 +16,7 @@ import {
   User,
 } from "./resources";
 
-import { Games, Leagues, Players, Teams } from "./collections"; // Transactions, Users } from "./collections";
+import { Games, Leagues, Players, Teams, Transactions } from "./collections"; // Users } from "./collections";
 
 class YahooFantasy {
   // redirect only needed if you're handling the auth with this lib
@@ -47,7 +47,7 @@ class YahooFantasy {
     this.teams = new Teams(this);
 
     this.transaction = new Transaction(this);
-    // this.transactions = new Transactions(this);
+    this.transactions = new Transactions(this);
 
     this.roster = new Roster(this);
 
@@ -58,18 +58,22 @@ class YahooFantasy {
     this.yahooRefreshToken = null;
   }
 
-  // oauth2 authentication function -- follow redirect to yahoo login
-  auth(res) {
-    const authData = stringify({
+  // oauth2 authenticatiocn function -- follow redirect to yahoo login
+  auth(res, state = null) {
+    const authData = {
       client_id: this.CONSUMER_KEY,
       redirect_uri: this.REDIRECT_URI,
       response_type: "code",
-    });
+    };
+
+    if (state) {
+      authData.state = state;
+    }
 
     const options = {
       hostname: "api.login.yahoo.com",
       port: 443,
-      path: `/oauth2/request_auth?${authData}`,
+      path: `/oauth2/request_auth?${stringify(authData)}`,
       method: "GET",
     };
 
@@ -97,13 +101,18 @@ class YahooFantasy {
   }
 
   authCallback(req, cb) {
-    const tokenData = stringify({
+    const tokenData = {
       client_id: this.CONSUMER_KEY,
       client_secret: this.CONSUMER_SECRET,
       redirect_uri: this.REDIRECT_URI,
       code: req.query.code,
       grant_type: "authorization_code",
-    });
+    };
+
+    let state = req.query.state;
+    if (state) {
+      tokenData.state = state;
+    }
 
     const options = {
       hostname: "api.login.yahoo.com",
@@ -125,16 +134,22 @@ class YahooFantasy {
       });
 
       tokenReponse.on("end", async () => {
-        const tokenData = JSON.parse(Buffer.concat(chunks));
-        this.yahooUserToken = tokenData.access_token;
-        this.yahooRefreshToken = tokenData.refresh_token;
+        const { access_token, refresh_token } = JSON.parse(
+          Buffer.concat(chunks)
+        );
+
+        this.yahooUserToken = access_token;
+        this.yahooRefreshToken = refresh_token;
 
         if (this.refreshTokenCallback) {
           // run the callback before moving on
-          await this.refreshTokenCallback(tokenData);
+          await this.refreshTokenCallback({
+            access_token,
+            refresh_token,
+          });
         }
 
-        cb();
+        cb(null, { access_token, refresh_token, state });
       });
     });
 
@@ -142,7 +157,7 @@ class YahooFantasy {
       cb(e);
     });
 
-    tokenRequest.write(tokenData);
+    tokenRequest.write(stringify(tokenData));
     tokenRequest.end();
   }
 
