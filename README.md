@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 4.1.1
+
+- Small change to the way the resource and collection files are being imported as it was causing issues on some hosts...
+
 #### 4.1.0
 
 - Maybe would have made sense as a 5.0.0 as there may be breaking changes, but I haven't been able to find any yet...
