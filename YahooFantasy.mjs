@@ -14,9 +14,15 @@ import {
   Team,
   Transaction,
   User,
-} from "./resources";
+} from "./resources/index.mjs";
 
-import { Games, Leagues, Players, Teams, Transactions } from "./collections"; // Users } from "./collections";
+import {
+  Games,
+  Leagues,
+  Players,
+  Teams,
+  Transactions,
+} from "./collections/index.mjs"; // Users } from "./collections";
 
 class YahooFantasy {
   // redirect only needed if you're handling the auth with this lib
