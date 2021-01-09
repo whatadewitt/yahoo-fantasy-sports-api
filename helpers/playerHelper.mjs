@@ -1,15 +1,11 @@
 import { mergeObjects } from "./sharedHelpers.mjs";
 import { mapTeam } from "./teamHelper.mjs";
 
-export function mapPlayer(p) {
+export function mapPlayer(p, po) {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
     player.eligible_positions = player.eligible_positions.map(p => p.position);
-  }
-
-  if (player.selected_position) {
-    player.selected_position = player.selected_position[1].position;
   }
 
   if (player.starting_status) {
@@ -32,6 +28,10 @@ export function mapPlayer(p) {
 
   if (player.player_points) {
     player.player_points = mapPoints(player.player_points);
+  }
+
+  if (po && po.selected_position) {
+    player.selected_position = po.selected_position[1].position;
   }
 
   return player;

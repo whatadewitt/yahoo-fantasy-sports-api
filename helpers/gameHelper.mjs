@@ -17,7 +17,7 @@ export function mapPlayers(ps) {
 
   return players.reduce((result, p) => {
     if (p.player) {
-      result.push(mapPlayer(p.player[0]));
+      result.push(mapPlayer(p.player[0], p.player[1]));
     }
 
     return result;
