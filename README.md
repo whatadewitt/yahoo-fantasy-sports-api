@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+#### 4.1.2
+
+- Fixed bug where "selected position" was no longer working due to a change in the data format coming from Yahoo! (merge [PR #69](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/69)) (Thanks [brisberg](https://github.com/brisberg))
+
 #### 4.1.1
 
 - Small change to the way the resource and collection files are being imported as it was causing issues on some hosts...
