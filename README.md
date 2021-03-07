@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 4.1.3
+
+- Fixed a bug where Yahoo! apparently no longer requires `;type=week` when building a URL for team.stats and player.stats, leading to no stats coming back for those resources ([Issue #70](https://github.com/whatadewitt/yfsapi/issues/70"))
+
 #### 4.1.2
 
 - Fixed bug where "selected position" was no longer working due to a change in the data format coming from Yahoo! (merge [PR #69](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/69)) (Thanks [brisberg](https://github.com/brisberg))

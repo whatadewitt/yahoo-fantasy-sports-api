@@ -39,7 +39,7 @@ class PlayerResource {
     const cb = extractCallback(args);
 
     if (args.length) {
-      url += `;type=week;week=${args.pop()}`;
+      url += `;week=${args.pop()}`;
     }
 
     return this.yf
