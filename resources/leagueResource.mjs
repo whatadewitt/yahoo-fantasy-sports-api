@@ -191,12 +191,13 @@ class LeagueResource {
     url += "/stats";
 
     if (week) {
-      url += `;type=week;week=${week}`;
+      url += `;week=${week}`;
     }
 
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {
+        // TODO: map players stats here as well
         const players = mapPlayers(data.fantasy_content.league[1].players);
 
         const league = data.fantasy_content.league[0];
