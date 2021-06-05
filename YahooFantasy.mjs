@@ -288,12 +288,12 @@ class YahooFantasy {
 
             if (data.error) {
               if (/"token_expired"/i.test(data.error.description)) {
-                this.refreshToken((err, data) => {
+                return this.refreshToken((err, data) => {
                   if (err) {
                     return reject(err);
                   }
 
-                  return this.api(method, url, postData);
+                  return resolve(this.api(method, url, postData));
                 });
               } else {
                 return reject(data.error);
