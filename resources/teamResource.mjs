@@ -48,6 +48,7 @@ class TeamResource {
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {
+        console.log(JSON.stringify(data.fantasy_content));
         const stats = mapStats(data.fantasy_content.team[1].team_stats.stats);
         const team = mapTeam(data.fantasy_content.team[0]);
 
