@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 4.1.4
+
+- Fixed a bug where the response from the token refresh was not being included in the promise chain. (merge [PR #78](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/78)) (Thanks [connor4312](https://github.com/connor4312))
+
 ### 4.1.3
 
 - Fixed a bug where Yahoo! apparently no longer requires `;type=week` when building a URL for team.stats and player.stats, leading to no stats coming back for those resources ([Issue #70](https://github.com/whatadewitt/yfsapi/issues/70"))
