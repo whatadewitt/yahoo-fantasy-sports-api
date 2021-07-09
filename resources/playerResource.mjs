@@ -42,6 +42,7 @@ class PlayerResource {
       url += `;week=${args.pop()}`;
     }
 
+    console.log(url);
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {

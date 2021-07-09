@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 4.1.5
+
+- Fixed a bug where certain league settings were not loading properly for some older leagues. (merge [PR #80](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/80)) (Thanks [connor4312](https://github.com/connor4312))
+
 ### 4.1.4
 
 - Fixed a bug where the response from the token refresh was not being included in the promise chain. (merge [PR #78](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/78)) (Thanks [connor4312](https://github.com/connor4312))
