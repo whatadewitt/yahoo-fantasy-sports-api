@@ -31,9 +31,9 @@ export function mapStandings(ts) {
 
 export function mapSettings(settings) {
   settings.stat_categories = settings.stat_categories.stats.map((s) => {
-    s.stat.stat_position_types = s.stat.stat_position_types.map(
-      (pt) => pt.stat_position_type.position_type
-    );
+    s.stat.stat_position_types = s.stat.stat_position_types
+      ? s.stat.stat_position_types.map((pt) => pt.stat_position_type.position_type)
+      : [];
 
     return s.stat;
   });
