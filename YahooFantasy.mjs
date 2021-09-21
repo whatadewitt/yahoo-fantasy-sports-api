@@ -284,23 +284,27 @@ class YahooFantasy {
           });
 
           resp.on("end", () => {
-            data = JSON.parse(data);
+            try {
+              data = JSON.parse(data);
 
-            if (data.error) {
-              if (/"token_expired"/i.test(data.error.description)) {
-                return this.refreshToken((err, data) => {
-                  if (err) {
-                    return reject(err);
-                  }
+              if (data.error) {
+                if (/"token_expired"/i.test(data.error.description)) {
+                  return this.refreshToken((err, data) => {
+                    if (err) {
+                      return reject(err);
+                    }
 
-                  return resolve(this.api(method, url, postData));
-                });
-              } else {
-                return reject(data.error);
+                    return resolve(this.api(method, url, postData));
+                  });
+                } else {
+                  return reject(data.error);
+                }
               }
-            }
 
-            return resolve(data);
+              return resolve(data);
+            } catch (e) {
+              return reject(e);
+            }
           });
         })
         .on("error", (err) => {
