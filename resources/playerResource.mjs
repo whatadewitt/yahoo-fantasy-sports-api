@@ -39,7 +39,14 @@ class PlayerResource {
     const cb = extractCallback(args);
 
     if (args.length) {
-      url += `;week=${args.pop()}`;
+      let date = args.pop();
+      if (date.indexOf("-") > 0) {
+        // string is date, of format y-m-d
+        url += `;type=date;date=${date}`;
+      } else {
+        // number is week...
+        url += `;type=week;week=${date}`;
+      }
     }
 
     console.log(url);
