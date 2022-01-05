@@ -38,17 +38,34 @@ class PlayerResource {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/stats`;
     const cb = extractCallback(args);
 
+    let dateType;
     if (args.length) {
-      url += `;week=${args.pop()}`;
+      const date = args.pop();
+      // TODO: I could get more clever here, but need it working first...
+      if (date.indexOf("-") > 0) {
+        dateType = "date";
+        // string is date, of format y-m-d
+        url += `;type=date;date=${date}`;
+      } else {
+        dateType = "week";
+        // number is week...
+        url += `;type=week;week=${date}`;
+      }
     }
 
     console.log(url);
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {
-        const stats = mapStats(data.fantasy_content.player[1].player_stats);
-
+        let stats;
         const player = mapPlayer(data.fantasy_content.player[0]);
+
+        if (data.fantasy_content.player.length > 1) {
+          stats = mapStats(data.fantasy_content.player[1].player_stats);
+        } else {
+          const gameKey = playerKey.split(".")[0];
+          stats = `Cannot retrieve player stats of type '${dateType}' for game '${gameKey}'`;
+        }
 
         player.stats = stats;
         cb(null, player);
