@@ -97,6 +97,13 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 4.2.0
+
+- Fixed a bug where querying player stats for a given week wasn't working.
+- Updated the `player.stats` function to accept a week OR a date (format `yyyy-mm-dd`) as the 2nd param.
+- Fixed a bug that would cause the function to fail silently if trying to request stats for a given `week` for players outside of the NFL (for this you can just get the weeks from the game settings and make multiple queries for each day of the week).
+- Fixes [Issue #79](https://github.com/whatadewitt/yahoo-fantasy-sports-api/issues/79) (Big thanks to [jimweigandt](https://github.com/jimweigandt) and [rdbaron](https://github.com/rdbaron) for the help finding / debugging the issue)
+
 ### 4.1.5
 
 - Fixed a bug where certain league settings were not loading properly for some older leagues. (merge [PR #80](https://github.com/whatadewitt/yahoo-fantasy-sports-api/pull/80)) (Thanks [connor4312](https://github.com/connor4312))
