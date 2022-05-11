@@ -97,6 +97,11 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.0.0
+
+- My NextJS docs site was giving me grief about ESM/CJS imports so I made some changes that should work for whatever import method you want to use
+- Updated the `mapScoreboard` function that is used by the league resource to simplify the `stat_winners` array to show the winning `stat_id` and `team_key` (or `is_tied`), rather than having them nested inside a `stat_winner` object
+
 ### 4.2.0
 
 - Fixed a bug where querying player stats for a given week wasn't working.

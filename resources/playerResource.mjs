@@ -53,7 +53,6 @@ class PlayerResource {
       }
     }
 
-    console.log(url);
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {

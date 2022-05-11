@@ -118,6 +118,7 @@ class LeagueResource {
       .then((data) => {
         const teams = mapTeams(data.fantasy_content.league[1].teams);
         const league = data.fantasy_content.league[0];
+
         league.teams = teams;
         cb(null, league);
         return league;

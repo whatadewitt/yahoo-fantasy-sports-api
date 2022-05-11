@@ -1,8 +1,12 @@
 {
   "name": "yahoo-fantasy",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
-  "main": "index.js",
+  "main": "./index.js",
+  "exports": {
+    "import": "./YahooFantasy.mjs",
+    "require": "./index.js"
+  },
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
@@ -25,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/whatadewitt/yfsapi/issues"
   },
-  "homepage": "https://github.com/whatadewitt/yfsapi",
+  "homepage": "https://yahoo-fantasy-node-docs.vercel.app/",
   "dependencies": {
     "esm": "^3.2.25",
     "follow-redirects": "^1.13.0",
