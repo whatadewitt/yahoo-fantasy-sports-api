@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.1.0
+
+- Cleaned up the `user.game_leagues` function to have the `game.league` array be an array of objects instead of an array of a single array holding an object.
+
 ### 5.0.0
 
 - My NextJS docs site was giving me grief about ESM/CJS imports so I made some changes that should work for whatever import method you want to use

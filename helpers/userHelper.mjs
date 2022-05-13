@@ -27,7 +27,7 @@ export function mapUserLeagues(gs) {
     const leagues = [];
 
     for (let j = 0; j < leagueCount; j++) {
-      leagues.push(ls[j].league);
+      leagues.push(ls[j].league[0]);
     }
 
     game.leagues = leagues;
