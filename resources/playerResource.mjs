@@ -42,7 +42,10 @@ class PlayerResource {
     if (args.length) {
       const date = args.pop();
       // TODO: I could get more clever here, but need it working first...
-      if (date.indexOf("-") > 0) {
+      if (date === "lastweek" || date === "lastmonth") {
+        dateType = date;
+        url += `;type=${date}`;
+      } else if (date.indexOf("-") > 0) {
         dateType = "date";
         // string is date, of format y-m-d
         url += `;type=date;date=${date}`;
