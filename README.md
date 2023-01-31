@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.2.1
+
+- Dependabot alert fixes
+
 ### 5.2.0
 
 - Add support for `lastweek` and `lastmonth` as arguments in `player.stats` resource (Thanks to [nosecreek](https://github.com/nosecreek)!)
