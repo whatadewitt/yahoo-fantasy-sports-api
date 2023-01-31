@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.2.0
+
+- Add support for `lastweek` and `lastmonth` as arguments in `player.stats` resource (Thanks to [nosecreek](https://github.com/nosecreek)!)
+
 ### 5.1.0
 
 - Cleaned up the `user.game_leagues` function to have the `game.league` array be an array of objects instead of an array of a single array holding an object.
