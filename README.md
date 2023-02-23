@@ -16,7 +16,7 @@ This module is available under the [MIT Licence](http://opensource.org/licenses/
 
 ## Documentation
 
-More complete documentation can be found using the application sandbox. This sandbox is always a work in progress, if I've learned anything it's that nothing is ever complete.
+More complete documentation can be found using the application sandbox ([Link](https://yahoo-fantasy-node-docs.vercel.app/)). This sandbox is always a work in progress, if I've learned anything it's that nothing is ever complete.
 
 The API can be used by simply importing the module and querying data, since version 4.0 the authentication flow has been built into the library to make things easier for users.
 
