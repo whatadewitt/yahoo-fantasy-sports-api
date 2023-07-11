@@ -120,8 +120,10 @@ export function mapTransactions(ts) {
   for (let i = 0; i < count; i++) {
     let transaction = Object.assign({ players: [] }, ts[i].transaction[0]);
 
-    if (ts[i].transaction[1].players) {
+    if (ts[i].transaction.length > 1 && ts[i].transaction[1].players) {
       transaction.players = mapTransactionPlayers(ts[i].transaction[1].players);
+    } else {
+      transaction.players = [];
     }
 
     transactions.push(transaction);

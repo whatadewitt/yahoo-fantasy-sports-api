@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.2.2
+
+- Fixed a bug where transactions somehow didn't have players and would cause a crash
+
 ### 5.2.1
 
 - Dependabot alert fixes
