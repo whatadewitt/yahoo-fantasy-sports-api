@@ -1,7 +1,7 @@
 import { mergeObjects } from "./sharedHelpers.mjs";
 import { mapTeam } from "./teamHelper.mjs";
 
-export function mapPlayer(p, po) {
+export function mapPlayer(p) {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
