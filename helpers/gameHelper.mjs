@@ -17,7 +17,10 @@ export function mapPlayers(ps) {
 
   return players.reduce((result, p) => {
     if (p.player) {
-      result.push(mapPlayer(p.player[0], p.player[1]));
+      for (let i = 1; i < p.player.length; i++) {
+        p.player[0].push(p.player[i]);
+      }
+      result.push(mapPlayer(p.player[0])); //, p.player[1]));
     }
 
     return result;
@@ -37,18 +40,18 @@ export function mapWeeks(ws) {
 }
 
 export function mapStatCategories(statcats) {
-  statcats = statcats.map(s => s.stat);
+  statcats = statcats.map((s) => s.stat);
 
   // additional cleanup...
-  statcats = statcats.map(statcat => {
+  statcats = statcats.map((statcat) => {
     if ("undefined" != typeof statcat.position_types) {
       statcat.position_types = statcat.position_types.map(
-        pt => pt.position_type
+        (pt) => pt.position_type
       );
     }
 
     if ("undefined" != typeof statcat.base_stats) {
-      statcat.base_stats = statcat.base_stats.map(bs => bs.base_stat.stat_id);
+      statcat.base_stats = statcat.base_stats.map((bs) => bs.base_stat.stat_id);
     }
 
     return statcat;
@@ -58,11 +61,11 @@ export function mapStatCategories(statcats) {
 }
 
 export function mapPositionTypes(positions) {
-  return positions.map(p => p.position_type);
+  return positions.map((p) => p.position_type);
 }
 
 export function mapRosterPositions(positions) {
-  return positions.map(p => p.roster_position);
+  return positions.map((p) => p.roster_position);
 }
 
 export function parseCollection(gs, subresources) {
@@ -73,7 +76,7 @@ export function parseCollection(gs, subresources) {
     games.push(gs[i]);
   }
 
-  return games.map(g => {
+  return games.map((g) => {
     let game = Array.isArray(g.game) ? g.game[0] : g.game;
     // TODO: figure out the "pick'em" subresources...
 

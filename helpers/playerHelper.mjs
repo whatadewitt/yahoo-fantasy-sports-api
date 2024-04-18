@@ -5,7 +5,9 @@ export function mapPlayer(p, po) {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
-    player.eligible_positions = player.eligible_positions.map(p => p.position);
+    player.eligible_positions = player.eligible_positions.map(
+      (p) => p.position
+    );
   }
 
   if (player.starting_status) {
@@ -30,8 +32,8 @@ export function mapPlayer(p, po) {
     player.player_points = mapPoints(player.player_points);
   }
 
-  if (po && po.selected_position) {
-    player.selected_position = po.selected_position[1].position;
+  if (player.selected_position) {
+    player.selected_position = player.selected_position[1].position;
   }
 
   return player;
@@ -42,7 +44,7 @@ export function mapStats(stats) {
   return {
     coverage_type: coverage_type,
     coverage_value: stats[0][coverage_type],
-    stats: stats.stats.map(s => s.stat)
+    stats: stats.stats.map((s) => s.stat),
   };
 }
 
@@ -51,13 +53,13 @@ export function mapPoints(points) {
   return {
     coverage_type,
     coverage_value: points[0][coverage_type],
-    total: points.total
+    total: points.total,
   };
 }
 
 export function mapOwnership(ownership) {
   const o = {
-    ownership_type: ownership.ownership_type
+    ownership_type: ownership.ownership_type,
   };
 
   if ("team" === o.ownership_type) {
@@ -80,7 +82,7 @@ export function parseCollection(ps, subresources) {
     players.push(ps[i]);
   }
 
-  return players.map(p => {
+  return players.map((p) => {
     let player = mapPlayer(p.player[0]);
 
     subresources.forEach((resource, idx) => {
@@ -120,7 +122,7 @@ export function parseLeagueCollection(ls, subresources) {
     leagues.push(ls[i]);
   }
 
-  return leagues.map(l => {
+  return leagues.map((l) => {
     let league = l.league[0];
     league.players = parseCollection(l.league[1].players, subresources);
 
@@ -136,7 +138,7 @@ export function parseTeamCollection(ts, subresources) {
     teams.push(ts[i]);
   }
 
-  return teams.map(t => {
+  return teams.map((t) => {
     let team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 

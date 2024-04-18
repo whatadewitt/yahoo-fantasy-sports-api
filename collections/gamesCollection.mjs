@@ -10,18 +10,13 @@ class GamesCollection {
   // params: game keys or filters, subresources (optional), callback
   fetch(...args) {
     let gameKeys = [],
-      subresources = [],
-      filters = {};
+      subresources = [];
     const cb = extractCallback(args);
 
-    if ("string" === typeof args[0]) {
-      gameKeys = args.shift();
+    gameKeys = args.shift();
 
-      if (!Array.isArray(gameKeys)) {
-        gameKeys = [gameKeys];
-      }
-    } else {
-      filters = args.shift();
+    if (!Array.isArray(gameKeys)) {
+      gameKeys = [gameKeys];
     }
 
     if (args.length) {
@@ -37,12 +32,6 @@ class GamesCollection {
 
     if (gameKeys.length) {
       url += `;game_keys=${gameKeys.join(",")}`;
-    }
-
-    if (Object.keys(filters).length) {
-      Object.keys(filters).forEach((key) => {
-        url += `;${key}=${filters[key]}`;
-      });
     }
 
     if (subresources.length) {
