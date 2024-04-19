@@ -35,7 +35,7 @@ class TeamResource {
     const cb = extractCallback(args);
 
     if (args.length) {
-      let date = args.pop();
+      const date = args.pop();
       if (date.indexOf("-") > 0) {
         // string is date, of format y-m-d
         url += `;type=date;date=${date}`;

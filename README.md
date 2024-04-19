@@ -97,6 +97,14 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.3.0
+
+- Split the roster resource into 2 functions (which was avoided in the past). `roster.fetch` will work the same as `roster.players` always has. `roster.players` will be backwards compatible but will now allow an optional additional "subresource" parameter that return additional information about the roster being queried.
+- Removed unused and undocumented "filter" checks on games.fetch
+- Cleaned up mapPlayer function in playerHelpers
+- Added resourceHelper file for roster changes
+- Minor code cleanup
+
 ### 5.2.2
 
 - Fixed a bug where transactions somehow didn't have players and would cause a crash

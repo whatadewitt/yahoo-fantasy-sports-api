@@ -6,14 +6,14 @@ export function mapTeam(t) {
   const team = mergeObjects(t);
   // clean up team_logos
   if (team.team_logos.length) {
-    team.team_logos = team.team_logos.map(logo => logo.team_logo);
+    team.team_logos = team.team_logos.map((logo) => logo.team_logo);
   } else {
     // fix issue #49 -- no team logo throwing error
     team.team_logos = [];
   }
 
   // clean up managers
-  team.managers = team.managers.map(manager => manager.manager);
+  team.managers = team.managers.map((manager) => manager.manager);
 
   return team;
 }
@@ -24,7 +24,7 @@ export function mapRoster(r) {
 }
 
 export function mapStats(stats) {
-  stats = stats.map(s => s.stat);
+  stats = stats.map((s) => s.stat);
 
   return stats;
 }
@@ -53,10 +53,10 @@ export function mapMatchups(ms) {
     // grades seem to be football specific...
     // todo: shared with league helper...
     if (matchup.matchup_grades) {
-      matchup.matchup_grades = matchup.matchup_grades.map(grade => {
+      matchup.matchup_grades = matchup.matchup_grades.map((grade) => {
         return {
           team_key: grade.matchup_grade.team_key,
-          grade: grade.matchup_grade.grade
+          grade: grade.matchup_grade.grade,
         };
       });
     }
@@ -100,10 +100,10 @@ export function parseCollection(ts, subresources) {
     teams.push(ts[i]);
   }
 
-  return teams.map(t => {
+  return teams.map((t) => {
     // this is only here because user games collection is adding an extra null
     // and I cannot for the life of me figure out why.
-    t.team = t.team.filter(o => null !== o);
+    t.team = t.team.filter((o) => null !== o);
 
     let team = mapTeam(t.team[0]);
 
@@ -154,7 +154,7 @@ export function parseLeagueCollection(ls, subresources) {
     leagues.push(ls[i]);
   }
 
-  return leagues.map(l => {
+  return leagues.map((l) => {
     let league = l.league[0];
     league.teams = parseCollection(l.league[1].teams, subresources);
 
@@ -170,7 +170,7 @@ export function parseTeamCollection(ts, subresources) {
     teams.push(ts[i]);
   }
 
-  return teams.map(t => {
+  return teams.map((t) => {
     let team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 
@@ -186,7 +186,7 @@ export function parseGameCollection(gs, subresources) {
     games.push(gs[i]);
   }
 
-  return games.map(g => {
+  return games.map((g) => {
     let game = g.game[0];
     game.teams = parseCollection(g.game[1].teams, subresources);
 
