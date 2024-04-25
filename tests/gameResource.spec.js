@@ -1,6 +1,5 @@
-import YahooFantasy from "../YahooFantasy.mjs";
-var nock = require("nock");
-var q = require("q");
+import YahooFantasy from "../index.js";
+import nock from "nock";
 
 describe("resource : gameResource", function() {
   var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),

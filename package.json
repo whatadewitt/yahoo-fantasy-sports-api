@@ -3,10 +3,6 @@
   "version": "5.3.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
   "main": "./index.js",
-  "exports": {
-    "import": "./YahooFantasy.mjs",
-    "require": "./index.js"
-  },
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
@@ -39,7 +35,7 @@
   "devDependencies": {
     "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.6.1",
+    "nock": "^13.5.4",
     "prettier": "^1.18.2",
     "q": "^1.4.1"
   },

@@ -1,4 +1,4 @@
-import YahooFantasy from "../YahooFantasy.mjs";
+import YahooFantasy from "../index.js";
 var nock = require("nock");
 
 describe("resource: leagueResource", function() {
