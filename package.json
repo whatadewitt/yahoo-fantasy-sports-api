@@ -31,16 +31,14 @@
   },
   "homepage": "https://yahoo-fantasy-node-docs.vercel.app/",
   "dependencies": {
-    "esm": "^3.2.25",
     "follow-redirects": "^1.13.0",
     "oauth-signature": "^1.5.0",
-    "uuid": "^8.3.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "jasmine": "^3.4.0",
-    "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.6.1",
-    "prettier": "^1.18.2",
+    "jasmine": "^5.1.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "nock": "^13.5.4",
     "q": "^1.4.1"
   },
   "directories": {
