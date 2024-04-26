@@ -1,8 +1,8 @@
-import GamesCollection from "./gamesCollection.mjs";
-import LeagueCollection from "./leaguesCollection.mjs";
-import PlayerCollection from "./playersCollection.mjs";
-import TransactionCollection from "./transactionsCollection.mjs";
-import TeamCollection from "./teamsCollection.mjs";
+import GamesCollection from "./gamesCollection.js";
+import LeagueCollection from "./leaguesCollection.js";
+import PlayerCollection from "./playersCollection.js";
+import TransactionCollection from "./transactionsCollection.js";
+import TeamCollection from "./teamsCollection.js";
 // import UserCollection from "./UserCollection.mjs";
 
 export { GamesCollection as Games };

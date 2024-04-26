@@ -2,7 +2,7 @@ import {
   mapGames,
   mapUserLeagues,
   mapUserTeams,
-} from "../helpers/userHelper.mjs";
+} from "../helpers/userHelper.js";
 
 class UserResource {
   constructor(yf) {

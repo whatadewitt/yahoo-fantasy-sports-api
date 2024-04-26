@@ -1,6 +1,6 @@
-import { mapPlayer } from "./playerHelper.mjs";
-import { mergeObjects, flattenObject } from "./sharedHelpers.mjs";
-import { mapPlayers } from "./gameHelper.mjs";
+import { mapPlayer } from "./playerHelper.js";
+import { mergeObjects, flattenObject } from "./sharedHelpers.js";
+import { mapPlayers } from "./gameHelper.js";
 
 export function mapTeam(t) {
   const team = mergeObjects(t);

@@ -1,5 +1,5 @@
-import { mapTeam, mapTeamPoints } from "./teamHelper.mjs";
-import { mapTransactionPlayers } from "./transactionHelper.mjs";
+import { mapTeam, mapTeamPoints } from "./teamHelper.js";
+import { mapTransactionPlayers } from "./transactionHelper.js";
 
 /*
  * Helper function to map data to a "team"

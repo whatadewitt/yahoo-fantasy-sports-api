@@ -1,7 +1,7 @@
-import { mapTeam, mapRoster } from "../helpers/teamHelper.mjs";
+import { mapTeam, mapRoster } from "../helpers/teamHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
-import { parseResourceArgs } from "../helpers/resourceHelper.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
+import { parseResourceArgs } from "../helpers/resourceHelper.js";
 
 class RosterResource {
   constructor(yf) {

@@ -1,4 +1,4 @@
-import { mapPlayer } from "./playerHelper.mjs";
+import { mapPlayer } from "./playerHelper.js";
 
 export function mapLeagues(ls) {
   const leagues = Object.values(ls);
@@ -32,7 +32,7 @@ export function mapWeeks(ws) {
 
   return weeks.reduce((result, w) => {
     if (w.game_week) {
-      result.push(w.game_week);
+      result.push({ ...w.game_week, week: parseInt(w.game_week.week, 10) });
     }
 
     return result;

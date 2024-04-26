@@ -5,11 +5,11 @@ import {
   mapTeams,
   mapDraft,
   mapTransactions,
-} from "../helpers/leagueHelper.mjs";
+} from "../helpers/leagueHelper.js";
 
-import { mapPlayers } from "../helpers/gameHelper.mjs";
+import { mapPlayers } from "../helpers/gameHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
 
 class LeagueResource {
   constructor(yf) {

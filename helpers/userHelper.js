@@ -1,4 +1,4 @@
-import { mapTeam } from "./teamHelper.mjs";
+import { mapTeam } from "./teamHelper.js";
 
 export function mapGames(gs) {
   // TODO: clean this up?

@@ -4,9 +4,9 @@ import {
   mapRoster,
   mapDraft,
   mapMatchups,
-} from "../helpers/teamHelper.mjs";
+} from "../helpers/teamHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
 
 class TeamResource {
   constructor(yf) {

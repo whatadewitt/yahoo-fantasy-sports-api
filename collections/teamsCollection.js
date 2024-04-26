@@ -2,9 +2,9 @@ import {
   parseCollection,
   parseLeagueCollection,
   parseGameCollection,
-} from "../helpers/teamHelper.mjs";
+} from "../helpers/teamHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
 
 class TeamsCollection {
   constructor(yf) {

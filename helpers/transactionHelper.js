@@ -1,4 +1,4 @@
-import { mapPlayer } from "./playerHelper.mjs";
+import { mapPlayer } from "./playerHelper.js";
 
 export function mapTransactionPlayers(ps) {
   const count = ps.count;

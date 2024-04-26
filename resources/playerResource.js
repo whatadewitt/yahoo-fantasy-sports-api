@@ -2,9 +2,9 @@ import {
   mapPlayer,
   mapStats,
   mapDraftAnalysis,
-} from "../helpers/playerHelper.mjs";
+} from "../helpers/playerHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
 
 class PlayerResource {
   constructor(yf) {

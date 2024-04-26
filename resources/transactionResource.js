@@ -1,4 +1,4 @@
-import { mapTransactionPlayers } from "../helpers/transactionHelper.mjs";
+import { mapTransactionPlayers } from "../helpers/transactionHelper.js";
 
 // TODO: PUT (accept/disallow/reject trades/vote against)
 // TODO: DELETE (cancel pending claim or trade)

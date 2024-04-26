@@ -1,5 +1,5 @@
-import { mergeObjects } from "./sharedHelpers.mjs";
-import { mapTeam } from "./teamHelper.mjs";
+import { mergeObjects } from "./sharedHelpers.js";
+import { mapTeam } from "./teamHelper.js";
 
 export function mapPlayer(p) {
   const player = mergeObjects(p);

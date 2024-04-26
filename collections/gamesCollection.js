@@ -1,6 +1,6 @@
-import { parseCollection } from "../helpers/gameHelper.mjs";
+import { parseCollection } from "../helpers/gameHelper.js";
 
-import { extractCallback } from "../helpers/argsParser.mjs";
+import { extractCallback } from "../helpers/argsParser.js";
 
 class GamesCollection {
   constructor(yf) {

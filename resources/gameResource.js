@@ -5,7 +5,7 @@ import {
   mapStatCategories,
   mapPositionTypes,
   mapRosterPositions,
-} from "../helpers/gameHelper.mjs";
+} from "../helpers/gameHelper.js";
 
 class GameResource {
   constructor(yf) {
@@ -33,63 +33,15 @@ class GameResource {
 
   /* league key can be an array of keys */
   leagues(gameKey, leagueKey, cb = () => {}) {
-    console.warn(
-      "WARNING: game.leagues will be DEPRECATED in an upcoming release, you can use league.meta to retrieve the same information (or more) with less params."
+    throw new Error(
+      "game.leagues has been deprecated, please use league.meta for fetching league data"
     );
-    // TODO: can this be cleaned up?
-    if ("string" === typeof leagueKey) {
-      leagueKey = [leagueKey];
-    }
-
-    return this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/leagues;league_keys=${leagueKey.join(
-          ","
-        )}`
-      )
-      .then((data) => {
-        const leagues = mapLeagues(data.fantasy_content.game[1].leagues);
-        const game = data.fantasy_content.game[0];
-
-        game.leagues = leagues;
-        cb(null, game);
-        return game;
-      })
-      .catch((e) => {
-        cb(e);
-        throw e;
-      });
   }
 
   players(gameKey, playerKey, cb = () => {}) {
-    console.warn(
-      "WARNING: game.players will be DEPRECATED in an upcoming release, you can use player.meta to retrieve the same information (or more) with less params."
+    throw new Error(
+      "game.players has been deprecated, please use player.meta for fetching player data"
     );
-    // TODO: can this be cleaned up?
-    if ("string" === typeof playerKey) {
-      playerKey = [playerKey];
-    }
-
-    return this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/players;player_keys=${playerKey.join(
-          ","
-        )}`
-      )
-      .then((data) => {
-        const players = mapPlayers(data.fantasy_content.game[1].players);
-        const game = data.fantasy_content.game[0];
-
-        game.players = players;
-        cb(null, game);
-        return game;
-      })
-      .catch((e) => {
-        cb(e);
-        throw e;
-      });
   }
 
   game_weeks(gameKey, cb = () => {}) {
