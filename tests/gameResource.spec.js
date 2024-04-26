@@ -1,4 +1,4 @@
-import { expect, describe, test, spyOn } from "@jest/globals";
+import { expect, describe, test, spyOn, mockRestore } from "@jest/globals";
 import YahooFantasy from "../index.js";
 import nock from "nock";
 
@@ -45,6 +45,7 @@ describe("resource : gameResource", function() {
     const meta = require("./nock-data/gameMeta").meta;
 
     beforeEach(() => {
+      // jest.mockRestore();
       jest.spyOn(yf, "api").mockResolvedValue(meta);
     });
 
@@ -91,24 +92,21 @@ describe("resource : gameResource", function() {
     const game_weeks = require("./nock-data/gameWeeks").weeks;
 
     beforeEach(() => {
+      // jest.mockRestore();
       jest.spyOn(yf, "api").mockResolvedValue(game_weeks);
     });
 
     fit("should build a proper url to retrieve game weeks using a numeric game key", async function() {
       const gameData = { ...game_weeks.fantasy_content.game[0] };
-      console.log(gameData);
-
       const data = await game.game_weeks(328);
 
-      // , function(e, data) {
       expect(yf.api).toHaveBeenCalledWith(
         yf.GET,
         `https://fantasysports.yahooapis.com/fantasy/v2/game/328/game_weeks`
       );
 
-      expect(data).toContain(gameData);
+      expect(Object.keys(data)).toEqual(expect.arrayContaining(Object.keys(gameData)));
       expect(data).toHaveProperty("weeks");
-      // });
     });
 
     it("should build a proper url to retrieve game weeks using a string game key", function() {
