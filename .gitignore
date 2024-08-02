@@ -30,3 +30,4 @@ node_modules
 .esm-cache
 .vs-code
 dump.rdb
+.vscode

@@ -31,7 +31,7 @@ class YahooFantasy {
     this.CONSUMER_SECRET = consumerSecret;
     this.REDIRECT_URI = redirectUri;
 
-    this.refreshTokenCallback = () => {};
+    this.refreshTokenCallback = () => { };
 
     if (tokenCallbackFn) {
       this.refreshTokenCallback = tokenCallbackFn;
@@ -65,7 +65,7 @@ class YahooFantasy {
   }
 
   // oauth2 authenticatiocn function -- follow redirect to yahoo login
-  auth(res, state = null) {
+  auth(res, state = null, scope = null) {
     const authData = {
       client_id: this.CONSUMER_KEY,
       redirect_uri: this.REDIRECT_URI,
@@ -74,6 +74,10 @@ class YahooFantasy {
 
     if (state) {
       authData.state = state;
+    }
+
+    if (scope) {
+      authData.scope = scope
     }
 
     const options = {
@@ -140,9 +144,10 @@ class YahooFantasy {
       });
 
       tokenReponse.on("end", async () => {
-        const { access_token, refresh_token } = JSON.parse(
+        const data = JSON.parse(
           Buffer.concat(chunks)
         );
+        const { access_token, refresh_token } = data;
 
         this.yahooUserToken = access_token;
         this.yahooRefreshToken = refresh_token;
@@ -155,7 +160,7 @@ class YahooFantasy {
           });
         }
 
-        cb(null, { access_token, refresh_token, state });
+        cb(null, { ...data, state });
       });
     });
 
