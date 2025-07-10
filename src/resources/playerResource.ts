@@ -13,7 +13,7 @@ import {
 import { extractCallback } from '../helpers/argsParser';
 
 class PlayerResource {
-  constructor(private yf: YahooFantasyInstance) {}
+  constructor(public yf: YahooFantasyInstance) {}
 
   // Method overloads for meta
   meta(playerKey: string): Promise<Player>;

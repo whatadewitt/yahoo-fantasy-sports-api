@@ -20,7 +20,7 @@ import { mapPlayers } from '../helpers/gameHelper';
 import { extractCallback } from '../helpers/argsParser';
 
 class LeagueResource {
-  constructor(private yf: YahooFantasyInstance) {}
+  constructor(public yf: YahooFantasyInstance) {}
 
   // Method overloads for meta
   meta(leagueKey: string): Promise<League>;

@@ -19,7 +19,7 @@ import {
 } from '../helpers/gameHelper';
 
 class GameResource {
-  constructor(private yf: YahooFantasyInstance) {}
+  constructor(public yf: YahooFantasyInstance) {}
 
   // Method overloads for meta
   meta(gameKey: string): Promise<Game>;

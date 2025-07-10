@@ -51,7 +51,7 @@ export interface YahooApiResponse<T = any> {
 }
 
 // Callback types
-export type Callback<T> = (error: Error | null, result?: T) => void;
+export type Callback<T> = (error: Error | null, result?: T | undefined) => void;
 
 // Method overload helper types
 export type CallbackOrPromise<T> = T | Promise<T>;
