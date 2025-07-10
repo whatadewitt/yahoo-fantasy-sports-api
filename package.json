@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node -r esm jasmine-runner.js",
+    "test": "node jasmine-runner.js",
     "test:types": "npm run typecheck && npx ts-node test-typescript.ts",
     "test:migration": "node test-migration.js",
     "test:validation": "npx ts-node test-validation.ts",
@@ -71,7 +71,7 @@
     "@types/uuid": "^10.0.0",
     "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.6.1",
+    "nock": "^14.0.5",
     "prettier": "^1.18.2",
     "q": "^1.4.1",
     "ts-node": "^10.9.2",

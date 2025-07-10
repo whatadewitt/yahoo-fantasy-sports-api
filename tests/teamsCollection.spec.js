@@ -1,4 +1,4 @@
-import YahooFantasy from "../YahooFantasy.mjs";
+var YahooFantasy = require("../index.js");
 var nock = require("nock");
 
 describe("collection: teamsCollection", function() {
