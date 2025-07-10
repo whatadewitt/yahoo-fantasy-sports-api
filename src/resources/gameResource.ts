@@ -5,13 +5,9 @@ import {
   StatCategory, 
   PositionType, 
   RosterPosition,
-  League,
-  Player,
   FantasyContent 
 } from '../types/api-responses';
 import {
-  mapLeagues,
-  mapPlayers,
   mapWeeks,
   mapStatCategories,
   mapPositionTypes,
@@ -49,71 +45,11 @@ class GameResource {
     }
   }
 
-  // Method overloads for leagues (deprecated)
-  leagues(gameKey: string, leagueKeys: string[]): Promise<Game & { leagues: League[] }>;
-  leagues(gameKey: string, leagueKeys: string[], cb: Callback<Game & { leagues: League[] }>): void;
-  leagues(gameKey: string, leagueKeys: string | string[], cb?: Callback<Game & { leagues: League[] }>): Promise<Game & { leagues: League[] }> | void {
-    console.warn(
-      "WARNING: game.leagues will be DEPRECATED in an upcoming release, you can use league.meta to retrieve the same information (or more) with less params."
-    );
-    
-    // Normalize to array
-    const keys = typeof leagueKeys === 'string' ? [leagueKeys] : leagueKeys;
+  // REMOVED: game.leagues method (deprecated)
+  // Use league.meta() instead for retrieving league information
 
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/leagues;league_keys=${keys.join(",")}`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const leagues = mapLeagues(data.fantasy_content.game[1].leagues);
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, leagues };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
-  }
-
-  // Method overloads for players (deprecated)
-  players(gameKey: string, playerKeys: string[]): Promise<Game & { players: Player[] }>;
-  players(gameKey: string, playerKeys: string[], cb: Callback<Game & { players: Player[] }>): void;
-  players(gameKey: string, playerKeys: string | string[], cb?: Callback<Game & { players: Player[] }>): Promise<Game & { players: Player[] }> | void {
-    console.warn(
-      "WARNING: game.players will be DEPRECATED in an upcoming release, you can use player.meta to retrieve the same information (or more) with less params."
-    );
-    
-    // Normalize to array
-    const keys = typeof playerKeys === 'string' ? [playerKeys] : playerKeys;
-
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/players;player_keys=${keys.join(",")}`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const players = mapPlayers(data.fantasy_content.game[1].players);
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, players };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
-  }
+  // REMOVED: game.players method (deprecated)
+  // Use player.meta() instead for retrieving player information
 
   // Method overloads for game_weeks
   game_weeks(gameKey: string): Promise<Game & { weeks: GameWeek[] }>;

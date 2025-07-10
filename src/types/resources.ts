@@ -31,11 +31,8 @@ export interface GameResource extends BaseResource {
   meta(gameKey: string, cb: Callback<Game>): void;
   meta(gameKey: string): Promise<Game>;
   
-  leagues(gameKey: string, leagueKeys: string[], cb: Callback<Game & { leagues: League[] }>): void;
-  leagues(gameKey: string, leagueKeys: string[]): Promise<Game & { leagues: League[] }>;
-  
-  players(gameKey: string, playerKeys: string[], cb: Callback<Game & { players: Player[] }>): void;
-  players(gameKey: string, playerKeys: string[]): Promise<Game & { players: Player[] }>;
+  // REMOVED: leagues() and players() methods (deprecated)
+  // Use league.meta() and player.meta() instead
   
   game_weeks(gameKey: string, cb: Callback<Game & { weeks: GameWeek[] }>): void;
   game_weeks(gameKey: string): Promise<Game & { weeks: GameWeek[] }>;
