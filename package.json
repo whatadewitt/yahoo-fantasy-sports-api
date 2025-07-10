@@ -2,21 +2,38 @@
   "name": "yahoo-fantasy",
   "version": "5.3.0",
   "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
-  "main": "./index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "import": "./YahooFantasy.mjs",
-    "require": "./index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
-    "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
+    "istanbul": "istanbul cover --include-all-sources jasmine-node tests",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/whatadewitt/yfsapi.git"
   },
   "engines": {
-    "node": ">= 8.10.0"
+    "node": ">= 14.0.0"
   },
   "keywords": [
     "yahoo",
@@ -37,11 +54,16 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.6",
+    "@types/oauth-signature": "^1.5.2",
+    "@types/uuid": "^10.0.0",
     "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
     "nock": "^9.6.1",
     "prettier": "^1.18.2",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "directories": {
     "test": "tests"
