@@ -1,0 +1,79 @@
+import { YahooFantasyInstance, Callback } from '../types/core';
+import { Game } from '../types/api-responses';
+import { parseCollection } from '../helpers/gameHelper';
+import { extractCallback } from '../helpers/argsParser';
+
+class GamesCollection {
+  constructor(private yf: YahooFantasyInstance) {}
+
+  fetch(gameKeys: string[]): Promise<Game[]>;
+  fetch(gameKeys: string[], cb: Callback<Game[]>): void;
+  fetch(gameKeys: string[], subresources: string[]): Promise<Game[]>;
+  fetch(gameKeys: string[], subresources: string[], cb: Callback<Game[]>): void;
+  fetch(...args: any[]): Promise<Game[]> | void {
+    let gameKeys: string[] = [];
+    let subresources: string[] = [];
+    const cb = extractCallback(args);
+
+    gameKeys = args.shift();
+    if (!Array.isArray(gameKeys)) {
+      gameKeys = [gameKeys];
+    }
+
+    if (args.length) {
+      subresources = args.pop();
+      if (typeof subresources === 'string') {
+        subresources = [subresources];
+      }
+    }
+
+    let url = 'https://fantasysports.yahooapis.com/fantasy/v2/games';
+
+    if (gameKeys.length) {
+      url += `;game_keys=${gameKeys.join(',')}`;
+    }
+
+    if (subresources.length) {
+      url += `;out=${subresources.join(',')}`;
+    }
+
+    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
+    const resultPromise = promise.then((data) => {
+      const games = parseCollection(data.fantasy_content.games, subresources);
+      return games;
+    });
+
+    if (cb) {
+      resultPromise.then(games => cb(null, games)).catch(e => cb(e));
+      return;
+    }
+    return resultPromise;
+  }
+
+  user(): Promise<Game[]>;
+  user(cb: Callback<Game[]>): void;
+  user(cb?: Callback<Game[]>): Promise<Game[]> | void {
+    const promise = this.yf.api(
+      this.yf.GET,
+      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games'
+    ) as Promise<any>;
+
+    const resultPromise = promise.then(data => {
+      return parseCollection(data.fantasy_content.users[0].user[1].games);
+    });
+
+    if (cb) {
+      resultPromise.then(games => cb(null, games)).catch(e => cb(e));
+      return;
+    }
+    return resultPromise;
+  }
+
+  userFetch(gameKeys: string[]): Promise<Game[]>;
+  userFetch(gameKeys: string[], cb: Callback<Game[]>): void;
+  userFetch(gameKeys: string[], cb?: Callback<Game[]>): Promise<Game[]> | void {
+    return cb ? this.fetch(gameKeys, cb) : this.fetch(gameKeys);
+  }
+}
+
+export default GamesCollection;

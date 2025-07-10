@@ -2,26 +2,20 @@
 import GameResource from './gameResource';
 export { GameResource as Game };
 
-export class League {
-  constructor(private yf: any) {}
-}
+import LeagueResource from './leagueResource';
+export { LeagueResource as League };
 
-export class Player {
-  constructor(private yf: any) {}
-}
+import PlayerResource from './playerResource';
+export { PlayerResource as Player };
 
-export class Roster {
-  constructor(private yf: any) {}
-}
+import RosterResource from './rosterResource';
+export { RosterResource as Roster };
 
-export class Team {
-  constructor(private yf: any) {}
-}
+import TeamResource from './teamResource';
+export { TeamResource as Team };
 
-export class Transaction {
-  constructor(private yf: any) {}
-}
+import TransactionResource from './transactionResource';
+export { TransactionResource as Transaction };
 
-export class User {
-  constructor(private yf: any) {}
-}
+import UserResource from './userResource';
+export { UserResource as User };

@@ -1,4 +1,5 @@
 // Game helper functions - temporary stubs until full migration
+import { mapPlayer } from './playerHelper';
 
 export function mapLeagues(ls: any): any[] {
   const leagues = Object.values(ls);
@@ -19,8 +20,7 @@ export function mapPlayers(ps: any): any[] {
       for (let i = 1; i < p.player.length; i++) {
         p.player[0].push(p.player[i]);
       }
-      // TODO: Import mapPlayer when playerHelper is migrated
-      result.push(p.player[0]);
+      result.push(mapPlayer(p.player[0]));
     }
     return result;
   }, []);
@@ -69,4 +69,10 @@ export function mapRosterPositions(roster_positions: any[]): any[] {
     }
     return result;
   }, []);
+}
+
+export function parseCollection(collection: any, subresources: string[] = []): any[] {
+  // TODO: Implement proper collection parsing
+  const items = Object.values(collection);
+  return items.filter((item: any) => item && typeof item === 'object' && !Array.isArray(item));
 }
