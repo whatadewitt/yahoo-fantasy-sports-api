@@ -72,8 +72,8 @@ export interface YahooFantasyInstance {
   CONSUMER_KEY: string;
   CONSUMER_SECRET: string;
   REDIRECT_URI?: string;
-  yahooUserToken?: string;
-  yahooRefreshToken?: string;
+  yahooUserToken?: string | null;
+  yahooRefreshToken?: string | null;
   refreshTokenCallback: TokenCallbackFunction;
   
   GET: HttpMethod;

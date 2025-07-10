@@ -71,20 +71,20 @@ This document breaks down the TypeScript migration project into actionable tasks
 ## Phase 2: Resources & Collections (Weeks 3-4)
 
 ### 2.1 API Response Interfaces
-- [ ] **TASK-010**: Generate type interfaces from mock data
+- [x] **TASK-010**: Generate type interfaces from mock data
   - Analyze tests/nock-data for response structures
   - Create interfaces for Game responses
   - Create interfaces for League responses
   - Create interfaces for Team responses
   
-- [ ] **TASK-011**: Create remaining API response types
+- [x] **TASK-011**: Create remaining API response types
   - Create interfaces for Player responses
   - Create interfaces for Transaction responses
   - Create interfaces for User responses
   - Create interfaces for Roster responses
 
 ### 2.2 Resource Class Migration
-- [ ] **TASK-012**: Migrate gameResource.mjs
+- [x] **TASK-012**: Migrate gameResource.mjs
   - Convert to TypeScript with proper types
   - Add method overloads for callbacks/promises
   - Type all parameters and return values
@@ -104,7 +104,7 @@ This document breaks down the TypeScript migration project into actionable tasks
   - Convert userResource.mjs
 
 ### 2.3 Collection Class Migration
-- [ ] **TASK-015**: Create base collection types
+- [x] **TASK-015**: Create base collection types
   - Define generic collection interface
   - Type pagination parameters
   - Type filter/query parameters
@@ -284,8 +284,8 @@ This document breaks down the TypeScript migration project into actionable tasks
 
 ## Success Metrics Tracking
 
-- [ ] Source files converted: 1/25 (YahooFantasy.ts migrated)
-- [ ] Type coverage: ~20% (core class and types done)
+- [ ] Source files converted: 2/25 (YahooFantasy.ts, gameResource.ts migrated)
+- [ ] Type coverage: ~35% (core class, types, and first resource done)
 - [ ] Tests passing: 0/X (not yet tested)
 - [ ] Bundle size increase: TBD
 - [ ] Beta feedback addressed: 0/X
@@ -304,3 +304,20 @@ This document breaks down the TypeScript migration project into actionable tasks
 
 ⏳ **Remaining Task:**
 - TASK-009: Add TypeScript checks to CI/CD (medium priority)
+
+## Phase 2 Progress Summary
+
+✅ **Completed Tasks (4/10):**
+- Comprehensive API response type interfaces generated from mock data
+- All Yahoo API response types created (Game, League, Player, Team, etc.)
+- GameResource successfully migrated to TypeScript with method overloads
+- Base collection types and interfaces defined
+
+🚧 **In Progress:**
+- TASK-013: Migrate leagueResource.mjs (next up)
+
+⏳ **Remaining Tasks:**
+- Resource migrations: playerResource, teamResource, rosterResource, transactionResource, userResource
+- Collection class migrations
+- Helper function migrations
+- Callback/promise overload implementation

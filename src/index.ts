@@ -10,5 +10,5 @@ export { YahooFantasy };
 export * from './types';
 
 // Export resource and collection classes
-export * from './resources';
-export * from './collections';
+export * as Resources from './resources';
+export * as Collections from './collections';
