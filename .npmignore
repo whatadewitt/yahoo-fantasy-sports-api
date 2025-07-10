@@ -1,0 +1,66 @@
+# Source files
+src/
+*.ts
+!*.d.ts
+
+# TypeScript config files
+tsconfig*.json
+
+# Test files
+test-*.ts
+test-*.js
+tests/
+jasmine.json
+jasmine-runner.js
+
+# Development files
+.clauderc
+.claude/
+claude-tasks/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Documentation that's not for end users  
+TypeScript_Migration_PRD.md
+TYPESCRIPT_MIGRATION.md
+
+# Development dependencies
+node_modules/
+.npm/
+
+# Git files
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Only include built files and documentation
+!dist/
+!README.md
+!LICENSE

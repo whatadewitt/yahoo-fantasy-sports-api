@@ -1,7 +1,7 @@
 {
   "name": "yahoo-fantasy",
-  "version": "5.3.0",
-  "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
+  "version": "6.0.0",
+  "description": "A TypeScript/JavaScript wrapper for the Yahoo! Fantasy Sports API with full type safety and IntelliSense support.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
@@ -19,6 +19,12 @@
   ],
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
+    "test:types": "npm run typecheck && npx ts-node test-typescript.ts",
+    "test:migration": "node test-migration.js",
+    "test:validation": "npx ts-node test-validation.ts",
+    "test:api": "npx ts-node test-api-validation.ts",
+    "test:benchmark": "node test-benchmark.js",
+    "test:all": "npm run test && npm run test:types && npm run test:migration",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests",
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
     "build:cjs": "tsc -p tsconfig.cjs.json",
@@ -26,7 +32,7 @@
     "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build && npm run test:all"
   },
   "repository": {
     "type": "git",
@@ -39,7 +45,13 @@
     "yahoo",
     "fantasy sports",
     "sports",
-    "fantasy"
+    "fantasy",
+    "typescript",
+    "api",
+    "nfl",
+    "nba",
+    "mlb",
+    "nhl"
   ],
   "author": "Luke DeWitt <dewittl@gmail.com> (http://www.whatadewitt.ca/)",
   "license": "MIT",
