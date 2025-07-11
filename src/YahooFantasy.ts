@@ -1,7 +1,7 @@
 import * as https from 'https';
 import { stringify } from 'querystring';
 import * as crypto from 'crypto';
-import * as oauthSignature from 'oauth-signature';
+import oauthSignature from 'oauth-signature';
 
 import {
   Game,
