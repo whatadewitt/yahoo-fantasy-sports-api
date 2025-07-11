@@ -63,9 +63,11 @@ describe("resource: playerResource", function() {
       .reply(200, mockPlayerStats);
 
     player.stats("328.p.6619", function(e, data) {
+      console.log(data);
       expect(data.stats.coverage_type).toEqual(
         mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type
       );
+
       player
         .stats("328.p.6619")
         .then((data) => {

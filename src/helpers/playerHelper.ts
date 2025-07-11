@@ -8,6 +8,7 @@ export function mapPlayer(player: any): any {
 export function mapStats(stats: any): any {
   if (!stats) return stats;
   
+  // Handle the structure: stats = { "0": { coverage_type: "season", season: "2014" }, "stats": [...] }
   const coverage_type = stats[0].coverage_type;
   return {
     coverage_type: coverage_type,

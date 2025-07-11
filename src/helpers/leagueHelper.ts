@@ -1,5 +1,7 @@
 // League helper functions - temporary stubs until full migration
 
+import { mapTeam, mapTeamPoints } from './teamHelper';
+
 export function mapSettings(settings: any): any {
   // TODO: Implement proper settings mapping
   return settings;
@@ -16,15 +18,53 @@ export function mapStandings(standings: any): any[] {
   }, []);
 }
 
-export function mapScoreboard(matchups: any): any[] {
-  // TODO: Implement proper scoreboard mapping
-  const matchupList = Object.values(matchups);
-  return matchupList.reduce((result: any[], matchup: any) => {
-    if (matchup.matchup) {
-      result.push(matchup.matchup);
+export function mapScoreboard(sb: any): any {
+  const scoreboard = Object.values(sb);
+  
+  // Process matchups following the original implementation
+  const matchups = scoreboard.reduce((matchupsResult: any[], m: any) => {
+    if (m.matchup) {
+      m = m.matchup;
+      
+      if (m.matchup_grades) {
+        m.matchup_grades = m.matchup_grades.map((grade: any) => {
+          return {
+            team_key: grade.matchup_grade.team_key,
+            grade: grade.matchup_grade.grade,
+          };
+        });
+      }
+
+      if (m.stat_winners) {
+        m.stat_winners = m.stat_winners.reduce((winners: any[], stat: any) => {
+          winners.push(stat.stat_winner);
+          return winners;
+        }, []);
+      }
+
+      const teams = Object.values(m[0].teams);
+
+      // Remove raw data entry from the matchup
+      delete m[0];
+
+      m.teams = teams.reduce((teamsResult: any[], t: any) => {
+        if (t.team) {
+          let team = mapTeam(t.team[0]);
+          team = mapTeamPoints(team, t.team[1]);
+          teamsResult.push(team);
+        }
+        return teamsResult;
+      }, []);
+
+      matchupsResult.push(m);
     }
-    return result;
+
+    return matchupsResult;
   }, []);
+
+  return {
+    matchups: matchups,
+  };
 }
 
 export function mapTeams(teams: any): any[] {
