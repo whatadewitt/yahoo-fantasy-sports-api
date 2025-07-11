@@ -27,14 +27,14 @@ describe("resource: transactionResource", function() {
   // meta
   it("should build a proper url to retrieve metadata via a transaction key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json")
+      .get("/fantasy/v2/transaction/328.l.34014.tr.237/metadata?format=json")
       .reply(200, require("./nock-data/transactionMeta"));
 
     transaction.meta("328.l.34014.tr.237", done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players"
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/metadata"
     );
   });
 

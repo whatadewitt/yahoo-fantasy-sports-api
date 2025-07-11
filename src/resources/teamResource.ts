@@ -85,9 +85,9 @@ class TeamResource {
     return resultPromise;
   }
 
-  draftResults(teamKey: string): Promise<any>;
-  draftResults(teamKey: string, cb: Callback<any>): void;
-  draftResults(teamKey: string, cb?: Callback<any>): Promise<any> | void {
+  draft_results(teamKey: string): Promise<any>;
+  draft_results(teamKey: string, cb: Callback<any>): void;
+  draft_results(teamKey: string, cb?: Callback<any>): Promise<any> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`

@@ -94,8 +94,8 @@ export interface TeamResource extends BaseResource {
   roster(teamKey: string, week: number, cb: Callback<Roster>): void;
   roster(teamKey: string, week: number): Promise<Roster>;
   
-  draftResults(teamKey: string, cb: Callback<any>): void;
-  draftResults(teamKey: string): Promise<any>;
+  draft_results(teamKey: string, cb: Callback<any>): void;
+  draft_results(teamKey: string): Promise<any>;
   
   matchups(teamKey: string, cb: Callback<TeamMatchup[]>): void;
   matchups(teamKey: string): Promise<TeamMatchup[]>;
@@ -120,11 +120,11 @@ export interface PlayerResource extends BaseResource {
   ownership(playerKey: string, leagueKey: string, cb: Callback<PlayerOwnership>): void;
   ownership(playerKey: string, leagueKey: string): Promise<PlayerOwnership>;
   
-  percentOwned(playerKey: string, cb: Callback<any>): void;
-  percentOwned(playerKey: string): Promise<any>;
+  percent_owned(playerKey: string, cb: Callback<any>): void;
+  percent_owned(playerKey: string): Promise<any>;
   
-  draftAnalysis(playerKey: string, cb: Callback<any>): void;
-  draftAnalysis(playerKey: string): Promise<any>;
+  draft_analysis(playerKey: string, cb: Callback<any>): void;
+  draft_analysis(playerKey: string): Promise<any>;
 }
 
 // Roster Resource

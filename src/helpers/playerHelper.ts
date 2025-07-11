@@ -6,8 +6,14 @@ export function mapPlayer(player: any): any {
 }
 
 export function mapStats(stats: any): any {
-  // TODO: Implement proper stats mapping
-  return stats;
+  if (!stats) return stats;
+  
+  const coverage_type = stats[0].coverage_type;
+  return {
+    coverage_type: coverage_type,
+    coverage_value: stats[0][coverage_type],
+    stats: stats.stats.map((s: any) => s.stat),
+  };
 }
 
 export function mapDraftAnalysis(analysis: any): any {

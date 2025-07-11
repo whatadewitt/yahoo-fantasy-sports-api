@@ -123,17 +123,14 @@ class LeagueResource {
       .api(this.yf.GET, url) as Promise<FantasyContent<{ league: any[] }>>);
     
     const resultPromise: Promise<any> = promise.then((data) => {
-      const week = data.fantasy_content.league[1].scoreboard.week;
-      const scoreboard = mapScoreboard(data.fantasy_content.league[1].scoreboard[0].matchups);
+      const scoreboardData = data.fantasy_content.league[1].scoreboard;
+      const week = scoreboardData.week;
+      const scoreboard = mapScoreboard(scoreboardData[0].matchups);
       const league = data.fantasy_content.league[0];
 
-      return {
-        ...league,
-        scoreboard: {
-          ...scoreboard,
-          week
-        }
-      };
+      league.scoreboard = scoreboard;
+      league.scoreboard.week = week;
+      return league;
     });
 
     if (cb) {
