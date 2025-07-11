@@ -1,7 +1,7 @@
 import * as https from 'https';
 import { stringify } from 'querystring';
 import * as crypto from 'crypto';
-import oauthSignature from 'oauth-signature';
+const oauthSignature = require('oauth-signature');
 
 import {
   Game,
