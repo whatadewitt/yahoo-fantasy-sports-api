@@ -1,8 +1,8 @@
-var YahooFantasy = require("../index.js");
-var nock = require("nock");
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
 
 describe("resource: rosterResource", function() {
-  var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     roster = yf.roster;
 
   it("should be defined", function() {

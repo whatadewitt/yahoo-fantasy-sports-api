@@ -1,8 +1,8 @@
-var YahooFantasy = require("../index.js");
-var nock = require("nock");
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
 
 describe("resource: playerResource", function() {
-  var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     player = yf.player;
 
   it("should be defined", function() {
@@ -56,7 +56,7 @@ describe("resource: playerResource", function() {
 
   // stats
   it("should build a proper url to retrieve player stats via a player key", function(done) {
-    var mockPlayerStats = require("./nock-data/playerStats");
+    const mockPlayerStats = require("./nock-data/playerStats");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/player/328.p.6619/stats?format=json")
       .times(2)

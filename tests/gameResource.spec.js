@@ -1,9 +1,9 @@
-var YahooFantasy = require("../index.js");
-var nock = require("nock");
-var q = require("q");
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
+const q = require("q");
 
 describe("resource : gameResource", function() {
-  var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     game = yf.game;
 
   it("should be defined", function() {
@@ -36,7 +36,7 @@ describe("resource : gameResource", function() {
 
   // meta
   describe(": meta", function() {
-    var meta = require("./nock-data/gameMeta").meta;
+    const meta = require("./nock-data/gameMeta").meta;
     yf.setUserToken("testusertoken==");
 
     it("should build a proper url to retrieve metadata via a numeric game key", function(done) {

@@ -1,8 +1,8 @@
-var YahooFantasy = require('../index.js');
-var nock = require('nock');
+const YahooFantasy = require('../index.js');
+const nock = require('nock');
 
 describe ("collection: playersCollection", function(){
-  var yf = new YahooFantasy(
+  const yf = new YahooFantasy(
     'Y!APPLICATION_KEY',
     'Y!APPLICATION_SECRET')
     , players = yf.players;

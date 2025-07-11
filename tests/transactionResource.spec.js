@@ -1,8 +1,8 @@
-var YahooFantasy = require("../index.js");
-var nock = require("nock");
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
 
 describe("resource: transactionResource", function() {
-  var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     transaction = yf.transaction;
 
   it("should be defined", function() {

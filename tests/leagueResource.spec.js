@@ -1,8 +1,8 @@
-var YahooFantasy = require("../index.js");
-var nock = require("nock");
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
 
 describe("resource: leagueResource", function() {
-  var yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     league = yf.league;
 
   it("should be defined", function() {
@@ -92,7 +92,7 @@ describe("resource: leagueResource", function() {
 
   // scoreboard
   it("should build a proper url to retrieve scoreboard via a league key", function(done) {
-    var mockLeagueScoreboard = require("./nock-data/leagueScoreboard");
+    const mockLeagueScoreboard = require("./nock-data/leagueScoreboard");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/scoreboard?format=json")
       .reply(200, mockLeagueScoreboard);
