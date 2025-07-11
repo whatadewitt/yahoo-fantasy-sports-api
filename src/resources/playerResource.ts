@@ -88,7 +88,8 @@ class PlayerResource {
         stats = `Cannot retrieve player stats of type '${dateType}' for game '${gameKey}'`;
       }
 
-      return { ...player, stats };
+      player.stats = stats;
+      return player;
     });
 
     if (cb) {
@@ -96,9 +97,8 @@ class PlayerResource {
         .then((result) => cb(null, result))
         .catch((e) => cb(e));
       return;
-    } else {
-      return resultPromise;
     }
+    return resultPromise;
   }
 
   // Method overloads for percent_owned
@@ -124,9 +124,8 @@ class PlayerResource {
         .then((result) => cb(null, result))
         .catch((e) => cb(e));
       return;
-    } else {
-      return resultPromise;
     }
+    return resultPromise;
   }
 
   // Alias for consistency with interface
@@ -165,9 +164,8 @@ class PlayerResource {
         .then((result) => cb(null, result))
         .catch((e) => cb(e));
       return;
-    } else {
-      return resultPromise;
     }
+    return resultPromise;
   }
 
   // Method overloads for draft_analysis
@@ -192,9 +190,8 @@ class PlayerResource {
         .then((result) => cb(null, result))
         .catch((e) => cb(e));
       return;
-    } else {
-      return resultPromise;
     }
+    return resultPromise;
   }
 
   // Alias for consistency with interface
