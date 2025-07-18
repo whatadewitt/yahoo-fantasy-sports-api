@@ -47,6 +47,17 @@ export function mapStatCategories(statcats: any[]): any[] {
         (pt: any) => pt.position_type
       );
     }
+    
+    // Convert base_stats to simple array of stat_id strings
+    if (typeof statcat.base_stats !== 'undefined' && Array.isArray(statcat.base_stats)) {
+      statcat.base_stats = statcat.base_stats.map((bs: any) => {
+        if (bs.base_stat && bs.base_stat.stat_id) {
+          return bs.base_stat.stat_id;
+        }
+        return bs;
+      });
+    }
+    
     return statcat;
   });
 

@@ -5,8 +5,8 @@ function mergeObjects(arrayOfObjects: any[]): any {
   const destinationObj: any = {};
 
   if (arrayOfObjects) {
-    arrayOfObjects.forEach(obj => {
-      Object.keys(obj).forEach(key => {
+    arrayOfObjects.forEach((obj) => {
+      Object.keys(obj).forEach((key) => {
         if (typeof key !== "undefined") {
           destinationObj[key] = obj[key];
         }
@@ -57,7 +57,7 @@ export function mapPlayer(p: any): any {
 
 export function mapStats(stats: any): any {
   if (!stats) return stats;
-  
+
   // Handle the structure: stats = { "0": { coverage_type: "season", season: "2014" }, "stats": [...] }
   const coverage_type = stats[0].coverage_type;
   return {

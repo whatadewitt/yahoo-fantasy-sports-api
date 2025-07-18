@@ -1,5 +1,6 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
 import { Transaction, Player } from '../types/api-responses';
+import { mapPlayers } from '../helpers/gameHelper';
 
 class TransactionResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -13,13 +14,13 @@ class TransactionResource {
     ) as Promise<any>;
 
     const resultPromise = promise.then(data => {
-      const meta = data.fantasy_content.transaction[0];
-      if (!meta) throw new Error('No transaction data found');
-      return meta;
+      const transaction = data.fantasy_content.transaction[0];
+      if (!transaction) throw new Error('No transaction data found');
+      return transaction;
     });
 
     if (cb) {
-      resultPromise.then(meta => cb(null, meta)).catch(e => cb(e));
+      resultPromise.then(transaction => cb(null, transaction)).catch(e => cb(e));
       return;
     }
     return resultPromise;
@@ -33,7 +34,20 @@ class TransactionResource {
       `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players`
     ) as Promise<any>;
 
-    const resultPromise = promise.then(data => data.fantasy_content.transaction[1].players || []);
+    const resultPromise = promise.then(data => {
+      // Get transaction metadata
+      const transaction = data.fantasy_content.transaction[0];
+      
+      // Get players data
+      const playersData = data.fantasy_content.transaction[1].players || {};
+      const mappedPlayers = mapPlayers(playersData);
+      
+      // Return transaction with players
+      return {
+        ...transaction,
+        players: mappedPlayers
+      };
+    });
 
     if (cb) {
       resultPromise.then(players => cb(null, players)).catch(e => cb(e));
