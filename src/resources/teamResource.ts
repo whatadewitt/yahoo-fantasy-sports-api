@@ -5,7 +5,13 @@ import {
   TeamMatchup,
   Roster,
 } from "../types/api-responses";
-import { mapTeam, mapStats, mapRoster, mapDraft, mapMatchups } from "../helpers/teamHelper";
+import {
+  mapTeam,
+  mapStats,
+  mapRoster,
+  mapDraft,
+  mapMatchups,
+} from "../helpers/teamHelper";
 
 class TeamResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -122,7 +128,7 @@ class TeamResource {
     const resultPromise = promise.then((data) => {
       const standings = data.fantasy_content.team[1].team_standings;
       const team = mapTeam(data.fantasy_content.team[0]);
-      
+
       team.standings = standings;
       return team;
     });
@@ -153,7 +159,7 @@ class TeamResource {
     const resultPromise = promise.then((data) => {
       const team = mapTeam(data.fantasy_content.team[0]);
       const roster = mapRoster(data.fantasy_content.team[1].roster);
-      
+
       team.roster = roster;
       return team;
     });
@@ -177,8 +183,10 @@ class TeamResource {
 
     const resultPromise = promise.then((data) => {
       const team = mapTeam(data.fantasy_content.team[0]);
-      const draft_results = mapDraft(data.fantasy_content.team[1].draft_results);
-      
+      const draft_results = mapDraft(
+        data.fantasy_content.team[1].draft_results
+      );
+
       team.draft_results = draft_results;
       return team;
     });
@@ -200,7 +208,12 @@ class TeamResource {
     cb?: Callback<TeamMatchup[]>
   ): Promise<TeamMatchup[]> | void {
     const actualCb = typeof weeksOrCb === "function" ? weeksOrCb : cb;
-    const weeks = Array.isArray(weeksOrCb) ? weeksOrCb : undefined;
+    const weeks = Array.isArray(weeksOrCb)
+      ? weeksOrCb.map((w) => Number(w))
+      : typeof weeksOrCb === "number" ||
+        (typeof weeksOrCb === "string" && !isNaN(Number(weeksOrCb)))
+      ? [Number(weeksOrCb)]
+      : undefined;
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
     if (weeks) url += `;weeks=${weeks.join(",")}`;
@@ -209,7 +222,7 @@ class TeamResource {
     const resultPromise = promise.then((data) => {
       const team = mapTeam(data.fantasy_content.team[0]);
       const matchups = mapMatchups(data.fantasy_content.team[1].matchups);
-      
+
       team.matchups = matchups;
       return team;
     });
