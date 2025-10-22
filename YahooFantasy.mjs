@@ -237,7 +237,9 @@ class YahooFantasy {
       format: "json",
     };
 
-    const headers = {};
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+    };
 
     if (!this.yahooUserToken) {
       params = {
@@ -284,7 +286,22 @@ class YahooFantasy {
           });
 
           resp.on("end", () => {
-            data = JSON.parse(data);
+            // Check if response is actually JSON before parsing
+            try {
+              // Check content-type header
+              const contentType = resp.headers['content-type'] || '';
+              if (!contentType.includes('application/json') && !contentType.includes('text/javascript')) {
+                console.error('Yahoo API returned non-JSON response. Content-Type:', contentType);
+                console.error('Response preview:', data.substring(0, 200));
+                return reject(new Error(`Yahoo API returned ${contentType} instead of JSON. Response: ${data.substring(0, 200)}...`));
+              }
+              
+              data = JSON.parse(data);
+            } catch (parseError) {
+              console.error('Failed to parse Yahoo API response as JSON');
+              console.error('Response preview:', data.substring(0, 200));
+              return reject(new Error(`Yahoo API returned invalid JSON. Response: ${data.substring(0, 200)}...`));
+            }
 
             if (data.error) {
               if (/"token_expired"/i.test(data.error.description)) {
