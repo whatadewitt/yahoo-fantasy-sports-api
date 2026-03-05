@@ -1,5 +1,5 @@
-// Game helper functions - temporary stubs until full migration
 import { mapPlayer } from './playerHelper';
+import { MappedPlayer } from '../types/api-responses';
 
 export function mapLeagues(ls: any): any[] {
   const leagues = Object.values(ls);
@@ -12,7 +12,7 @@ export function mapLeagues(ls: any): any[] {
   }, []);
 }
 
-export function mapPlayers(ps: any): any[] {
+export function mapPlayers(ps: any): MappedPlayer[] {
   const players = Object.values(ps);
 
   return players.reduce((result: any[], p: any) => {
@@ -82,8 +82,55 @@ export function mapRosterPositions(roster_positions: any[]): any[] {
   }, []);
 }
 
-export function parseCollection(collection: any, subresources: string[] = []): any[] {
-  // TODO: Implement proper collection parsing
-  const items = Object.values(collection);
-  return items.filter((item: any) => item && typeof item === 'object' && !Array.isArray(item));
+export function parseCollection(gs: any, subresources: string[] = []): any[] {
+  const count = gs.count;
+  const games = [];
+
+  for (let i = 0; i < count; i++) {
+    games.push(gs[i]);
+  }
+
+  return games.map((g: any) => {
+    let game = Array.isArray(g.game) ? g.game[0] : g.game;
+    
+    // Handle subresources
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "leagues":
+          game.leagues = mapLeagues(g.game[idx + 1].leagues);
+          break;
+
+        case "players":
+          game.players = mapPlayers(g.game[idx + 1].players);
+          break;
+
+        case "game_weeks":
+          game.game_weeks = mapWeeks(g.game[idx + 1].game_weeks);
+          break;
+
+        case "stat_categories":
+          game.stat_categories = mapStatCategories(
+            g.game[idx + 1].stat_categories.stats
+          );
+          break;
+
+        case "position_types":
+          game.position_types = mapPositionTypes(
+            g.game[idx + 1].position_types
+          );
+          break;
+
+        case "roster_positions":
+          game.roster_positions = mapRosterPositions(
+            g.game[idx + 1].roster_positions
+          );
+          break;
+
+        default:
+          break;
+      }
+    });
+    
+    return game;
+  });
 }

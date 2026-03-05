@@ -1,5 +1,5 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
-import { Roster, Team, FantasyContent } from "../types/api-responses";
+import { MappedTeam, FantasyContent } from "../types/api-responses";
 import { mapTeam, mapRoster } from "../helpers/teamHelper";
 import { extractCallback } from "../helpers/argsParser";
 
@@ -7,24 +7,24 @@ class RosterResource {
   constructor(private yf: YahooFantasyInstance) {}
 
   // Method overloads for fetch
-  fetch(teamKey: string): Promise<Team & { roster: any[] }>;
-  fetch(teamKey: string, date: string): Promise<Team & { roster: any[] }>;
-  fetch(teamKey: string, week: number): Promise<Team & { roster: any[] }>;
-  fetch(teamKey: string, cb: Callback<Team & { roster: any[] }>): void;
+  fetch(teamKey: string): Promise<MappedTeam>;
+  fetch(teamKey: string, date: string): Promise<MappedTeam>;
+  fetch(teamKey: string, week: number): Promise<MappedTeam>;
+  fetch(teamKey: string, cb: Callback<MappedTeam>): void;
   fetch(
     teamKey: string,
     date: string,
-    cb: Callback<Team & { roster: any[] }>
+    cb: Callback<MappedTeam>
   ): void;
   fetch(
     teamKey: string,
     week: number,
-    cb: Callback<Team & { roster: any[] }>
+    cb: Callback<MappedTeam>
   ): void;
   fetch(
     teamKey: string,
     ...args: any[]
-  ): Promise<Team & { roster: any[] }> | void {
+  ): Promise<MappedTeam> | void {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
     const cb = extractCallback(args);
 
@@ -59,39 +59,39 @@ class RosterResource {
     return resultPromise;
   }
 
-  players(teamKey: string): Promise<Roster>;
-  players(teamKey: string, subresources: string | string[]): Promise<Roster>;
+  players(teamKey: string): Promise<MappedTeam>;
+  players(teamKey: string, subresources: string | string[]): Promise<MappedTeam>;
   players(
     teamKey: string,
     date: string,
     subresources?: string | string[]
-  ): Promise<Roster>;
+  ): Promise<MappedTeam>;
   players(
     teamKey: string,
     week: number,
     subresources?: string | string[]
-  ): Promise<Roster>;
-  players(teamKey: string, cb: Callback<Roster>): void;
+  ): Promise<MappedTeam>;
+  players(teamKey: string, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     subresources: string | string[],
-    cb: Callback<Roster>
+    cb: Callback<MappedTeam>
   ): void;
-  players(teamKey: string, date: string, cb: Callback<Roster>): void;
+  players(teamKey: string, date: string, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     date: string,
     subresources: string | string[],
-    cb: Callback<Roster>
+    cb: Callback<MappedTeam>
   ): void;
-  players(teamKey: string, week: number, cb: Callback<Roster>): void;
+  players(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     week: number,
     subresources: string | string[],
-    cb: Callback<Roster>
+    cb: Callback<MappedTeam>
   ): void;
-  players(teamKey: string, ...args: any[]): Promise<Roster> | void {
+  players(teamKey: string, ...args: any[]): Promise<MappedTeam> | void {
     const cb = extractCallback(args);
 
     let dateWeekParam: string | number | undefined;
@@ -116,8 +116,7 @@ class RosterResource {
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
 
-    // Determine date type
-    let dateType = "season"; // default
+    let dateType = "season";
     let dateValue = "";
 
     if (dateWeekParam) {
@@ -130,24 +129,25 @@ class RosterResource {
       }
     }
 
-    // Build URL based on whether we have subresource
-    if (subresource) {
+    if (subresource && dateType) {
+      if (dateType !== "season") {
+        url += `;${dateType}=${dateValue}`;
+      }
       url += `/players/${subresource};type=${dateType}`;
       if (dateType !== "season") {
         url += `;${dateType}=${dateValue}`;
       }
-    } else {
-      url += "/players";
-      if (dateType !== "season") {
-        url += `;${dateType}=${dateValue}`;
-      }
+    } else if (dateType !== "season") {
+      url += `;${dateType}=${dateValue}`;
     }
 
-    // TODO: subresources on this resource are buggered. but they already were so fix later...
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-    const resultPromise = promise.then((data) =>
-      mapRoster(data.fantasy_content.team[1].roster)
-    );
+    const resultPromise = promise.then((data) => {
+      const team = mapTeam(data.fantasy_content.team[0]);
+      const roster = mapRoster(data.fantasy_content.team[1].roster);
+      team.roster = roster;
+      return team;
+    });
 
     if (cb) {
       resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));

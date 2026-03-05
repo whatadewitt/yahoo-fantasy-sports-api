@@ -52,18 +52,58 @@ class GamesCollection {
 
   user(): Promise<Game[]>;
   user(cb: Callback<Game[]>): void;
-  user(cb?: Callback<Game[]>): Promise<Game[]> | void {
-    const promise = this.yf.api(
-      this.yf.GET,
-      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games'
-    ) as Promise<any>;
+  user(filters: any): Promise<Game[]>;
+  user(filters: any, cb: Callback<Game[]>): void;
+  user(filters: any, subresources: string[]): Promise<Game[]>;
+  user(filters: any, subresources: string[], cb: Callback<Game[]>): void;
+  user(subresources: string[]): Promise<Game[]>;
+  user(subresources: string[], cb: Callback<Game[]>): void;
+  user(...args: any[]): Promise<Game[]> | void {
+    let subresources: string[] = [];
+    let filters: any = false;
+    const cb = extractCallback(args);
 
-    const resultPromise = promise.then(data => {
-      return parseCollection(data.fantasy_content.users[0].user[1].games);
+    switch (args.length) {
+      case 1:
+        if (Array.isArray(args[0])) {
+          subresources = args[0];
+        } else {
+          filters = args[0];
+        }
+        break;
+
+      case 2:
+        filters = args[0];
+        subresources = args[1];
+        break;
+
+      default:
+        break;
+    }
+
+    let url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
+
+    if (filters) {
+      Object.keys(filters).forEach((key) => {
+        url += `;${key}=${filters[key]}`;
+      });
+    }
+
+    if (subresources.length) {
+      url += `;out=${subresources.join(',')}`;
+    }
+
+    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
+    
+    const resultPromise = promise.then((data) => {
+      return parseCollection(
+        data.fantasy_content.users[0].user[1].games,
+        subresources
+      );
     });
 
     if (cb) {
-      resultPromise.then(games => cb(null, games)).catch(e => cb(e));
+      resultPromise.then((games) => cb(null, games)).catch((e) => cb(e));
       return;
     }
     return resultPromise;

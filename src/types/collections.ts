@@ -8,14 +8,9 @@ import {
 import {
   Game,
   League,
-  Player,
-  Team,
+  MappedPlayer,
+  MappedTeam,
   Transaction,
-  GamesCollection,
-  LeaguesCollection,
-  PlayersCollection,
-  TeamsCollection,
-  TransactionsCollection
 } from './api-responses';
 
 import {
@@ -54,26 +49,26 @@ export interface LeaguesCollectionResource extends BaseCollection {
 
 // Players Collection
 export interface PlayersCollectionResource extends BaseCollection {
-  fetch(playerKeys: string[], cb: Callback<Player[]>): void;
-  fetch(playerKeys: string[]): Promise<Player[]>;
+  fetch(playerKeys: string[], cb: Callback<MappedPlayer[]>): void;
+  fetch(playerKeys: string[]): Promise<MappedPlayer[]>;
   
   league(
     leagueKey: string, 
     params: PaginationParams & FilterParams, 
-    cb: Callback<Player[]>
+    cb: Callback<MappedPlayer[]>
   ): void;
   league(
     leagueKey: string, 
     params: PaginationParams & FilterParams
-  ): Promise<Player[]>;
-  league(leagueKey: string, cb: Callback<Player[]>): void;
-  league(leagueKey: string): Promise<Player[]>;
+  ): Promise<MappedPlayer[]>;
+  league(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
+  league(leagueKey: string): Promise<MappedPlayer[]>;
   
-  team(teamKey: string, cb: Callback<Player[]>): void;
-  team(teamKey: string): Promise<Player[]>;
+  team(teamKey: string, cb: Callback<MappedPlayer[]>): void;
+  team(teamKey: string): Promise<MappedPlayer[]>;
   
-  freeAgents(leagueKey: string, cb: Callback<Player[]>): void;
-  freeAgents(leagueKey: string): Promise<Player[]>;
+  freeAgents(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
+  freeAgents(leagueKey: string): Promise<MappedPlayer[]>;
   
   ownership(leagueKey: string, playerKeys: string[], cb: Callback<any[]>): void;
   ownership(leagueKey: string, playerKeys: string[]): Promise<any[]>;
@@ -81,17 +76,17 @@ export interface PlayersCollectionResource extends BaseCollection {
 
 // Teams Collection  
 export interface TeamsCollectionResource extends BaseCollection {
-  fetch(teamKeys: string[], cb: Callback<Team[]>): void;
-  fetch(teamKeys: string[]): Promise<Team[]>;
+  fetch(teamKeys: string[], cb: Callback<MappedTeam[]>): void;
+  fetch(teamKeys: string[]): Promise<MappedTeam[]>;
   
-  league(leagueKey: string, cb: Callback<Team[]>): void;
-  league(leagueKey: string): Promise<Team[]>;
+  league(leagueKey: string, cb: Callback<MappedTeam[]>): void;
+  league(leagueKey: string): Promise<MappedTeam[]>;
   
-  user(cb: Callback<Team[]>): void;
-  user(): Promise<Team[]>;
+  user(cb: Callback<MappedTeam[]>): void;
+  user(): Promise<MappedTeam[]>;
   
-  userFetch(teamKeys: string[], cb: Callback<Team[]>): void;
-  userFetch(teamKeys: string[]): Promise<Team[]>;
+  userFetch(teamKeys: string[], cb: Callback<MappedTeam[]>): void;
+  userFetch(teamKeys: string[]): Promise<MappedTeam[]>;
 }
 
 // Transactions Collection

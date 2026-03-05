@@ -13,14 +13,12 @@ import {
   RosterPosition,
   League,
   LeagueSettings,
-  TeamStanding,
-  Team,
-  TeamMatchup,
-  Player,
-  PlayerStats,
+  MappedTeam,
+  MappedPlayer,
+  MappedStats,
+  MappedDraftAnalysis,
   PlayerOwnership,
   Transaction,
-  Roster,
   UserGame,
   UserLeague,
   FantasyContent
@@ -55,19 +53,19 @@ export interface LeagueResource extends BaseResource {
   settings(leagueKey: string, cb: Callback<LeagueSettings>): void;
   settings(leagueKey: string): Promise<LeagueSettings>;
   
-  standings(leagueKey: string, cb: Callback<TeamStanding[]>): void;
-  standings(leagueKey: string): Promise<TeamStanding[]>;
+  standings(leagueKey: string, cb: Callback<MappedTeam[]>): void;
+  standings(leagueKey: string): Promise<MappedTeam[]>;
   
   scoreboard(leagueKey: string, week: number, cb: Callback<any>): void;
   scoreboard(leagueKey: string, week: number): Promise<any>;
   scoreboard(leagueKey: string, cb: Callback<any>): void;
   scoreboard(leagueKey: string): Promise<any>;
   
-  teams(leagueKey: string, cb: Callback<Team[]>): void;
-  teams(leagueKey: string): Promise<Team[]>;
+  teams(leagueKey: string, cb: Callback<MappedTeam[]>): void;
+  teams(leagueKey: string): Promise<MappedTeam[]>;
   
-  players(leagueKey: string, cb: Callback<Player[]>): void;
-  players(leagueKey: string): Promise<Player[]>;
+  players(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
+  players(leagueKey: string): Promise<MappedPlayer[]>;
   
   draftResults(leagueKey: string, cb: Callback<any>): void;
   draftResults(leagueKey: string): Promise<any>;
@@ -78,44 +76,44 @@ export interface LeagueResource extends BaseResource {
 
 // Team Resource  
 export interface TeamResource extends BaseResource {
-  meta(teamKey: string, cb: Callback<Team>): void;
-  meta(teamKey: string): Promise<Team>;
+  meta(teamKey: string, cb: Callback<MappedTeam>): void;
+  meta(teamKey: string): Promise<MappedTeam>;
   
   stats(teamKey: string, cb: Callback<any>): void;
   stats(teamKey: string): Promise<any>;
   stats(teamKey: string, week: number, cb: Callback<any>): void;
   stats(teamKey: string, week: number): Promise<any>;
   
-  standings(teamKey: string, cb: Callback<TeamStanding>): void;
-  standings(teamKey: string): Promise<TeamStanding>;
+  standings(teamKey: string, cb: Callback<MappedTeam>): void;
+  standings(teamKey: string): Promise<MappedTeam>;
   
-  roster(teamKey: string, cb: Callback<Roster>): void;
-  roster(teamKey: string): Promise<Roster>;
-  roster(teamKey: string, week: number, cb: Callback<Roster>): void;
-  roster(teamKey: string, week: number): Promise<Roster>;
+  roster(teamKey: string, cb: Callback<MappedTeam>): void;
+  roster(teamKey: string): Promise<MappedTeam>;
+  roster(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
+  roster(teamKey: string, week: number): Promise<MappedTeam>;
   
   draft_results(teamKey: string, cb: Callback<any>): void;
   draft_results(teamKey: string): Promise<any>;
   
-  matchups(teamKey: string, cb: Callback<TeamMatchup[]>): void;
-  matchups(teamKey: string): Promise<TeamMatchup[]>;
-  matchups(teamKey: string, weeks: number[], cb: Callback<TeamMatchup[]>): void;
-  matchups(teamKey: string, weeks: number[]): Promise<TeamMatchup[]>;
+  matchups(teamKey: string, cb: Callback<MappedTeam>): void;
+  matchups(teamKey: string): Promise<MappedTeam>;
+  matchups(teamKey: string, weeks: number[], cb: Callback<MappedTeam>): void;
+  matchups(teamKey: string, weeks: number[]): Promise<MappedTeam>;
 }
 
 // Player Resource
 export interface PlayerResource extends BaseResource {
-  meta(playerKey: string, cb: Callback<Player>): void;
-  meta(playerKey: string): Promise<Player>;
+  meta(playerKey: string, cb: Callback<MappedPlayer>): void;
+  meta(playerKey: string): Promise<MappedPlayer>;
   
-  stats(playerKey: string, cb: Callback<Player & { stats: any }>): void;
-  stats(playerKey: string): Promise<Player & { stats: any }>;
-  stats(playerKey: string, week: number, cb: Callback<Player & { stats: any }>): void;
-  stats(playerKey: string, week: number): Promise<Player & { stats: any }>;
-  stats(playerKey: string, date: string, cb: Callback<Player & { stats: any }>): void;
-  stats(playerKey: string, date: string): Promise<Player & { stats: any }>;
-  stats(playerKey: string, type: 'lastweek' | 'lastmonth', cb: Callback<Player & { stats: any }>): void;
-  stats(playerKey: string, type: 'lastweek' | 'lastmonth'): Promise<Player & { stats: any }>;
+  stats(playerKey: string, cb: Callback<MappedPlayer & { stats: MappedStats }>): void;
+  stats(playerKey: string): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, week: number, cb: Callback<MappedPlayer & { stats: MappedStats }>): void;
+  stats(playerKey: string, week: number): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, date: string, cb: Callback<MappedPlayer & { stats: MappedStats }>): void;
+  stats(playerKey: string, date: string): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, type: 'lastweek' | 'lastmonth', cb: Callback<MappedPlayer & { stats: MappedStats }>): void;
+  stats(playerKey: string, type: 'lastweek' | 'lastmonth'): Promise<MappedPlayer & { stats: MappedStats }>;
   
   ownership(playerKey: string, leagueKey: string, cb: Callback<PlayerOwnership>): void;
   ownership(playerKey: string, leagueKey: string): Promise<PlayerOwnership>;
@@ -129,12 +127,12 @@ export interface PlayerResource extends BaseResource {
 
 // Roster Resource
 export interface RosterResource extends BaseResource {
-  players(teamKey: string, cb: Callback<Roster>): void;
-  players(teamKey: string): Promise<Roster>;
-  players(teamKey: string, date: string, cb: Callback<Roster>): void;
-  players(teamKey: string, date: string): Promise<Roster>;
-  players(teamKey: string, week: number, cb: Callback<Roster>): void;
-  players(teamKey: string, week: number): Promise<Roster>;
+  players(teamKey: string, cb: Callback<MappedTeam>): void;
+  players(teamKey: string): Promise<MappedTeam>;
+  players(teamKey: string, date: string, cb: Callback<MappedTeam>): void;
+  players(teamKey: string, date: string): Promise<MappedTeam>;
+  players(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
+  players(teamKey: string, week: number): Promise<MappedTeam>;
 }
 
 // Transaction Resource
@@ -142,8 +140,8 @@ export interface TransactionResource extends BaseResource {
   meta(transactionKey: string, cb: Callback<Transaction>): void;
   meta(transactionKey: string): Promise<Transaction>;
   
-  players(transactionKey: string, cb: Callback<Player[]>): void;
-  players(transactionKey: string): Promise<Player[]>;
+  players(transactionKey: string, cb: Callback<MappedPlayer[]>): void;
+  players(transactionKey: string): Promise<MappedPlayer[]>;
 }
 
 // User Resource
@@ -154,12 +152,12 @@ export interface UserResource extends BaseResource {
   game_leagues(gameKey: string, cb: Callback<UserLeague[]>): void;
   game_leagues(gameKey: string): Promise<UserLeague[]>;
   
-  game_teams(gameKey: string, cb: Callback<Team[]>): void;
-  game_teams(gameKey: string): Promise<Team[]>;
+  game_teams(gameKey: string, cb: Callback<MappedTeam[]>): void;
+  game_teams(gameKey: string): Promise<MappedTeam[]>;
   
   leagues(cb: Callback<UserLeague[]>): void;
   leagues(): Promise<UserLeague[]>;
   
-  teams(cb: Callback<Team[]>): void;
-  teams(): Promise<Team[]>;
+  teams(cb: Callback<MappedTeam[]>): void;
+  teams(): Promise<MappedTeam[]>;
 }

@@ -2,10 +2,9 @@ import { YahooFantasyInstance, Callback } from "../types/core";
 import {
   League,
   LeagueSettings,
-  TeamStanding,
-  Team,
+  MappedTeam,
+  MappedPlayer,
   Transaction,
-  Player,
   FantasyContent,
 } from "../types/api-responses";
 import {
@@ -76,22 +75,22 @@ class LeagueResource {
   }
 
   // Method overloads for standings
-  standings(leagueKey: string): Promise<League & { standings: TeamStanding[] }>;
+  standings(leagueKey: string): Promise<League & { standings: MappedTeam[] }>;
   standings(
     leagueKey: string,
-    cb: Callback<League & { standings: TeamStanding[] }>
+    cb: Callback<League & { standings: MappedTeam[] }>
   ): void;
   standings(
     leagueKey: string,
-    cb?: Callback<League & { standings: TeamStanding[] }>
-  ): Promise<League & { standings: TeamStanding[] }> | void {
+    cb?: Callback<League & { standings: MappedTeam[] }>
+  ): Promise<League & { standings: MappedTeam[] }> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings`
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
     const resultPromise: Promise<
-      League & { standings: TeamStanding[] }
+      League & { standings: MappedTeam[] }
     > = promise.then((data) => {
       const standings = mapStandings(
         data.fantasy_content.league[1].standings[0].teams
@@ -117,7 +116,6 @@ class LeagueResource {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/scoreboard`;
     const cb = extractCallback(args);
     let requestedWeek: number | undefined;
-
     if (args.length) {
       const week = args[0];
       if (
@@ -154,15 +152,15 @@ class LeagueResource {
   }
 
   // Method overloads for teams
-  teams(leagueKey: string): Promise<Team[]>;
-  teams(leagueKey: string, cb: Callback<Team[]>): void;
-  teams(leagueKey: string, cb?: Callback<Team[]>): Promise<Team[]> | void {
+  teams(leagueKey: string): Promise<MappedTeam[]>;
+  teams(leagueKey: string, cb: Callback<MappedTeam[]>): void;
+  teams(leagueKey: string, cb?: Callback<MappedTeam[]>): Promise<MappedTeam[]> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
-    const resultPromise: Promise<Team[]> = promise.then((data) => {
+    const resultPromise: Promise<MappedTeam[]> = promise.then((data) => {
       const teams = mapTeams(data.fantasy_content.league[1].teams);
       return teams;
     });
@@ -236,26 +234,26 @@ class LeagueResource {
   }
 
   // Method overloads for players (WIP... not sure this is useful... certainly doesn't feel good...)
-  players(leagueKey: string): Promise<Player[]>;
-  players(leagueKey: string, cb: Callback<Player[]>): void;
-  players(leagueKey: string, playerKeys: string[]): Promise<Player[]>;
+  players(leagueKey: string): Promise<MappedPlayer[]>;
+  players(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
+  players(leagueKey: string, playerKeys: string[]): Promise<MappedPlayer[]>;
   players(
     leagueKey: string,
     playerKeys: string[],
-    cb: Callback<Player[]>
+    cb: Callback<MappedPlayer[]>
   ): void;
   players(
     leagueKey: string,
     playerKeys: string[],
     week: number
-  ): Promise<Player[]>;
+  ): Promise<MappedPlayer[]>;
   players(
     leagueKey: string,
     playerKeys: string[],
     week: number,
-    cb: Callback<Player[]>
+    cb: Callback<MappedPlayer[]>
   ): void;
-  players(leagueKey: string, ...args: any[]): Promise<Player[]> | void {
+  players(leagueKey: string, ...args: any[]): Promise<MappedPlayer[]> | void {
     const cb = extractCallback(args);
     let playerKeys: string[] = args.length ? args.shift() : [];
     let week: number | false = false;
@@ -290,8 +288,7 @@ class LeagueResource {
       FantasyContent<{ league: any[] }>
     >;
 
-    const resultPromise: Promise<Player[]> = promise.then((data) => {
-      console.log(JSON.stringify(data));
+    const resultPromise: Promise<MappedPlayer[]> = promise.then((data) => {
       const players = mapPlayers(data.fantasy_content.league[1].players);
       return players;
     });

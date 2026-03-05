@@ -1,5 +1,5 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
-import { Transaction, Player } from '../types/api-responses';
+import { Transaction, MappedPlayer } from '../types/api-responses';
 import { mapPlayers } from '../helpers/gameHelper';
 
 class TransactionResource {
@@ -26,9 +26,9 @@ class TransactionResource {
     return resultPromise;
   }
 
-  players(transactionKey: string): Promise<Player[]>;
-  players(transactionKey: string, cb: Callback<Player[]>): void;
-  players(transactionKey: string, cb?: Callback<Player[]>): Promise<Player[]> | void {
+  players(transactionKey: string): Promise<MappedPlayer[]>;
+  players(transactionKey: string, cb: Callback<MappedPlayer[]>): void;
+  players(transactionKey: string, cb?: Callback<MappedPlayer[]>): Promise<MappedPlayer[]> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}/players`

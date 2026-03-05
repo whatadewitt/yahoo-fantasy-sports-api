@@ -1,7 +1,7 @@
-// League helper functions - temporary stubs until full migration
-
 import { mapTeam, mapTeamPoints } from './teamHelper';
 import { mapTransactionPlayers } from './transactionHelper';
+import { mapDraft } from './sharedHelper';
+import { MappedTeam } from '../types/api-responses';
 
 export function mapSettings(settings: any): any {
   settings.stat_categories = settings.stat_categories.stats.map((s: any) => {
@@ -25,7 +25,7 @@ export function mapSettings(settings: any): any {
   return settings;
 }
 
-export function mapStandings(ts: any): any[] {
+export function mapStandings(ts: any): MappedTeam[] {
   const count = ts.count;
   const teams = [];
 
@@ -87,10 +87,10 @@ export function mapScoreboard(sb: any): any {
   };
 }
 
-export function mapTeams(ts: any): any[] {
+export function mapTeams(ts: any): MappedTeam[] {
   const teams = Object.values(ts);
 
-  return teams.reduce((result: any[], t: any) => {
+  return teams.reduce((result: MappedTeam[], t: any) => {
     if (t.team) {
       result.push(mapTeam(t.team[0]));
     }
@@ -99,17 +99,7 @@ export function mapTeams(ts: any): any[] {
   }, []);
 }
 
-export function mapDraft(d: any): any[] {
-  const draft = Object.values(d);
-
-  return draft.reduce((result: any[], d: any) => {
-    if (d.draft_result) {
-      result.push(d.draft_result);
-    }
-
-    return result;
-  }, []);
-}
+export { mapDraft } from './sharedHelper';
 
 export function mapTransactions(ts: any): any[] {
   const count = ts.count;
@@ -128,4 +118,52 @@ export function mapTransactions(ts: any): any[] {
   }
 
   return transactions;
+}
+
+export function parseCollection(ls: any, subresources: string[] = []): any[] {
+  const count = ls.count;
+  const leagues = [];
+
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
+
+  return leagues.map((l: any) => {
+    let league = l.league[0];
+
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "settings":
+          league.settings = mapSettings(l.league[idx + 1].settings[0]);
+          break;
+
+        case "standings":
+          league.standings = mapStandings(l.league[idx + 1].standings[0].teams);
+          break;
+
+        case "scoreboard":
+          league.scoreboard = mapScoreboard(
+            l.league[idx + 1].scoreboard[0].matchups
+          );
+          break;
+
+        case "teams":
+          league.teams = mapTeams(l.league[idx + 1].teams);
+          break;
+
+        case "draftresults":
+          league.draftresults = mapDraft(l.league[idx + 1].draft_results);
+          break;
+
+        case "transactions":
+          league.transactions = mapTransactions(l.league[idx + 1].transactions);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return league;
+  });
 }

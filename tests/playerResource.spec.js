@@ -62,12 +62,13 @@ describe("resource: playerResource", function() {
       .times(2)
       .reply(200, mockPlayerStats);
 
+    // Test callback mode first
     player.stats("328.p.6619", function(e, data) {
-      console.log(data);
       expect(data.stats.coverage_type).toEqual(
         mockPlayerStats.fantasy_content.player[1].player_stats[0].coverage_type
       );
 
+      // Then test promise mode
       player
         .stats("328.p.6619")
         .then((data) => {

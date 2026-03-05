@@ -1,5 +1,5 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
-import { UserGame, UserLeague, Team } from '../types/api-responses';
+import { UserGame, UserLeague, MappedTeam } from '../types/api-responses';
 import { mapTeam } from '../helpers/teamHelper';
 
 class UserResource {
@@ -51,9 +51,9 @@ class UserResource {
     return resultPromise;
   }
 
-  game_teams(gameKey: string): Promise<Team[]>;
-  game_teams(gameKey: string, cb: Callback<Team[]>): void;
-  game_teams(gameKey: string, cb?: Callback<Team[]>): Promise<Team[]> | void {
+  game_teams(gameKey: string): Promise<MappedTeam[]>;
+  game_teams(gameKey: string, cb: Callback<MappedTeam[]>): void;
+  game_teams(gameKey: string, cb?: Callback<MappedTeam[]>): Promise<MappedTeam[]> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=${gameKey}/teams`

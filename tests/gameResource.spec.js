@@ -1,6 +1,5 @@
 const YahooFantasy = require("../index.js");
 const nock = require("nock");
-const q = require("q");
 
 describe("resource : gameResource", function() {
   const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),

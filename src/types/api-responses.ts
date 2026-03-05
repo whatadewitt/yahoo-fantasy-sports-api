@@ -360,6 +360,102 @@ export interface UserLeague extends League {
   teams?: Array<{ team: Team }>;
 }
 
+// Mapped types — these represent the transformed shapes returned by helper functions.
+// The helpers flatten Yahoo's raw array-of-objects format and reshape certain fields.
+
+export interface MappedPlayer {
+  player_key: string;
+  player_id: string;
+  name: PlayerName;
+  editorial_player_key: string;
+  editorial_team_key: string;
+  editorial_team_full_name: string;
+  editorial_team_abbr: string;
+  uniform_number?: string;
+  display_position: string;
+  headshot?: string;
+  image_url?: string;
+  is_undroppable: string;
+  position_type: string;
+  primary_position?: string;
+  eligible_positions: string[];
+  has_player_notes?: number;
+  player_notes_last_timestamp?: number;
+  status?: string;
+  status_full?: string;
+  injury_note?: string;
+  has_recent_player_notes?: number;
+  on_disabled_list?: string;
+  starting_status?: number;
+  batting_order?: string;
+  selected_position?: string;
+  player_stats?: MappedStats;
+  player_advanced_stats?: MappedStats;
+  player_points?: MappedPoints;
+  [key: string]: any;
+}
+
+export interface MappedStats {
+  coverage_type: string;
+  coverage_value: string;
+  stats: Array<{ stat_id: string; value: string }>;
+}
+
+export interface MappedPoints {
+  coverage_type: string;
+  coverage_value: string;
+  total: string;
+}
+
+export interface MappedOwnership {
+  ownership_type: string;
+  owner_team_key?: string;
+  owner_team_name?: string;
+}
+
+export interface MappedDraftAnalysis {
+  average_pick?: string;
+  average_round?: string;
+  average_cost?: string;
+  percent_drafted?: string;
+  [key: string]: any;
+}
+
+export interface MappedTeam {
+  team_key: string;
+  team_id: string;
+  name: string;
+  is_owned_by_current_login?: number;
+  url: string;
+  team_logo: string;
+  division_id?: string;
+  waiver_priority?: number;
+  faab_balance?: string;
+  number_of_moves: string;
+  number_of_trades: number;
+  roster_adds?: {
+    coverage_type: string;
+    coverage_value: string;
+    value: string;
+  };
+  league_scoring_type?: string;
+  has_draft_grade?: number;
+  draft_grade?: string;
+  draft_recap_url?: string;
+  managers?: Manager[];
+  clinched_playoffs?: number;
+  auction_budget_total?: string;
+  auction_budget_spent?: number;
+  roster?: MappedPlayer[];
+  standings?: any;
+  points?: any;
+  stats?: Array<{ stat_id: string; value: string }>;
+  projected_points?: any;
+  matchups?: any;
+  draftresults?: any;
+  [key: string]: any;
+}
+
 // Collection types
 export interface GamesCollection {
   games: {

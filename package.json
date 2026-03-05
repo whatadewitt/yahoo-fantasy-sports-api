@@ -40,7 +40,7 @@
     "url": "git+https://github.com/whatadewitt/yfsapi.git"
   },
   "engines": {
-    "node": ">= 14.0.0"
+    "node": ">= 18.0.0"
   },
   "keywords": [
     "yahoo",
@@ -61,7 +61,6 @@
   },
   "homepage": "https://yahoo-fantasy-node-docs.vercel.app/",
   "dependencies": {
-    "esm": "^3.2.25",
     "follow-redirects": "^1.13.0",
     "oauth-signature": "^1.5.0",
     "uuid": "^8.3.0"
@@ -74,8 +73,7 @@
     "jasmine": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
     "nock": "^14.0.5",
-    "prettier": "^1.18.2",
-    "q": "^1.4.1",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

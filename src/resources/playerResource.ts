@@ -1,7 +1,8 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
 import {
-  Player,
-  PlayerStats,
+  MappedPlayer,
+  MappedStats,
+  MappedDraftAnalysis,
   PlayerOwnership,
   FantasyContent,
 } from "../types/api-responses";
@@ -12,15 +13,15 @@ class PlayerResource {
   constructor(public yf: YahooFantasyInstance) {}
 
   // Method overloads for meta
-  meta(playerKey: string): Promise<Player>;
-  meta(playerKey: string, cb: Callback<Player>): void;
-  meta(playerKey: string, cb?: Callback<Player>): Promise<Player> | void {
+  meta(playerKey: string): Promise<MappedPlayer>;
+  meta(playerKey: string, cb: Callback<MappedPlayer>): void;
+  meta(playerKey: string, cb?: Callback<MappedPlayer>): Promise<MappedPlayer> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/metadata`
     ) as Promise<FantasyContent<{ player: any[] }>>;
 
-    const resultPromise: Promise<Player> = promise.then((data) => {
+    const resultPromise: Promise<MappedPlayer> = promise.then((data) => {
       const meta = mapPlayer(data.fantasy_content.player[0]);
       if (!meta) {
         throw new Error("No player data found");
@@ -37,33 +38,33 @@ class PlayerResource {
   }
 
   // Method overloads for stats
-  stats(playerKey: string): Promise<Player & { stats: any }>;
-  stats(playerKey: string, week: number): Promise<Player & { stats: any }>;
-  stats(playerKey: string, date: string): Promise<Player & { stats: any }>;
+  stats(playerKey: string): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, week: number): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, date: string): Promise<MappedPlayer & { stats: MappedStats }>;
   stats(
     playerKey: string,
     type: "lastweek" | "lastmonth"
-  ): Promise<Player & { stats: any }>;
-  stats(playerKey: string, cb: Callback<Player & { stats: any }>): void;
+  ): Promise<MappedPlayer & { stats: MappedStats }>;
+  stats(playerKey: string, cb: Callback<MappedPlayer & { stats: MappedStats }>): void;
   stats(
     playerKey: string,
     week: number,
-    cb: Callback<Player & { stats: any }>
+    cb: Callback<MappedPlayer & { stats: MappedStats }>
   ): void;
   stats(
     playerKey: string,
     date: string,
-    cb: Callback<Player & { stats: any }>
+    cb: Callback<MappedPlayer & { stats: MappedStats }>
   ): void;
   stats(
     playerKey: string,
     type: "lastweek" | "lastmonth",
-    cb: Callback<Player & { stats: any }>
+    cb: Callback<MappedPlayer & { stats: MappedStats }>
   ): void;
   stats(
     playerKey: string,
     ...args: any[]
-  ): Promise<Player & { stats: any }> | void {
+  ): Promise<MappedPlayer & { stats: MappedStats }> | void {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/stats`;
     const cb = extractCallback(args);
 
@@ -89,20 +90,25 @@ class PlayerResource {
       FantasyContent<{ player: any[] }>
     >;
 
-    const resultPromise: Promise<Player & { stats: any }> = promise.then(
+    const resultPromise: Promise<MappedPlayer & { stats: MappedStats }> = promise.then(
       (data) => {
         let stats: any;
         const player = mapPlayer(data.fantasy_content.player[0]);
 
         if (data.fantasy_content.player.length > 1) {
-          stats = mapStats(data.fantasy_content.player[1].player_stats);
+          const statsData = data.fantasy_content.player[1];
+          if (statsData.player_stats) {
+            stats = mapStats(statsData.player_stats);
+          } else {
+            stats = mapStats(statsData);
+          }
         } else {
           const gameKey = playerKey.split(".")[0];
           stats = `Cannot retrieve player stats of type '${dateType}' for game '${gameKey}'`;
         }
 
         player.stats = stats;
-        return player;
+        return player as MappedPlayer & { stats: MappedStats };
       }
     );
 
@@ -114,22 +120,22 @@ class PlayerResource {
   }
 
   // Method overloads for percent_owned
-  percent_owned(playerKey: string): Promise<Player & { percent_owned: string }>;
+  percent_owned(playerKey: string): Promise<MappedPlayer & { percent_owned: string }>;
   percent_owned(
     playerKey: string,
-    cb: Callback<Player & { percent_owned: string }>
+    cb: Callback<MappedPlayer & { percent_owned: string }>
   ): void;
   percent_owned(
     playerKey: string,
-    cb?: Callback<Player & { percent_owned: string }>
-  ): Promise<Player & { percent_owned: string }> | void {
+    cb?: Callback<MappedPlayer & { percent_owned: string }>
+  ): Promise<MappedPlayer & { percent_owned: string }> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/percent_owned`
     ) as Promise<FantasyContent<{ player: any[] }>>;
 
     const resultPromise: Promise<
-      Player & { percent_owned: string }
+      MappedPlayer & { percent_owned: string }
     > = promise.then((data) => {
       const percent_owned = data.fantasy_content.player[1].percent_owned[1];
       const player = mapPlayer(data.fantasy_content.player[0]);
@@ -185,7 +191,7 @@ class PlayerResource {
         ...player,
         status,
         league,
-      };
+      } as unknown as PlayerOwnership;
     });
 
     if (cb) {
@@ -196,22 +202,22 @@ class PlayerResource {
   }
 
   // Method overloads for draft_analysis
-  draft_analysis(playerKey: string): Promise<Player & { draft_analysis: any }>;
+  draft_analysis(playerKey: string): Promise<MappedPlayer & { draft_analysis: MappedDraftAnalysis }>;
   draft_analysis(
     playerKey: string,
-    cb: Callback<Player & { draft_analysis: any }>
+    cb: Callback<MappedPlayer & { draft_analysis: MappedDraftAnalysis }>
   ): void;
   draft_analysis(
     playerKey: string,
-    cb?: Callback<Player & { draft_analysis: any }>
-  ): Promise<Player & { draft_analysis: any }> | void {
+    cb?: Callback<MappedPlayer & { draft_analysis: MappedDraftAnalysis }>
+  ): Promise<MappedPlayer & { draft_analysis: MappedDraftAnalysis }> | void {
     const promise = this.yf.api(
       this.yf.GET,
       `https://fantasysports.yahooapis.com/fantasy/v2/player/${playerKey}/draft_analysis`
     ) as Promise<FantasyContent<{ player: any[] }>>;
 
     const resultPromise: Promise<
-      Player & { draft_analysis: any }
+      MappedPlayer & { draft_analysis: MappedDraftAnalysis }
     > = promise.then((data) => {
       const draft_analysis = mapDraftAnalysis(
         data.fantasy_content.player[1].draft_analysis

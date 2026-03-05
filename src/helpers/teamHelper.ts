@@ -1,24 +1,9 @@
-// Team helper functions
 import { mapPlayers } from './gameHelper';
+import { parseCollection as parsePlayerCollection } from './playerHelper';
+import { mergeObjects, mapDraft } from './sharedHelper';
+import { MappedTeam, MappedPlayer, Manager } from '../types/api-responses';
 
-// Helper to merge array of objects into single object
-function mergeObjects(arrayOfObjects: any[]): any {
-  const destinationObj: any = {};
-
-  if (arrayOfObjects) {
-    arrayOfObjects.forEach(obj => {
-      Object.keys(obj).forEach(key => {
-        if (typeof key !== "undefined") {
-          destinationObj[key] = obj[key];
-        }
-      });
-    });
-  }
-
-  return destinationObj;
-}
-
-export function mapTeam(t: any): any {
+export function mapTeam(t: any): MappedTeam {
   const team = mergeObjects(t);
   
   // clean up team_logos - extract URL from first logo
@@ -40,7 +25,7 @@ export function mapTeam(t: any): any {
   return team;
 }
 
-export function mapTeamPoints(team: any, points: any): any {
+export function mapTeamPoints(team: MappedTeam, points: any): MappedTeam {
   team.points = points.team_points;
 
   if (points.team_stats) {
@@ -54,29 +39,16 @@ export function mapTeamPoints(team: any, points: any): any {
   return team;
 }
 
-export function mapStats(stats: any): any {
+export function mapStats(stats: any): Array<{ stat_id: string; value: string }> {
   return stats.map((s: any) => s.stat);
 }
 
-export function mapRoster(r: any): any {
+export function mapRoster(r: any): MappedPlayer[] {
   let players = r[0].players;
   return mapPlayers(players);
 }
 
-export function mapDraft(draft: any): any {
-  if (!draft) return draft;
-  
-  const results = [];
-  const keys = Object.keys(draft);
-  
-  for (const key of keys) {
-    if (draft[key] && draft[key].draft_result) {
-      results.push(draft[key].draft_result);
-    }
-  }
-  
-  return results;
-}
+export { mapDraft } from './sharedHelper';
 
 export function mapMatchups(matchups: any): any {
   if (!matchups) return matchups;
@@ -125,4 +97,106 @@ export function mapMatchups(matchups: any): any {
   }
   
   return results;
+}
+
+export function parseCollection(ts: any, subresources: string[] = []): MappedTeam[] {
+  const count = ts.count;
+  const teams = [];
+
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
+
+  return teams.map((t: any) => {
+    // this is only here because user games collection is adding an extra null
+    // and I cannot for the life of me figure out why.
+    t.team = t.team.filter((o: any) => null !== o);
+
+    let team = mapTeam(t.team[0]);
+
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "stats":
+          // TODO: this could be cleaner...
+          if (t.team[idx + 1].team_stats) {
+            team.stats = mapStats(t.team[idx + 1].team_stats.stats);
+          }
+
+          if (t.team[idx + 1].team_points) {
+            team.points = t.team[idx + 1].team_points;
+          }
+
+          break;
+
+        case "standings":
+          team.standings = t.team[idx + 1].team_standings;
+          break;
+
+        case "roster":
+          team.roster = mapRoster(t.team[idx + 1].roster);
+          break;
+
+        case "draftresults":
+          team.draftresults = mapDraft(t.team[idx + 1].draft_results);
+          break;
+
+        case "matchups":
+          team.matchups = mapMatchups(t.team[idx + 1].matchups);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return team;
+  });
+}
+
+export function parseLeagueCollection(ls: any, subresources: string[] = []): any[] {
+  const count = ls.count;
+  const leagues = [];
+
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
+
+  return leagues.map((l: any) => {
+    let league = l.league[0];
+    league.teams = parseCollection(l.league[1].teams, subresources);
+
+    return league;
+  });
+}
+
+export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
+  const count = ts.count;
+  const teams = [];
+
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
+
+  return teams.map((t: any) => {
+    let team = mapTeam(t.team[0]);
+    team.players = parsePlayerCollection(t.team[1].players, subresources);
+
+    return team;
+  });
+}
+
+export function parseGameCollection(gs: any, subresources: string[] = []): any[] {
+  const count = gs.count;
+  const games = [];
+
+  for (let i = 0; i < count; i++) {
+    games.push(gs[i]);
+  }
+
+  return games.map((g: any) => {
+    let game = g.game[0];
+    game.teams = parseCollection(g.game[1].teams, subresources);
+
+    return game;
+  });
 }

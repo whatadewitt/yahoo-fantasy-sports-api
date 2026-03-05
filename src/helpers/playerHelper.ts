@@ -1,23 +1,8 @@
-// Player helper functions
+import { mapTeam } from './teamHelper';
+import { mergeObjects } from './sharedHelper';
+import { MappedPlayer, MappedStats, MappedPoints, MappedOwnership, MappedDraftAnalysis, MappedTeam } from '../types/api-responses';
 
-// Helper to merge array of objects into single object
-function mergeObjects(arrayOfObjects: any[]): any {
-  const destinationObj: any = {};
-
-  if (arrayOfObjects) {
-    arrayOfObjects.forEach((obj) => {
-      Object.keys(obj).forEach((key) => {
-        if (typeof key !== "undefined") {
-          destinationObj[key] = obj[key];
-        }
-      });
-    });
-  }
-
-  return destinationObj;
-}
-
-export function mapPlayer(p: any): any {
+export function mapPlayer(p: any): MappedPlayer {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
@@ -52,31 +37,149 @@ export function mapPlayer(p: any): any {
     player.selected_position = player.selected_position[1].position;
   }
 
+  // Convert headshot object to just the URL string
+  if (player.headshot && player.headshot.url) {
+    player.headshot = player.headshot.url;
+  }
+
   return player;
 }
 
-export function mapStats(stats: any): any {
+export function mapStats(stats: any): MappedStats {
   if (!stats) return stats;
 
   // Handle the structure: stats = { "0": { coverage_type: "season", season: "2014" }, "stats": [...] }
-  const coverage_type = stats[0].coverage_type;
+  // Some data uses string key "0", others use numeric index 0
+  const statsInfo = stats[0] || stats["0"];
+  const coverage_type = statsInfo.coverage_type;
   return {
     coverage_type: coverage_type,
-    coverage_value: stats[0][coverage_type],
+    coverage_value: statsInfo[coverage_type],
     stats: stats.stats.map((s: any) => s.stat),
   };
 }
 
-export function mapPoints(points: any): any {
-  const coverage_type = points[0].coverage_type;
+export function mapPoints(points: any): MappedPoints {
+  const pointsInfo = points[0] || points["0"];
+  const coverage_type = pointsInfo.coverage_type;
   return {
     coverage_type,
-    coverage_value: points[0][coverage_type],
+    coverage_value: pointsInfo[coverage_type],
     total: points.total,
   };
 }
 
-export function mapDraftAnalysis(analysis: any): any {
-  // TODO: Implement proper draft analysis mapping
+export function mapOwnership(ownership: any): MappedOwnership {
+  const o: MappedOwnership = {
+    ownership_type: ownership.ownership_type,
+  };
+
+  if ("team" === o.ownership_type) {
+    o.owner_team_key = ownership.owner_team_key;
+    o.owner_team_name = ownership.owner_team_name;
+  }
+
+  return o;
+}
+
+export function mapDraftAnalysis(analysis: any): MappedDraftAnalysis {
+  if (!analysis) return analysis;
+
+  if (Array.isArray(analysis)) {
+    const result: MappedDraftAnalysis = {};
+    analysis.forEach((item: any) => {
+      Object.keys(item).forEach((key) => {
+        result[key] = item[key];
+      });
+    });
+    return result;
+  }
+  
   return analysis;
+}
+
+export function parseLeagueCollection(ls: any, subresources: string[] = []): any {
+  const count = ls.count;
+  const leagues = [];
+
+  for (let i = 0; i < count; i++) {
+    leagues.push(ls[i]);
+  }
+
+  return leagues.map((l: any) => {
+    let league = l.league[0];
+    league.players = parseCollection(l.league[1].players, subresources);
+
+    return league;
+  });
+}
+
+export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
+  const count = ts.count;
+  const teams = [];
+
+  for (let i = 0; i < count; i++) {
+    teams.push(ts[i]);
+  }
+
+  return teams.map((t: any) => {
+    let team = mapTeam(t.team[0]);
+    team.players = parseCollection(t.team[1].players, subresources);
+
+    return team;
+  });
+}
+
+export function parseCollection(ps: any, subresources: string[] = []): MappedPlayer[] {
+  const count = ps.count;
+  const players = [];
+
+  for (let i = 0; i < count; i++) {
+    players.push(ps[i]);
+  }
+
+  return players.map((p: any) => {
+    let player = mapPlayer(p.player[0]);
+
+    subresources.forEach((resource, idx) => {
+      switch (resource) {
+        case "stats":
+          player.stats = mapStats(p.player[idx + 1].player_stats);
+          break;
+
+        case "percent_owned":
+          // Handle the array structure for percent_owned
+          const percentOwnedData = p.player[idx + 1].percent_owned;
+          if (Array.isArray(percentOwnedData)) {
+            player.percent_owned = {
+              coverage_type: percentOwnedData[0].coverage_type,
+              coverage_value: percentOwnedData[0][percentOwnedData[0].coverage_type],
+              value: percentOwnedData[1].value,
+              delta: percentOwnedData[2]?.delta || null
+            };
+          } else {
+            player.percent_owned = percentOwnedData;
+          }
+          break;
+
+        case "ownership":
+          const ownershipData = p.player[idx + 1].ownership;
+          if (ownershipData) {
+            player.ownership = mapOwnership(ownershipData);
+          }
+          break;
+
+        case "draft_analysis":
+          player.draft_analysis = mapDraftAnalysis(
+            p.player[idx + 1].draft_analysis
+          );
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    return player;
+  });
 }
