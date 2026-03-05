@@ -9,7 +9,6 @@ describe("collection: gamesCollection", function() {
     expect(games).not.toBe(null);
   });
 
-  // functions
   it("should have a fetch function", function() {
     expect(games.fetch).not.toBe(null);
   });
@@ -22,23 +21,22 @@ describe("collection: gamesCollection", function() {
     expect(games.userFetch).not.toBe(null);
   });
 
-  // building urls
   beforeEach(function() {
     yf.setUserToken("testuser.token==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  // fetch
-  it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
+  it("should build a proper url to retrieve metadata via a numeric game key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/games;game_keys=328?format=json")
       .reply(200, { fantasy_content: { games: [] } });
 
-    games.fetch(328, done);
+    const result = games.fetch(328);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=328"
     );
+    return result;
   });
 });

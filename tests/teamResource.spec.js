@@ -9,7 +9,6 @@ describe("resource: teamResource", function() {
     expect(team).not.toBe(null);
   });
 
-  // functions
   it("should have a meta function", function() {
     expect(team.meta).not.toBe(null);
   });
@@ -34,93 +33,92 @@ describe("resource: teamResource", function() {
     expect(team.matchups).not.toBe(null);
   });
 
-  // building urls
   beforeEach(function() {
     yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  // meta
-  it("should build a proper url to retrieve metadata via a team key", function(done) {
+  it("should build a proper url to retrieve metadata via a team key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/metadata?format=json")
       .reply(200, require("./nock-data/teamMeta"));
 
-    team.meta("328.l.34014.t.1", done);
+    const result = team.meta("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/metadata"
     );
+    return result;
   });
 
-  // stats
-  it("should build a proper url to retrieve team stats via a team key", function(done) {
+  it("should build a proper url to retrieve team stats via a team key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/stats?format=json")
       .reply(200, require("./nock-data/teamStats"));
 
-    team.stats("328.l.34014.t.1", done);
+    const result = team.stats("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats"
     );
+    return result;
   });
 
-  // standings
-  it("should build a proper url to retrieve team standings via a team key", function(done) {
+  it("should build a proper url to retrieve team standings via a team key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/standings?format=json")
       .reply(200, require("./nock-data/teamStandings"));
 
-    team.standings("328.l.34014.t.1", done);
+    const result = team.standings("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/standings"
     );
+    return result;
   });
 
-  // roster
-  it("should build a proper url to retrieve team ownership in a given league via a team key and a league key", function(done) {
+  it("should build a proper url to retrieve team ownership in a given league via a team key and a league key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
       .reply(200, require("./nock-data/teamRoster"));
 
-    team.roster("328.l.34014.t.1", done);
+    const result = team.roster("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster"
     );
+    return result;
   });
 
-  // draft_results
-  it("should build a proper url to retrieve team draft analysis via a team key", function(done) {
+  it("should build a proper url to retrieve team draft analysis via a team key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/draftresults?format=json")
       .reply(200, require("./nock-data/teamDraftResults"));
 
-    team.draft_results("328.l.34014.t.1", done);
+    const result = team.draft_results("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/draftresults"
     );
+    return result;
   });
 
-  // matchups
-  it("should build a proper url to retrieve team draft analysis via a team key", function(done) {
+  it("should build a proper url to retrieve team draft analysis via a team key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/matchups?format=json")
       .reply(200, require("./nock-data/teamMatchups"));
 
-    team.matchups("328.l.34014.t.1", done);
+    const result = team.matchups("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/matchups"
     );
+    return result;
   });
 });

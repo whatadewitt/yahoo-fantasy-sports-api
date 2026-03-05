@@ -9,7 +9,6 @@ describe("resource: transactionResource", function() {
     expect(transaction).not.toBe(null);
   });
 
-  // functions
   it("should have a meta function", function() {
     expect(transaction.meta).not.toBe(null);
   });
@@ -18,37 +17,36 @@ describe("resource: transactionResource", function() {
     expect(transaction.players).not.toBe(null);
   });
 
-  // building urls
   beforeEach(function() {
     yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  // meta
-  it("should build a proper url to retrieve metadata via a transaction key", function(done) {
+  it("should build a proper url to retrieve metadata via a transaction key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/transaction/328.l.34014.tr.237/metadata?format=json")
       .reply(200, require("./nock-data/transactionMeta"));
 
-    transaction.meta("328.l.34014.tr.237", done);
+    const result = transaction.meta("328.l.34014.tr.237");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/metadata"
     );
+    return result;
   });
 
-  // players
-  it("should build a proper url to retrieve player info via a transaction key", function(done) {
+  it("should build a proper url to retrieve player info via a transaction key", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/transaction/328.l.34014.tr.237/players?format=json")
       .reply(200, require("./nock-data/transactionPlayers"));
 
-    transaction.players("328.l.34014.tr.237", done);
+    const result = transaction.players("328.l.34014.tr.237");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/transaction/328.l.34014.tr.237/players"
     );
+    return result;
   });
 });

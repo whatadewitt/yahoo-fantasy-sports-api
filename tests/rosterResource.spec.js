@@ -9,28 +9,26 @@ describe("resource: rosterResource", function() {
     expect(roster).not.toBe(null);
   });
 
-  // functions
   it("should have a players function", function() {
     expect(roster.players).not.toBe(null);
   });
 
-  // building urls
   beforeEach(function() {
     yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  // meta
-  it("should build a proper url to retrieve players on a team", function(done) {
+  it("should build a proper url to retrieve players on a team", function() {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
       .reply(200, require("./nock-data/teamRoster"));
 
-    roster.players("328.l.34014.t.1", done);
+    const result = roster.players("328.l.34014.t.1");
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster"
     );
+    return result;
   });
 });
