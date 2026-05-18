@@ -59,4 +59,21 @@ describe("collection: transactionsCollection writes", function () {
         expect(call[2]).toContain("<type>pending_trade</type>");
       });
   });
+
+  it("add_player invokes the callback with data on success", function (done) {
+    nock("https://fantasysports.yahooapis.com")
+      .post("/fantasy/v2/league/nfl.l.1/transactions?format=json")
+      .reply(200, { fantasy_content: {} });
+
+    transactions.add_player(
+      "nfl.l.1",
+      "nfl.l.1.t.1",
+      "nfl.p.9",
+      function (err, data) {
+        expect(err).toBeNull();
+        expect(data).toEqual({ fantasy_content: {} });
+        done();
+      }
+    );
+  });
 });

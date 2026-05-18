@@ -202,6 +202,7 @@ class TransactionsCollection {
 
   waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions): Promise<any>;
   waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts: WaiverOptions, cb: Callback<any>): void;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, cb: Callback<any>): void;
   waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions | Callback<any>, cb?: Callback<any>): Promise<any> | void {
     const options = typeof opts === "function" ? {} : opts || {};
     const callback = typeof opts === "function" ? opts : cb;

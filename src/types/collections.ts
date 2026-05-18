@@ -110,6 +110,7 @@ export interface TransactionsCollectionResource extends BaseCollection {
 
   waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions): Promise<any>;
   waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts: WaiverOptions, cb: Callback<any>): void;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, cb: Callback<any>): void;
 
   propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade): Promise<any>;
   propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade, cb: Callback<any>): void;
