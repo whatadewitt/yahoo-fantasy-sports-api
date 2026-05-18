@@ -40,6 +40,11 @@ npm run test:all      # Run all test suites
 3. Set `RUN_INTEGRATION_TESTS=true`
 4. Run `npm run test:integration`
 
+### Write Operations
+Write operations (roster.update, transactions.*, transaction.*) are covered by
+unit tests only (mocked HTTP, asserting method/URL/XML body). They are
+intentionally excluded from integration tests because they mutate real leagues.
+
 ## Common Issues & Solutions
 
 ### 1. OAuth Signature Import
