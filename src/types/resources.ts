@@ -8,6 +8,7 @@ import {
 import {
   TradeResponseOptions,
   EditWaiverOptions,
+  EditTradeOptions,
 } from '../helpers/xmlHelper';
 
 import {
@@ -168,8 +169,8 @@ export interface TransactionResource extends BaseResource {
   edit_waiver(transactionKey: string, opts: EditWaiverOptions): Promise<any>;
   edit_waiver(transactionKey: string, opts: EditWaiverOptions, cb: Callback<any>): void;
 
-  edit_trade(transactionKey: string, opts: { trade_note?: string }): Promise<any>;
-  edit_trade(transactionKey: string, opts: { trade_note?: string }, cb: Callback<any>): void;
+  edit_trade(transactionKey: string, opts: EditTradeOptions): Promise<any>;
+  edit_trade(transactionKey: string, opts: EditTradeOptions, cb: Callback<any>): void;
 
   cancel(transactionKey: string): Promise<any>;
   cancel(transactionKey: string, cb: Callback<any>): void;

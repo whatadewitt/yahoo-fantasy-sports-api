@@ -7,6 +7,7 @@ import {
   buildEditTradePayload,
   TradeResponseOptions,
   EditWaiverOptions,
+  EditTradeOptions,
 } from '../helpers/xmlHelper';
 
 class TransactionResource {
@@ -72,6 +73,19 @@ class TransactionResource {
     return promise;
   }
 
+  private deleteTransaction(
+    transactionKey: string,
+    cb?: Callback<any>
+  ): Promise<any> | void {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}`;
+    const promise = this.yf.api(this.yf.DELETE, url) as Promise<any>;
+    if (cb) {
+      promise.then((d) => cb(null, d)).catch((e) => cb(e));
+      return;
+    }
+    return promise;
+  }
+
   private respond(
     transactionKey: string,
     action: 'accept' | 'reject' | 'allow' | 'disallow' | 'vote_against',
@@ -127,22 +141,16 @@ class TransactionResource {
     return this.putTransaction(transactionKey, buildEditWaiverPayload(transactionKey, opts), cb);
   }
 
-  edit_trade(transactionKey: string, opts: { trade_note?: string }): Promise<any>;
-  edit_trade(transactionKey: string, opts: { trade_note?: string }, cb: Callback<any>): void;
-  edit_trade(transactionKey: string, opts: { trade_note?: string }, cb?: Callback<any>): Promise<any> | void {
+  edit_trade(transactionKey: string, opts: EditTradeOptions): Promise<any>;
+  edit_trade(transactionKey: string, opts: EditTradeOptions, cb: Callback<any>): void;
+  edit_trade(transactionKey: string, opts: EditTradeOptions, cb?: Callback<any>): Promise<any> | void {
     return this.putTransaction(transactionKey, buildEditTradePayload(transactionKey, opts), cb);
   }
 
   cancel(transactionKey: string): Promise<any>;
   cancel(transactionKey: string, cb: Callback<any>): void;
   cancel(transactionKey: string, cb?: Callback<any>): Promise<any> | void {
-    const url = `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}`;
-    const promise = this.yf.api(this.yf.DELETE, url) as Promise<any>;
-    if (cb) {
-      promise.then((d) => cb(null, d)).catch((e) => cb(e));
-      return;
-    }
-    return promise;
+    return this.deleteTransaction(transactionKey, cb);
   }
 }
 

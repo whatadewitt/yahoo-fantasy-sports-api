@@ -194,6 +194,10 @@ export interface EditWaiverOptions {
   faab_bid?: number;
 }
 
+export interface EditTradeOptions {
+  trade_note?: string;
+}
+
 export function buildEditWaiverPayload(
   transactionKey: string,
   opts: EditWaiverOptions
@@ -213,7 +217,7 @@ export function buildEditWaiverPayload(
 
 export function buildEditTradePayload(
   transactionKey: string,
-  opts: { trade_note?: string }
+  opts: EditTradeOptions
 ): string {
   const note =
     opts.trade_note !== undefined
