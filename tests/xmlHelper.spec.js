@@ -5,6 +5,10 @@ const {
   buildDropPayload,
   buildAddDropPayload,
   buildWaiverPayload,
+  buildProposeTradePayload,
+  buildTradeResponsePayload,
+  buildEditWaiverPayload,
+  buildEditTradePayload,
 } = require("../dist/cjs/helpers/xmlHelper");
 
 describe("xmlHelper.escapeXml", function () {
@@ -108,6 +112,80 @@ describe("xmlHelper transaction create builders", function () {
         "<type>drop</type><source_team_key>nfl.l.1.t.1</source_team_key>" +
         "</transaction_data></player>" +
         "</players></transaction></fantasy_content>"
+    );
+  });
+});
+
+describe("xmlHelper trade builders", function () {
+  it("buildProposeTradePayload with note", function () {
+    expect(
+      buildProposeTradePayload("t.1", "t.2", {
+        send: ["p.a"],
+        receive: ["p.b"],
+        trade_note: "deal?",
+      })
+    ).toBe(
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+        "<type>pending_trade</type><trader_team_key>t.1</trader_team_key>" +
+        "<tradee_team_key>t.2</tradee_team_key><trade_note>deal?</trade_note>" +
+        "<players>" +
+        "<player><player_key>p.a</player_key><transaction_data>" +
+        "<type>pending_trade</type><source_team_key>t.1</source_team_key>" +
+        "<destination_team_key>t.2</destination_team_key></transaction_data></player>" +
+        "<player><player_key>p.b</player_key><transaction_data>" +
+        "<type>pending_trade</type><source_team_key>t.2</source_team_key>" +
+        "<destination_team_key>t.1</destination_team_key></transaction_data></player>" +
+        "</players></transaction></fantasy_content>"
+    );
+  });
+
+  it("buildProposeTradePayload without note omits trade_note", function () {
+    const xml = buildProposeTradePayload("t.1", "t.2", {
+      send: ["p.a"],
+      receive: [],
+    });
+    expect(xml.indexOf("<trade_note>")).toBe(-1);
+  });
+
+  it("buildTradeResponsePayload accept with note", function () {
+    expect(
+      buildTradeResponsePayload("k1", "accept", { trade_note: "ok" })
+    ).toBe(
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+        "<transaction_key>k1</transaction_key><type>pending_trade</type>" +
+        "<action>accept</action><trade_note>ok</trade_note>" +
+        "</transaction></fantasy_content>"
+    );
+  });
+
+  it("buildTradeResponsePayload vote_against with voter", function () {
+    expect(
+      buildTradeResponsePayload("k1", "vote_against", { voter_team_key: "t.9" })
+    ).toBe(
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+        "<transaction_key>k1</transaction_key><type>pending_trade</type>" +
+        "<action>vote_against</action><voter_team_key>t.9</voter_team_key>" +
+        "</transaction></fantasy_content>"
+    );
+  });
+
+  it("buildEditWaiverPayload with priority and faab", function () {
+    expect(
+      buildEditWaiverPayload("k2", { priority: 2, faab_bid: 8 })
+    ).toBe(
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+        "<transaction_key>k2</transaction_key><type>waiver</type>" +
+        "<waiver_priority>2</waiver_priority><faab_bid>8</faab_bid>" +
+        "</transaction></fantasy_content>"
+    );
+  });
+
+  it("buildEditTradePayload", function () {
+    expect(buildEditTradePayload("k3", { trade_note: "rev" })).toBe(
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+        "<transaction_key>k3</transaction_key><type>pending_trade</type>" +
+        "<action>edit_trade</action><trade_note>rev</trade_note>" +
+        "</transaction></fantasy_content>"
     );
   });
 });

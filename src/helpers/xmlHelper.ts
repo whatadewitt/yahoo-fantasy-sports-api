@@ -116,3 +116,110 @@ export function buildWaiverPayload(
     teamKey
   )}</transaction></fantasy_content>`;
 }
+
+export interface ProposeTrade {
+  send: string[];
+  receive: string[];
+  trade_note?: string;
+}
+
+export function buildProposeTradePayload(
+  traderTeamKey: string,
+  tradeeTeamKey: string,
+  trade: ProposeTrade
+): string {
+  const note =
+    trade.trade_note !== undefined
+      ? `<trade_note>${escapeXml(trade.trade_note)}</trade_note>`
+      : "";
+  const tradePlayer = (
+    key: string,
+    src: string,
+    dest: string
+  ): string =>
+    `<player><player_key>${escapeXml(
+      key
+    )}</player_key><transaction_data><type>pending_trade</type><source_team_key>${escapeXml(
+      src
+    )}</source_team_key><destination_team_key>${escapeXml(
+      dest
+    )}</destination_team_key></transaction_data></player>`;
+  const sendEls = trade.send
+    .map((k) => tradePlayer(k, traderTeamKey, tradeeTeamKey))
+    .join("");
+  const recvEls = trade.receive
+    .map((k) => tradePlayer(k, tradeeTeamKey, traderTeamKey))
+    .join("");
+  return `${DECL}<fantasy_content><transaction><type>pending_trade</type><trader_team_key>${escapeXml(
+    traderTeamKey
+  )}</trader_team_key><tradee_team_key>${escapeXml(
+    tradeeTeamKey
+  )}</tradee_team_key>${note}<players>${sendEls}${recvEls}</players></transaction></fantasy_content>`;
+}
+
+export type TradeAction =
+  | "accept"
+  | "reject"
+  | "allow"
+  | "disallow"
+  | "vote_against";
+
+export interface TradeResponseOptions {
+  trade_note?: string;
+  voter_team_key?: string;
+}
+
+export function buildTradeResponsePayload(
+  transactionKey: string,
+  action: TradeAction,
+  opts: TradeResponseOptions = {}
+): string {
+  const note =
+    opts.trade_note !== undefined
+      ? `<trade_note>${escapeXml(opts.trade_note)}</trade_note>`
+      : "";
+  const voter =
+    opts.voter_team_key !== undefined
+      ? `<voter_team_key>${escapeXml(opts.voter_team_key)}</voter_team_key>`
+      : "";
+  return `${DECL}<fantasy_content><transaction><transaction_key>${escapeXml(
+    transactionKey
+  )}</transaction_key><type>pending_trade</type><action>${escapeXml(
+    action
+  )}</action>${note}${voter}</transaction></fantasy_content>`;
+}
+
+export interface EditWaiverOptions {
+  priority?: number;
+  faab_bid?: number;
+}
+
+export function buildEditWaiverPayload(
+  transactionKey: string,
+  opts: EditWaiverOptions
+): string {
+  const prio =
+    opts.priority !== undefined
+      ? `<waiver_priority>${escapeXml(opts.priority)}</waiver_priority>`
+      : "";
+  const faab =
+    opts.faab_bid !== undefined
+      ? `<faab_bid>${escapeXml(opts.faab_bid)}</faab_bid>`
+      : "";
+  return `${DECL}<fantasy_content><transaction><transaction_key>${escapeXml(
+    transactionKey
+  )}</transaction_key><type>waiver</type>${prio}${faab}</transaction></fantasy_content>`;
+}
+
+export function buildEditTradePayload(
+  transactionKey: string,
+  opts: { trade_note?: string }
+): string {
+  const note =
+    opts.trade_note !== undefined
+      ? `<trade_note>${escapeXml(opts.trade_note)}</trade_note>`
+      : "";
+  return `${DECL}<fantasy_content><transaction><transaction_key>${escapeXml(
+    transactionKey
+  )}</transaction_key><type>pending_trade</type><action>edit_trade</action>${note}</transaction></fantasy_content>`;
+}
