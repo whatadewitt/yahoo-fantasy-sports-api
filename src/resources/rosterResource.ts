@@ -2,6 +2,7 @@ import { YahooFantasyInstance, Callback } from "../types/core";
 import { MappedTeam, FantasyContent } from "../types/api-responses";
 import { mapTeam, mapRoster } from "../helpers/teamHelper";
 import { extractCallback } from "../helpers/argsParser";
+import { buildRosterPayload, RosterCoverage, RosterSlot } from "../helpers/xmlHelper";
 
 class RosterResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -154,6 +155,33 @@ class RosterResource {
       return;
     }
     return resultPromise;
+  }
+  update(
+    teamKey: string,
+    coverage: RosterCoverage,
+    players: RosterSlot[]
+  ): Promise<any>;
+  update(
+    teamKey: string,
+    coverage: RosterCoverage,
+    players: RosterSlot[],
+    cb: Callback<any>
+  ): void;
+  update(
+    teamKey: string,
+    coverage: RosterCoverage,
+    players: RosterSlot[],
+    cb?: Callback<any>
+  ): Promise<any> | void {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
+    const body = buildRosterPayload(coverage, players);
+    const promise = this.yf.api(this.yf.PUT, url, body) as Promise<any>;
+
+    if (cb) {
+      promise.then((data) => cb(null, data)).catch((e) => cb(e));
+      return;
+    }
+    return promise;
   }
 }
 
