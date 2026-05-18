@@ -53,8 +53,8 @@ export interface LeagueResource extends BaseResource {
   settings(leagueKey: string, cb: Callback<LeagueSettings>): void;
   settings(leagueKey: string): Promise<LeagueSettings>;
   
-  standings(leagueKey: string, cb: Callback<MappedTeam[]>): void;
-  standings(leagueKey: string): Promise<MappedTeam[]>;
+  standings(leagueKey: string, cb: Callback<League & { standings: MappedTeam[] }>): void;
+  standings(leagueKey: string): Promise<League & { standings: MappedTeam[] }>;
   
   scoreboard(leagueKey: string, week: number, cb: Callback<any>): void;
   scoreboard(leagueKey: string, week: number): Promise<any>;
