@@ -92,25 +92,110 @@ describe("resource: transactionResource writes", function () {
   });
 
   it("vote_against includes voter_team_key", function () {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k1</transaction_key><type>pending_trade</type>" +
+      "<action>vote_against</action><voter_team_key>t.9</voter_team_key>" +
+      "</transaction></fantasy_content>";
     nock("https://fantasysports.yahooapis.com")
-      .put("/fantasy/v2/transaction/k1?format=json")
+      .put("/fantasy/v2/transaction/k1?format=json", expected)
       .reply(200, { fantasy_content: {} });
-
-    return transaction.vote_against("k1", "t.9").then(() => {
-      const call = yf.api.calls.mostRecent().args;
-      expect(call[2]).toContain("<voter_team_key>t.9</voter_team_key>");
-    });
+    const result = transaction.vote_against("k1", "t.9");
+    expect(yf.api).toHaveBeenCalledWith(
+      "PUT",
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k1",
+      expected
+    );
+    return result;
   });
 
   it("reject invokes the callback with data on success", function (done) {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k2</transaction_key><type>pending_trade</type>" +
+      "<action>reject</action></transaction></fantasy_content>";
     nock("https://fantasysports.yahooapis.com")
-      .put("/fantasy/v2/transaction/k2?format=json")
+      .put("/fantasy/v2/transaction/k2?format=json", expected)
       .reply(200, { fantasy_content: {} });
-
     transaction.reject("k2", {}, function (err, data) {
       expect(err).toBeNull();
       expect(data).toEqual({ fantasy_content: {} });
+      expect(yf.api).toHaveBeenCalledWith(
+        "PUT",
+        "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k2",
+        expected
+      );
       done();
     });
+  });
+
+  it("allow PUTs allow action XML", function () {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k1</transaction_key><type>pending_trade</type>" +
+      "<action>allow</action></transaction></fantasy_content>";
+    nock("https://fantasysports.yahooapis.com")
+      .put("/fantasy/v2/transaction/k1?format=json", expected)
+      .reply(200, { fantasy_content: {} });
+    const result = transaction.allow("k1");
+    expect(yf.api).toHaveBeenCalledWith(
+      "PUT",
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k1",
+      expected
+    );
+    return result;
+  });
+
+  it("disallow PUTs disallow action XML", function () {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k1</transaction_key><type>pending_trade</type>" +
+      "<action>disallow</action></transaction></fantasy_content>";
+    nock("https://fantasysports.yahooapis.com")
+      .put("/fantasy/v2/transaction/k1?format=json", expected)
+      .reply(200, { fantasy_content: {} });
+    const result = transaction.disallow("k1");
+    expect(yf.api).toHaveBeenCalledWith(
+      "PUT",
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k1",
+      expected
+    );
+    return result;
+  });
+
+  it("edit_waiver PUTs waiver edit XML", function () {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k2</transaction_key><type>waiver</type>" +
+      "<waiver_priority>2</waiver_priority><faab_bid>8</faab_bid>" +
+      "</transaction></fantasy_content>";
+    nock("https://fantasysports.yahooapis.com")
+      .put("/fantasy/v2/transaction/k2?format=json", expected)
+      .reply(200, { fantasy_content: {} });
+    const result = transaction.edit_waiver("k2", { priority: 2, faab_bid: 8 });
+    expect(yf.api).toHaveBeenCalledWith(
+      "PUT",
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k2",
+      expected
+    );
+    return result;
+  });
+
+  it("edit_trade PUTs trade edit XML", function () {
+    const expected =
+      "<?xml version='1.0'?><fantasy_content><transaction>" +
+      "<transaction_key>k3</transaction_key><type>pending_trade</type>" +
+      "<action>edit_trade</action><trade_note>rev</trade_note>" +
+      "</transaction></fantasy_content>";
+    nock("https://fantasysports.yahooapis.com")
+      .put("/fantasy/v2/transaction/k3?format=json", expected)
+      .reply(200, { fantasy_content: {} });
+    const result = transaction.edit_trade("k3", { trade_note: "rev" });
+    expect(yf.api).toHaveBeenCalledWith(
+      "PUT",
+      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k3",
+      expected
+    );
+    return result;
   });
 });
