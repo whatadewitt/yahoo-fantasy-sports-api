@@ -1,7 +1,7 @@
 // Collection-specific type definitions
 
-import { 
-  Callback, 
+import {
+  Callback,
   BaseResource
 } from './core';
 
@@ -12,6 +12,8 @@ import {
   MappedTeam,
   Transaction,
 } from './api-responses';
+
+import { WaiverOptions, ProposeTrade } from '../helpers/xmlHelper';
 
 import {
   FilterParams,
@@ -97,36 +99,18 @@ export interface TransactionsCollectionResource extends BaseCollection {
   league(leagueKey: string, cb: Callback<Transaction[]>): void;
   league(leagueKey: string): Promise<Transaction[]>;
   
-  // TODO: Uncomment when implementation is ready
-  // add_player(
-  //   teamKey: string,
-  //   playerKey: string,
-  //   cb: Callback<Transaction>
-  // ): void;
-  // add_player(
-  //   teamKey: string,
-  //   playerKey: string
-  // ): Promise<Transaction>;
-  
-  // drop_player(
-  //   teamKey: string,
-  //   playerKey: string,
-  //   cb: Callback<Transaction>
-  // ): void;
-  // drop_player(
-  //   teamKey: string,
-  //   playerKey: string
-  // ): Promise<Transaction>;
-  
-  // add_drop(
-  //   teamKey: string,
-  //   addPlayerKey: string,
-  //   dropPlayerKey: string,
-  //   cb: Callback<Transaction>
-  // ): void;
-  // add_drop(
-  //   teamKey: string,
-  //   addPlayerKey: string,
-  //   dropPlayerKey: string
-  // ): Promise<Transaction>;
+  add_player(leagueKey: string, teamKey: string, playerKey: string): Promise<any>;
+  add_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<any>): void;
+
+  drop_player(leagueKey: string, teamKey: string, playerKey: string): Promise<any>;
+  drop_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<any>): void;
+
+  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string): Promise<any>;
+  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string, cb: Callback<any>): void;
+
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions): Promise<any>;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts: WaiverOptions, cb: Callback<any>): void;
+
+  propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade): Promise<any>;
+  propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade, cb: Callback<any>): void;
 }
