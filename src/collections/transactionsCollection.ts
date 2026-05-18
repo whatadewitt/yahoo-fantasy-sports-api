@@ -2,6 +2,15 @@ import { YahooFantasyInstance, Callback } from "../types/core";
 import { Transaction } from "../types/api-responses";
 import { extractCallback } from "../helpers/argsParser";
 import { parseTransactionCollection } from "../helpers/transactionHelper";
+import {
+  buildAddPayload,
+  buildDropPayload,
+  buildAddDropPayload,
+  buildWaiverPayload,
+  buildProposeTradePayload,
+  WaiverOptions,
+  ProposeTrade,
+} from "../helpers/xmlHelper";
 
 class TransactionsCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -159,26 +168,52 @@ class TransactionsCollection {
     return resultPromise;
   }
 
-  // TODO: Add/Drop player methods (commented out until ready)
-  /*
-  add_player(leagueKey: string, teamKey: string, playerKey: string): Promise<Transaction>;
-  add_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<Transaction>): void;
-  add_player(leagueKey: string, teamKey: string, playerKey: string, cb?: Callback<Transaction>): Promise<Transaction> | void {
-    // Implementation for adding a player
+  private postTransaction(
+    leagueKey: string,
+    body: string,
+    cb?: Callback<any>
+  ): Promise<any> | void {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
+    const promise = this.yf.api(this.yf.POST, url, body) as Promise<any>;
+    if (cb) {
+      promise.then((d) => cb(null, d)).catch((e) => cb(e));
+      return;
+    }
+    return promise;
   }
 
-  drop_player(leagueKey: string, teamKey: string, playerKey: string): Promise<Transaction>;
-  drop_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<Transaction>): void;
-  drop_player(leagueKey: string, teamKey: string, playerKey: string, cb?: Callback<Transaction>): Promise<Transaction> | void {
-    // Implementation for dropping a player
+  add_player(leagueKey: string, teamKey: string, playerKey: string): Promise<any>;
+  add_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<any>): void;
+  add_player(leagueKey: string, teamKey: string, playerKey: string, cb?: Callback<any>): Promise<any> | void {
+    return this.postTransaction(leagueKey, buildAddPayload(playerKey, teamKey), cb);
   }
 
-  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string): Promise<Transaction>;
-  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string, cb: Callback<Transaction>): void;
-  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string, cb?: Callback<Transaction>): Promise<Transaction> | void {
-    // Implementation for add/drop transaction
+  drop_player(leagueKey: string, teamKey: string, playerKey: string): Promise<any>;
+  drop_player(leagueKey: string, teamKey: string, playerKey: string, cb: Callback<any>): void;
+  drop_player(leagueKey: string, teamKey: string, playerKey: string, cb?: Callback<any>): Promise<any> | void {
+    return this.postTransaction(leagueKey, buildDropPayload(playerKey, teamKey), cb);
   }
-  */
+
+  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string): Promise<any>;
+  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string, cb: Callback<any>): void;
+  add_drop(leagueKey: string, teamKey: string, addPlayerKey: string, dropPlayerKey: string, cb?: Callback<any>): Promise<any> | void {
+    return this.postTransaction(leagueKey, buildAddDropPayload(addPlayerKey, dropPlayerKey, teamKey), cb);
+  }
+
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions): Promise<any>;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts: WaiverOptions, cb: Callback<any>): void;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, cb: Callback<any>): void;
+  waiver_claim(leagueKey: string, teamKey: string, addPlayerKey: string, opts?: WaiverOptions | Callback<any>, cb?: Callback<any>): Promise<any> | void {
+    const options = typeof opts === "function" ? {} : opts || {};
+    const callback = typeof opts === "function" ? opts : cb;
+    return this.postTransaction(leagueKey, buildWaiverPayload(addPlayerKey, teamKey, options), callback);
+  }
+
+  propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade): Promise<any>;
+  propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade, cb: Callback<any>): void;
+  propose_trade(leagueKey: string, traderTeamKey: string, tradeeTeamKey: string, trade: ProposeTrade, cb?: Callback<any>): Promise<any> | void {
+    return this.postTransaction(leagueKey, buildProposeTradePayload(traderTeamKey, tradeeTeamKey, trade), cb);
+  }
 }
 
 export default TransactionsCollection;
