@@ -5,6 +5,8 @@ import {
   BaseResource
 } from './core';
 
+import { RosterCoverage, RosterSlot } from '../helpers/xmlHelper';
+
 import {
   Game,
   GameWeek,
@@ -53,8 +55,8 @@ export interface LeagueResource extends BaseResource {
   settings(leagueKey: string, cb: Callback<LeagueSettings>): void;
   settings(leagueKey: string): Promise<LeagueSettings>;
   
-  standings(leagueKey: string, cb: Callback<MappedTeam[]>): void;
-  standings(leagueKey: string): Promise<MappedTeam[]>;
+  standings(leagueKey: string, cb: Callback<League & { standings: MappedTeam[] }>): void;
+  standings(leagueKey: string): Promise<League & { standings: MappedTeam[] }>;
   
   scoreboard(leagueKey: string, week: number, cb: Callback<any>): void;
   scoreboard(leagueKey: string, week: number): Promise<any>;
@@ -133,6 +135,9 @@ export interface RosterResource extends BaseResource {
   players(teamKey: string, date: string): Promise<MappedTeam>;
   players(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
   players(teamKey: string, week: number): Promise<MappedTeam>;
+
+  update(teamKey: string, coverage: RosterCoverage, players: RosterSlot[]): Promise<any>;
+  update(teamKey: string, coverage: RosterCoverage, players: RosterSlot[], cb: Callback<any>): void;
 }
 
 // Transaction Resource

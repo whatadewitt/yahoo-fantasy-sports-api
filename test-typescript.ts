@@ -5,11 +5,11 @@
  */
 
 import * as dotenv from 'dotenv';
-import YahooFantasy, { 
-  Game, 
-  League, 
-  Player, 
-  Team, 
+import YahooFantasy, {
+  Game,
+  League,
+  MappedPlayer,
+  Team,
   GameResource,
   LeagueResource,
   PlayerResource
@@ -96,7 +96,7 @@ try {
   // Promise versions (return type inference)
   const gamePromise: Promise<Game> = yf.game.meta('328');
   const leaguePromise: Promise<League> = yf.league.meta('328.l.123');
-  const playerPromise: Promise<Player> = yf.player.meta('328.p.123');
+  const playerPromise: Promise<MappedPlayer> = yf.player.meta('328.p.123');
   
   console.log('✅ Callback overloads compile correctly');
   console.log('✅ Promise overloads compile correctly');

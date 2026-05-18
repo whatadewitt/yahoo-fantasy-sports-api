@@ -44,6 +44,8 @@ class YahooFantasy {
 
   public readonly GET: HttpMethod = "GET";
   public readonly POST: HttpMethod = "POST";
+  public readonly PUT: HttpMethod = "PUT";
+  public readonly DELETE: HttpMethod = "DELETE";
 
   public game: Game;
   public games: Games;
@@ -371,8 +373,11 @@ class YahooFantasy {
             oauth_signature: decodeURIComponent(signature),
           };
         } else {
-          // OAuth 2.0 flow
           headers.Authorization = `Bearer ${this.yahooUserToken}`;
+        }
+
+        if (postData && (method === "POST" || method === "PUT")) {
+          headers["Content-Type"] = "application/xml";
         }
 
         const options: https.RequestOptions = {
@@ -428,7 +433,7 @@ class YahooFantasy {
           reject(new Error(err.message));
         });
 
-        if (postData && method === "POST") {
+        if (postData && (method === "POST" || method === "PUT")) {
           request.write(
             typeof postData === "string" ? postData : JSON.stringify(postData)
           );

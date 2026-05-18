@@ -78,6 +78,8 @@ export interface YahooFantasyInstance {
   
   GET: HttpMethod;
   POST: HttpMethod;
+  PUT: HttpMethod;
+  DELETE: HttpMethod;
   
   // Method to make API requests
   api(
