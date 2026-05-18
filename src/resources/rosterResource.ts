@@ -156,6 +156,7 @@ class RosterResource {
     }
     return resultPromise;
   }
+
   update(
     teamKey: string,
     coverage: RosterCoverage,

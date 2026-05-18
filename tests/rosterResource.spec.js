@@ -66,4 +66,21 @@ describe("resource: rosterResource.update", function () {
     );
     return result;
   });
+
+  it("invokes the callback with data on success", function (done) {
+    nock("https://fantasysports.yahooapis.com")
+      .put("/fantasy/v2/team/nfl.l.1.t.2/roster?format=json")
+      .reply(200, { fantasy_content: {} });
+
+    roster.update(
+      "nfl.l.1.t.2",
+      { week: 3 },
+      [{ player_key: "nfl.p.2", position: "QB" }],
+      function (err, data) {
+        expect(err).toBeNull();
+        expect(data).toEqual({ fantasy_content: {} });
+        done();
+      }
+    );
+  });
 });
