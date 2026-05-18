@@ -1,9 +1,14 @@
 // Resource-specific type definitions
 
-import { 
-  Callback, 
+import {
+  Callback,
   BaseResource
 } from './core';
+
+import {
+  TradeResponseOptions,
+  EditWaiverOptions,
+} from '../helpers/xmlHelper';
 
 import {
   Game,
@@ -139,9 +144,35 @@ export interface RosterResource extends BaseResource {
 export interface TransactionResource extends BaseResource {
   meta(transactionKey: string, cb: Callback<Transaction>): void;
   meta(transactionKey: string): Promise<Transaction>;
-  
+
   players(transactionKey: string, cb: Callback<MappedPlayer[]>): void;
   players(transactionKey: string): Promise<MappedPlayer[]>;
+
+  accept(transactionKey: string, opts?: { trade_note?: string }): Promise<any>;
+  accept(transactionKey: string, opts: { trade_note?: string }, cb: Callback<any>): void;
+  accept(transactionKey: string, cb: Callback<any>): void;
+
+  reject(transactionKey: string, opts?: { trade_note?: string }): Promise<any>;
+  reject(transactionKey: string, opts: { trade_note?: string }, cb: Callback<any>): void;
+  reject(transactionKey: string, cb: Callback<any>): void;
+
+  allow(transactionKey: string): Promise<any>;
+  allow(transactionKey: string, cb: Callback<any>): void;
+
+  disallow(transactionKey: string): Promise<any>;
+  disallow(transactionKey: string, cb: Callback<any>): void;
+
+  vote_against(transactionKey: string, voterTeamKey: string): Promise<any>;
+  vote_against(transactionKey: string, voterTeamKey: string, cb: Callback<any>): void;
+
+  edit_waiver(transactionKey: string, opts: EditWaiverOptions): Promise<any>;
+  edit_waiver(transactionKey: string, opts: EditWaiverOptions, cb: Callback<any>): void;
+
+  edit_trade(transactionKey: string, opts: { trade_note?: string }): Promise<any>;
+  edit_trade(transactionKey: string, opts: { trade_note?: string }, cb: Callback<any>): void;
+
+  cancel(transactionKey: string): Promise<any>;
+  cancel(transactionKey: string, cb: Callback<any>): void;
 }
 
 // User Resource
