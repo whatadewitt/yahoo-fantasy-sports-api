@@ -16,13 +16,14 @@ function prompt(question) {
 }
 
 async function authedClient() {
-  const { YAHOO_CONSUMER_KEY, YAHOO_CONSUMER_SECRET, YAHOO_REDIRECT_URI } =
-    process.env;
+  const { YAHOO_CONSUMER_KEY, YAHOO_CONSUMER_SECRET } = process.env;
+  const redirectUrl =
+    process.env.YAHOO_REDIRECT_URL || process.env.YAHOO_REDIRECT_URI;
 
-  if (!YAHOO_CONSUMER_KEY || !YAHOO_CONSUMER_SECRET || !YAHOO_REDIRECT_URI) {
+  if (!YAHOO_CONSUMER_KEY || !YAHOO_CONSUMER_SECRET || !redirectUrl) {
     throw new Error(
       'Missing env vars. Set YAHOO_CONSUMER_KEY, YAHOO_CONSUMER_SECRET, and ' +
-        'YAHOO_REDIRECT_URI (in .env or the environment).'
+        'YAHOO_REDIRECT_URL (in .env or the environment).'
     );
   }
 
@@ -30,14 +31,14 @@ async function authedClient() {
     YAHOO_CONSUMER_KEY,
     YAHOO_CONSUMER_SECRET,
     undefined,
-    YAHOO_REDIRECT_URI
+    redirectUrl
   );
 
   const authUrl =
     'https://api.login.yahoo.com/oauth2/request_auth?client_id=' +
     encodeURIComponent(YAHOO_CONSUMER_KEY) +
     '&redirect_uri=' +
-    encodeURIComponent(YAHOO_REDIRECT_URI) +
+    encodeURIComponent(redirectUrl) +
     '&response_type=code';
 
   console.log('\n1) Open this URL and approve access:\n');
