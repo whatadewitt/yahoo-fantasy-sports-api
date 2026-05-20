@@ -1,24 +1,24 @@
 const YahooFantasy = require("../index.js");
 const nock = require("nock");
 
-describe("resource: rosterResource", function() {
+describe("resource: rosterResource", function () {
   const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     roster = yf.roster;
 
-  it("should be defined", function() {
+  it("should be defined", function () {
     expect(roster).not.toBe(null);
   });
 
-  it("should have a players function", function() {
+  it("should have a players function", function () {
     expect(roster.players).not.toBe(null);
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  it("should build a proper url to retrieve players on a team", function() {
+  it("should build a proper url to retrieve players on a team", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/roster?format=json")
       .reply(200, require("./nock-data/teamRoster"));
@@ -27,7 +27,23 @@ describe("resource: rosterResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster"
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster",
+    );
+    return result;
+  });
+
+  it("should build a proper url to retrieve weekly roster player stats", function () {
+    nock("https://fantasysports.yahooapis.com")
+      .get(
+        "/fantasy/v2/team/328.l.34014.t.1/roster;week=3/players/stats;type=week;week=3?format=json",
+      )
+      .reply(200, require("./nock-data/teamRoster"));
+
+    const result = roster.players("328.l.34014.t.1", 3, "stats");
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster;week=3/players/stats;type=week;week=3",
     );
     return result;
   });
@@ -53,16 +69,14 @@ describe("resource: rosterResource.update", function () {
       .put("/fantasy/v2/team/nfl.l.1.t.1/roster?format=json", expected)
       .reply(200, { fantasy_content: {} });
 
-    const result = roster.update(
-      "nfl.l.1.t.1",
-      { week: 3 },
-      [{ player_key: "nfl.p.1", position: "WR" }]
-    );
+    const result = roster.update("nfl.l.1.t.1", { week: 3 }, [
+      { player_key: "nfl.p.1", position: "WR" },
+    ]);
 
     expect(yf.api).toHaveBeenCalledWith(
       "PUT",
       "https://fantasysports.yahooapis.com/fantasy/v2/team/nfl.l.1.t.1/roster",
-      expected
+      expected,
     );
     return result;
   });
@@ -80,7 +94,7 @@ describe("resource: rosterResource.update", function () {
         expect(err).toBeNull();
         expect(data).toEqual({ fantasy_content: {} });
         done();
-      }
+      },
     );
   });
 });

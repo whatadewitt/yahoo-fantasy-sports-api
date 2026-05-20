@@ -1,52 +1,52 @@
 const YahooFantasy = require("../index.js");
 const nock = require("nock");
 
-describe("resource: leagueResource", function() {
+describe("resource: leagueResource", function () {
   const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
     league = yf.league;
 
-  it("should be defined", function() {
+  it("should be defined", function () {
     expect(league).not.toBe(null);
   });
 
-  it("should have a meta function", function() {
+  it("should have a meta function", function () {
     expect(league.meta).not.toBe(null);
   });
 
-  it("should have a settings function", function() {
+  it("should have a settings function", function () {
     expect(league.settings).not.toBe(null);
   });
 
-  it("should have a standings function", function() {
+  it("should have a standings function", function () {
     expect(league.standings).not.toBe(null);
   });
 
-  it("should have a scoreboard function", function() {
+  it("should have a scoreboard function", function () {
     expect(league.scoreboard).not.toBe(null);
   });
 
-  it("should have a teams function", function() {
+  it("should have a teams function", function () {
     expect(league.teams).not.toBe(null);
   });
 
-  it("should have a players function", function() {
+  it("should have a players function", function () {
     expect(league.players).not.toBe(null);
   });
 
-  it("should have a draft_results function", function() {
+  it("should have a draft_results function", function () {
     expect(league.draft_results).not.toBe(null);
   });
 
-  it("should have a transactions function", function() {
+  it("should have a transactions function", function () {
     expect(league.transactions).not.toBe(null);
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     yf.setUserToken("testusertoken==");
     spyOn(yf, "api").and.callThrough();
   });
 
-  it("should build a proper url to retrieve metadata via a league key", function() {
+  it("should build a proper url to retrieve metadata via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/metadata?format=json")
       .reply(200, require("./nock-data/leagueMeta").meta);
@@ -55,13 +55,13 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/metadata",
     );
 
     return result;
   });
 
-  it("should build a proper url to retrieve settings via a league key", function() {
+  it("should build a proper url to retrieve settings via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/settings?format=json")
       .reply(200, require("./nock-data/leagueSettings"));
@@ -70,13 +70,13 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/settings",
     );
 
     return result;
   });
 
-  it("should build a proper url to retrieve standings via a league key", function() {
+  it("should build a proper url to retrieve standings via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/standings?format=json")
       .reply(200, require("./nock-data/leagueStandings"));
@@ -85,35 +85,35 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/standings",
     );
 
     return result;
   });
 
-  it("should build a proper url to retrieve scoreboard via a league key", function() {
+  it("should build a proper url to retrieve scoreboard via a league key", function () {
     const mockLeagueScoreboard = require("./nock-data/leagueScoreboard");
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/scoreboard?format=json")
       .reply(200, mockLeagueScoreboard);
 
-    const result = league.scoreboard("328.l.34014").then(data => {
+    const result = league.scoreboard("328.l.34014").then((data) => {
       expect(data.league_key).toEqual("328.l.34014");
       expect(data.scoreboard.matchups[0].teams[0].name).toEqual(
         mockLeagueScoreboard.fantasy_content.league[1].scoreboard[0].matchups[0]
-          .matchup[0].teams[0].team[0][2].name
+          .matchup[0].teams[0].team[0][2].name,
       );
     });
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/scoreboard",
     );
 
     return result;
   });
 
-  it("should build a proper url to retrieve teams via a league key", function() {
+  it("should build a proper url to retrieve teams via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/teams?format=json")
       .reply(200, require("./nock-data/leagueTeams"));
@@ -122,7 +122,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/teams",
     );
 
     return result;
@@ -142,7 +142,25 @@ describe("resource: leagueResource", function() {
   //   );
   // });
 
-  it("should build a proper url to retrieve draft_results via a league key", function() {
+  it("should build a proper url to retrieve player stats via a league key", function () {
+    yf.api.and.returnValue(
+      Promise.resolve({
+        fantasy_content: {
+          league: [{}, { players: { count: 0 } }],
+        },
+      }),
+    );
+
+    const result = league.players("328.l.34014", ["328.p.1"], 4);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/players;player_keys=328.p.1/stats;week=4",
+    );
+    return result.then((players) => expect(players).toEqual([]));
+  });
+
+  it("should build a proper url to retrieve draft_results via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/draftresults?format=json")
       .reply(200, require("./nock-data/leagueDraftResults"));
@@ -151,13 +169,13 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/draftresults",
     );
 
     return result;
   });
 
-  it("should build a proper url to retrieve transactions via a league key", function() {
+  it("should build a proper url to retrieve transactions via a league key", function () {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/league/328.l.34014/transactions?format=json")
       .reply(200, require("./nock-data/leagueTransaction"));
@@ -166,7 +184,7 @@ describe("resource: leagueResource", function() {
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions"
+      "https://fantasysports.yahooapis.com/fantasy/v2/league/328.l.34014/transactions",
     );
 
     return result;

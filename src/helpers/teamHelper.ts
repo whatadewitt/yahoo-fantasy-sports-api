@@ -1,11 +1,12 @@
-import { mapPlayers } from './gameHelper';
-import { parseCollection as parsePlayerCollection } from './playerHelper';
-import { mergeObjects, mapDraft } from './sharedHelper';
-import { MappedTeam, MappedPlayer, Manager } from '../types/api-responses';
+import { mapPlayers } from "./gameHelper";
+import { parseCollection as parsePlayerCollection } from "./playerHelper";
+import { mergeObjects, mapDraft } from "./sharedHelper";
+import { MappedTeam, MappedPlayer, Manager } from "../types/api-responses";
+import { collectionItems } from "./requestHelper";
 
 export function mapTeam(t: any): MappedTeam {
   const team = mergeObjects(t);
-  
+
   // clean up team_logos - extract URL from first logo
   if (team.team_logos && team.team_logos.length) {
     team.team_logo = team.team_logos[0].team_logo.url;
@@ -13,7 +14,7 @@ export function mapTeam(t: any): MappedTeam {
     // fix issue #49 -- no team logo throwing error
     team.team_logo = "";
   }
-  
+
   // Remove the original team_logos array
   delete team.team_logos;
 
@@ -39,7 +40,9 @@ export function mapTeamPoints(team: MappedTeam, points: any): MappedTeam {
   return team;
 }
 
-export function mapStats(stats: any): Array<{ stat_id: string; value: string }> {
+export function mapStats(
+  stats: any,
+): Array<{ stat_id: string; value: string }> {
   return stats.map((s: any) => s.stat);
 }
 
@@ -48,58 +51,45 @@ export function mapRoster(r: any): MappedPlayer[] {
   return mapPlayers(players);
 }
 
-export { mapDraft } from './sharedHelper';
+export { mapDraft } from "./sharedHelper";
 
 export function mapMatchups(matchups: any): any {
   if (!matchups) return matchups;
-  
-  const results = [];
-  const keys = Object.keys(matchups);
-  
-  for (const key of keys) {
-    if (matchups[key] && matchups[key].matchup) {
-      const matchup = matchups[key].matchup;
-      
-      // Start with the matchup properties (week, week_start, week_end, status, etc.)
-      const mappedMatchup: any = {
+
+  return Object.values(matchups)
+    .map((entry: any) => entry.matchup)
+    .filter(Boolean)
+    .map((matchup: any) => {
+      const teamsData = matchup[0]?.teams;
+      const teams = teamsData
+        ? Object.keys(teamsData)
+            .filter((teamKey) => teamKey !== "count")
+            .map((teamKey) => teamsData[teamKey]?.team?.[0])
+            .filter(Boolean)
+            .map(mapTeam)
+        : [];
+
+      return {
         week: matchup.week,
         week_start: matchup.week_start,
         week_end: matchup.week_end,
         status: matchup.status,
         is_playoffs: matchup.is_playoffs,
         is_consolation: matchup.is_consolation,
-        is_matchup_of_the_week: matchup.is_matchup_of_the_week
+        is_matchup_of_the_week: matchup.is_matchup_of_the_week,
+        ...(matchup.is_tied !== undefined ? { is_tied: matchup.is_tied } : {}),
+        ...(matchup.winner_team_key
+          ? { winner_team_key: matchup.winner_team_key }
+          : {}),
+        ...(teams.length ? { teams } : {}),
       };
-      
-      // Add other properties that might exist
-      if (matchup.is_tied !== undefined) mappedMatchup.is_tied = matchup.is_tied;
-      if (matchup.winner_team_key) mappedMatchup.winner_team_key = matchup.winner_team_key;
-      
-      // Handle teams in the matchup
-      if (matchup[0] && matchup[0].teams) {
-        const teams = [];
-        const teamKeys = Object.keys(matchup[0].teams);
-        
-        for (const teamKey of teamKeys) {
-          if (teamKey !== 'count') {
-            const teamData = matchup[0].teams[teamKey];
-            if (teamData && teamData.team) {
-              teams.push(mapTeam(teamData.team[0]));
-            }
-          }
-        }
-        
-        mappedMatchup.teams = teams;
-      }
-      
-      results.push(mappedMatchup);
-    }
-  }
-  
-  return results;
+    });
 }
 
-export function parseCollection(ts: any, subresources: string[] = []): MappedTeam[] {
+export function parseCollection(
+  ts: any,
+  subresources: string[] = [],
+): MappedTeam[] {
   const count = ts.count;
   const teams = [];
 
@@ -153,15 +143,11 @@ export function parseCollection(ts: any, subresources: string[] = []): MappedTea
   });
 }
 
-export function parseLeagueCollection(ls: any, subresources: string[] = []): any[] {
-  const count = ls.count;
-  const leagues = [];
-
-  for (let i = 0; i < count; i++) {
-    leagues.push(ls[i]);
-  }
-
-  return leagues.map((l: any) => {
+export function parseLeagueCollection(
+  ls: any,
+  subresources: string[] = [],
+): any[] {
+  return collectionItems(ls).map((l: any) => {
     let league = l.league[0];
     league.teams = parseCollection(l.league[1].teams, subresources);
 
@@ -169,15 +155,11 @@ export function parseLeagueCollection(ls: any, subresources: string[] = []): any
   });
 }
 
-export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    teams.push(ts[i]);
-  }
-
-  return teams.map((t: any) => {
+export function parseTeamCollection(
+  ts: any,
+  subresources: string[] = [],
+): MappedTeam[] {
+  return collectionItems(ts).map((t: any) => {
     let team = mapTeam(t.team[0]);
     team.players = parsePlayerCollection(t.team[1].players, subresources);
 
@@ -185,15 +167,11 @@ export function parseTeamCollection(ts: any, subresources: string[] = []): Mappe
   });
 }
 
-export function parseGameCollection(gs: any, subresources: string[] = []): any[] {
-  const count = gs.count;
-  const games = [];
-
-  for (let i = 0; i < count; i++) {
-    games.push(gs[i]);
-  }
-
-  return games.map((g: any) => {
+export function parseGameCollection(
+  gs: any,
+  subresources: string[] = [],
+): any[] {
+  return collectionItems(gs).map((g: any) => {
     let game = g.game[0];
     game.teams = parseCollection(g.game[1].teams, subresources);
 

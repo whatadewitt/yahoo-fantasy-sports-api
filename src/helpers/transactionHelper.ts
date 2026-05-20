@@ -1,5 +1,6 @@
 import { mapPlayer } from "./playerHelper";
 import { MappedPlayer } from "../types/api-responses";
+import { collectionItems } from "./requestHelper";
 
 export function mapTransactionPlayers(ps: any): MappedPlayer[] {
   const count = ps.count;
@@ -18,21 +19,14 @@ export function mapTransactionPlayers(ps: any): MappedPlayer[] {
 }
 
 export function parseTransactionCollection(ts: any): any[] {
-  const count = ts.count || 0;
-  const transactions = [];
-
-  for (let i = 0; i < count; i++) {
-    if (ts[i] && ts[i].transaction) {
-      const transaction = ts[i].transaction[0];
-      
-      // If the transaction has players, map them
-      if (ts[i].transaction[1] && ts[i].transaction[1].players) {
-        transaction.players = mapTransactionPlayers(ts[i].transaction[1].players);
-      }
-      
-      transactions.push(transaction);
-    }
-  }
-
-  return transactions;
+  return collectionItems(ts)
+    .map((entry) => entry.transaction)
+    .filter(Boolean)
+    .map((transactionData) => {
+      const transaction = transactionData[0];
+      const players = transactionData[1]?.players;
+      return players
+        ? { ...transaction, players: mapTransactionPlayers(players) }
+        : transaction;
+    });
 }

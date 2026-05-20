@@ -1,26 +1,34 @@
-import { mapTeam } from './teamHelper';
-import { mergeObjects } from './sharedHelper';
-import { MappedPlayer, MappedStats, MappedPoints, MappedOwnership, MappedDraftAnalysis, MappedTeam } from '../types/api-responses';
+import { mapTeam } from "./teamHelper";
+import { mergeObjects } from "./sharedHelper";
+import { collectionItems } from "./requestHelper";
+import {
+  MappedPlayer,
+  MappedStats,
+  MappedPoints,
+  MappedOwnership,
+  MappedDraftAnalysis,
+  MappedTeam,
+} from "../types/api-responses";
 
-export function mapPlayer(p: any): MappedPlayer {
-  const player = mergeObjects(p);
-
+function mapEligiblePositions(player: any): void {
   if (player.eligible_positions) {
     player.eligible_positions = player.eligible_positions.map(
-      (p: any) => p.position
+      (position: any) => position.position,
     );
   }
+}
 
+function mapStartingStatus(player: any): void {
   if (player.starting_status) {
-    player.starting_status = player.starting_status
-      ? player.starting_status[1].is_starting
-      : 0;
+    player.starting_status = player.starting_status[1].is_starting;
 
     if (player.batting_order) {
       player.batting_order = player.batting_order[0].order_num;
     }
   }
+}
 
+function mapEmbeddedStats(player: any): void {
   if (player.player_stats) {
     player.player_stats = mapStats(player.player_stats);
   }
@@ -32,15 +40,30 @@ export function mapPlayer(p: any): MappedPlayer {
   if (player.player_points) {
     player.player_points = mapPoints(player.player_points);
   }
+}
 
+function mapSelectedPosition(player: any): void {
   if (player.selected_position) {
     player.selected_position = player.selected_position[1].position;
   }
+}
 
-  // Convert headshot object to just the URL string
+function mapHeadshot(player: any): void {
   if (player.headshot && player.headshot.url) {
     player.headshot = player.headshot.url;
   }
+}
+
+export function mapPlayer(p: any): MappedPlayer {
+  const player = mergeObjects(p);
+
+  [
+    mapEligiblePositions,
+    mapStartingStatus,
+    mapEmbeddedStats,
+    mapSelectedPosition,
+    mapHeadshot,
+  ].forEach((mapper) => mapper(player));
 
   return player;
 }
@@ -94,11 +117,14 @@ export function mapDraftAnalysis(analysis: any): MappedDraftAnalysis {
     });
     return result;
   }
-  
+
   return analysis;
 }
 
-export function parseLeagueCollection(ls: any, subresources: string[] = []): any {
+export function parseLeagueCollection(
+  ls: any,
+  subresources: string[] = [],
+): any {
   const count = ls.count;
   const leagues = [];
 
@@ -114,15 +140,11 @@ export function parseLeagueCollection(ls: any, subresources: string[] = []): any
   });
 }
 
-export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    teams.push(ts[i]);
-  }
-
-  return teams.map((t: any) => {
+export function parseTeamCollection(
+  ts: any,
+  subresources: string[] = [],
+): MappedTeam[] {
+  return collectionItems(ts).map((t: any) => {
     let team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 
@@ -130,7 +152,10 @@ export function parseTeamCollection(ts: any, subresources: string[] = []): Mappe
   });
 }
 
-export function parseCollection(ps: any, subresources: string[] = []): MappedPlayer[] {
+export function parseCollection(
+  ps: any,
+  subresources: string[] = [],
+): MappedPlayer[] {
   const count = ps.count;
   const players = [];
 
@@ -153,9 +178,10 @@ export function parseCollection(ps: any, subresources: string[] = []): MappedPla
           if (Array.isArray(percentOwnedData)) {
             player.percent_owned = {
               coverage_type: percentOwnedData[0].coverage_type,
-              coverage_value: percentOwnedData[0][percentOwnedData[0].coverage_type],
+              coverage_value:
+                percentOwnedData[0][percentOwnedData[0].coverage_type],
               value: percentOwnedData[1].value,
-              delta: percentOwnedData[2]?.delta || null
+              delta: percentOwnedData[2]?.delta || null,
             };
           } else {
             player.percent_owned = percentOwnedData;
@@ -171,7 +197,7 @@ export function parseCollection(ps: any, subresources: string[] = []): MappedPla
 
         case "draft_analysis":
           player.draft_analysis = mapDraftAnalysis(
-            p.player[idx + 1].draft_analysis
+            p.player[idx + 1].draft_analysis,
           );
           break;
 

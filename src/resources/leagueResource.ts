@@ -17,6 +17,12 @@ import {
 } from "../helpers/leagueHelper";
 import { mapPlayers } from "../helpers/gameHelper";
 import { extractCallback } from "../helpers/argsParser";
+import {
+  appendSemicolonParams,
+  asArray,
+  getAndMap,
+  withCallback,
+} from "../helpers/requestHelper";
 
 class LeagueResource {
   constructor(public yf: YahooFantasyInstance) {}
@@ -25,25 +31,18 @@ class LeagueResource {
   meta(leagueKey: string): Promise<League>;
   meta(leagueKey: string, cb: Callback<League>): void;
   meta(leagueKey: string, cb?: Callback<League>): Promise<League> | void {
-    const promise = this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata`
-    ) as Promise<FantasyContent<{ league: League[] }>>;
-
-    const resultPromise: Promise<League> = promise.then((data) => {
-      const meta = data.fantasy_content.league[0];
-      if (!meta) {
-        throw new Error("No league data found");
-      }
-      return meta;
-    });
-
-    if (cb) {
-      resultPromise.then((meta) => cb(null, meta)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return getAndMap(
+      this.yf,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/metadata`,
+      (data) => {
+        const meta = data.fantasy_content.league[0];
+        if (!meta) {
+          throw new Error("No league data found");
+        }
+        return meta;
+      },
+      cb,
+    );
   }
 
   // Method overloads for settings
@@ -51,11 +50,11 @@ class LeagueResource {
   settings(leagueKey: string, cb: Callback<LeagueSettings>): void;
   settings(
     leagueKey: string,
-    cb?: Callback<LeagueSettings>
+    cb?: Callback<LeagueSettings>,
   ): Promise<LeagueSettings> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/settings`,
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
     const resultPromise: Promise<LeagueSettings> = promise.then((data) => {
@@ -78,26 +77,25 @@ class LeagueResource {
   standings(leagueKey: string): Promise<League & { standings: MappedTeam[] }>;
   standings(
     leagueKey: string,
-    cb: Callback<League & { standings: MappedTeam[] }>
+    cb: Callback<League & { standings: MappedTeam[] }>,
   ): void;
   standings(
     leagueKey: string,
-    cb?: Callback<League & { standings: MappedTeam[] }>
+    cb?: Callback<League & { standings: MappedTeam[] }>,
   ): Promise<League & { standings: MappedTeam[] }> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/standings`,
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
-    const resultPromise: Promise<
-      League & { standings: MappedTeam[] }
-    > = promise.then((data) => {
-      const standings = mapStandings(
-        data.fantasy_content.league[1].standings[0].teams
-      );
-      const league = data.fantasy_content.league[0] as League;
-      return { ...league, standings };
-    });
+    const resultPromise: Promise<League & { standings: MappedTeam[] }> =
+      promise.then((data) => {
+        const standings = mapStandings(
+          data.fantasy_content.league[1].standings[0].teams,
+        );
+        const league = data.fantasy_content.league[0] as League;
+        return { ...league, standings };
+      });
 
     if (cb) {
       resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
@@ -154,10 +152,13 @@ class LeagueResource {
   // Method overloads for teams
   teams(leagueKey: string): Promise<MappedTeam[]>;
   teams(leagueKey: string, cb: Callback<MappedTeam[]>): void;
-  teams(leagueKey: string, cb?: Callback<MappedTeam[]>): Promise<MappedTeam[]> | void {
+  teams(
+    leagueKey: string,
+    cb?: Callback<MappedTeam[]>,
+  ): Promise<MappedTeam[]> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`,
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
     const resultPromise: Promise<MappedTeam[]> = promise.then((data) => {
@@ -179,7 +180,7 @@ class LeagueResource {
   draft_results(leagueKey: string, cb?: Callback<any>): Promise<any> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/draftresults`,
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
     const resultPromise: Promise<any> = promise.then((data) => {
@@ -209,16 +210,16 @@ class LeagueResource {
   transactions(leagueKey: string, cb: Callback<Transaction[]>): void;
   transactions(
     leagueKey: string,
-    cb?: Callback<Transaction[]>
+    cb?: Callback<Transaction[]>,
   ): Promise<Transaction[]> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`,
     ) as Promise<FantasyContent<{ league: any[] }>>;
 
     const resultPromise: Promise<Transaction[]> = promise.then((data) => {
       const transactions = mapTransactions(
-        data.fantasy_content.league[1].transactions
+        data.fantasy_content.league[1].transactions,
       );
       return transactions;
     });
@@ -240,50 +241,35 @@ class LeagueResource {
   players(
     leagueKey: string,
     playerKeys: string[],
-    cb: Callback<MappedPlayer[]>
+    cb: Callback<MappedPlayer[]>,
   ): void;
   players(
     leagueKey: string,
     playerKeys: string[],
-    week: number
+    week: number,
   ): Promise<MappedPlayer[]>;
   players(
     leagueKey: string,
     playerKeys: string[],
     week: number,
-    cb: Callback<MappedPlayer[]>
+    cb: Callback<MappedPlayer[]>,
   ): void;
   players(leagueKey: string, ...args: any[]): Promise<MappedPlayer[]> | void {
-    const cb = extractCallback(args);
-    let playerKeys: string[] = args.length ? args.shift() : [];
-    let week: number | false = false;
-
-    if (playerKeys && !Array.isArray(playerKeys)) {
-      playerKeys = [playerKeys];
-    }
-
-    if (args.length) {
-      const weekParam = args.shift();
-      if (
-        typeof weekParam === "number" ||
-        (typeof weekParam === "string" && !isNaN(Number(weekParam)))
-      ) {
-        week = Number(weekParam);
-      }
-    }
-
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;`;
-
-    if (playerKeys && playerKeys.length) {
-      url += `player_keys=${playerKeys.join(",")}`;
-    }
-
-    url += "/stats";
-
-    if (week) {
-      url += `;week=${week}`;
-    }
-
+    const cb = extractCallback(args) as Callback<MappedPlayer[]> | undefined;
+    const playerKeys = asArray<string>(args.length ? args.shift() : []);
+    const weekParam = args.find(
+      (arg) =>
+        typeof arg === "number" ||
+        (typeof arg === "string" && !isNaN(Number(arg))),
+    );
+    const week = weekParam === undefined ? undefined : Number(weekParam);
+    const playerSelector = playerKeys.length
+      ? `;player_keys=${playerKeys.join(",")}`
+      : "";
+    const url = appendSemicolonParams(
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players${playerSelector}/stats`,
+      [["week", week]],
+    );
     const promise = this.yf.api(this.yf.GET, url) as Promise<
       FantasyContent<{ league: any[] }>
     >;
@@ -293,12 +279,7 @@ class LeagueResource {
       return players;
     });
 
-    if (cb) {
-      resultPromise.then((players) => cb(null, players)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return withCallback(resultPromise, cb);
   }
 }
 
