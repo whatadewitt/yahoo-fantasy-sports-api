@@ -1,48 +1,72 @@
-import { YahooFantasyInstance, Callback } from '../types/core';
-import { 
-  Game, 
-  GameWeek, 
-  StatCategory, 
-  PositionType, 
+import { YahooFantasyInstance, Callback } from "../types/core";
+import {
+  Game,
+  GameWeek,
+  StatCategory,
+  PositionType,
   RosterPosition,
-  FantasyContent 
-} from '../types/api-responses';
+} from "../types/api-responses";
 import {
   mapWeeks,
   mapStatCategories,
   mapPositionTypes,
   mapRosterPositions,
-} from '../helpers/gameHelper';
+} from "../helpers/gameHelper";
+import { getAndMap, withCallback } from "../helpers/requestHelper";
+
+type GameResult<TName extends string, TValue> = Game & Record<TName, TValue>;
 
 class GameResource {
   constructor(public yf: YahooFantasyInstance) {}
+
+  private gameSubresource<TName extends string, TValue>(
+    gameKey: string,
+    resource: string,
+    propertyName: TName,
+    mapper: (resourceData: any) => TValue,
+    cb?: Callback<GameResult<TName, TValue>>,
+  ): Promise<GameResult<TName, TValue>> | void {
+    return getAndMap(
+      this.yf,
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/${resource}`,
+      (data) => {
+        const gameData = data.fantasy_content.game;
+        return {
+          ...(gameData[0] as Game),
+          [propertyName]: mapper(gameData[1]),
+        } as GameResult<TName, TValue>;
+      },
+      cb,
+    );
+  }
+
+  private aliasSubresource<T>(
+    promise: Promise<any>,
+    propertyName: string,
+    cb?: Callback<T>,
+  ): Promise<T> | void {
+    return withCallback(
+      promise.then((result) => result[propertyName] as T),
+      cb,
+    );
+  }
 
   // Method overloads for meta
   meta(gameKey: string): Promise<Game>;
   meta(gameKey: string, cb: Callback<Game>): void;
   meta(gameKey: string, cb?: Callback<Game>): Promise<Game> | void {
-    const promise = this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata`
-      ) as Promise<FantasyContent<{ game: Game[] }>>;
-    
-    const resultPromise: Promise<Game> = promise.then((data) => {
-      const meta = data.fantasy_content.game[0];
-      if (!meta) {
-        throw new Error('No game data found');
-      }
-      return meta;
-    });
-
-    if (cb) {
-      resultPromise
-        .then((meta) => cb(null, meta))
-        .catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return getAndMap(
+      this.yf,
+      `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/metadata`,
+      (data) => {
+        const meta = data.fantasy_content.game[0];
+        if (!meta) {
+          throw new Error("No game data found");
+        }
+        return meta;
+      },
+      cb,
+    );
   }
 
   // REMOVED: game.leagues method (deprecated)
@@ -54,179 +78,132 @@ class GameResource {
   // Method overloads for game_weeks
   game_weeks(gameKey: string): Promise<Game & { weeks: GameWeek[] }>;
   game_weeks(gameKey: string, cb: Callback<Game & { weeks: GameWeek[] }>): void;
-  game_weeks(gameKey: string, cb?: Callback<Game & { weeks: GameWeek[] }>): Promise<Game & { weeks: GameWeek[] }> | void {
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/game_weeks`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const weeks = mapWeeks(data.fantasy_content.game[1].game_weeks);
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, weeks };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  game_weeks(
+    gameKey: string,
+    cb?: Callback<Game & { weeks: GameWeek[] }>,
+  ): Promise<Game & { weeks: GameWeek[] }> | void {
+    return this.gameSubresource(
+      gameKey,
+      "game_weeks",
+      "weeks",
+      (data) => mapWeeks(data.game_weeks),
+      cb,
+    );
   }
 
   // Alias for consistency with interface
   weeks(gameKey: string): Promise<GameWeek[]>;
   weeks(gameKey: string, cb: Callback<GameWeek[]>): void;
-  weeks(gameKey: string, cb?: Callback<GameWeek[]>): Promise<GameWeek[]> | void {
-    const resultPromise = this.game_weeks(gameKey) as Promise<Game & { weeks: GameWeek[] }>;
-    const promise = resultPromise.then(result => result.weeks);
-
-    if (cb) {
-      promise
-        .then(weeks => cb(null, weeks))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  weeks(
+    gameKey: string,
+    cb?: Callback<GameWeek[]>,
+  ): Promise<GameWeek[]> | void {
+    const resultPromise = this.game_weeks(gameKey) as Promise<
+      Game & { weeks: GameWeek[] }
+    >;
+    return this.aliasSubresource(resultPromise, "weeks", cb);
   }
 
   // Method overloads for stat_categories
-  stat_categories(gameKey: string): Promise<Game & { stat_categories: StatCategory[] }>;
-  stat_categories(gameKey: string, cb: Callback<Game & { stat_categories: StatCategory[] }>): void;
-  stat_categories(gameKey: string, cb?: Callback<Game & { stat_categories: StatCategory[] }>): Promise<Game & { stat_categories: StatCategory[] }> | void {
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/stat_categories`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const stat_categories = mapStatCategories(
-          data.fantasy_content.game[1].stat_categories.stats
-        );
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, stat_categories };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  stat_categories(
+    gameKey: string,
+  ): Promise<Game & { stat_categories: StatCategory[] }>;
+  stat_categories(
+    gameKey: string,
+    cb: Callback<Game & { stat_categories: StatCategory[] }>,
+  ): void;
+  stat_categories(
+    gameKey: string,
+    cb?: Callback<Game & { stat_categories: StatCategory[] }>,
+  ): Promise<Game & { stat_categories: StatCategory[] }> | void {
+    return this.gameSubresource(
+      gameKey,
+      "stat_categories",
+      "stat_categories",
+      (data) => mapStatCategories(data.stat_categories.stats),
+      cb,
+    );
   }
 
   // Alias for consistency with interface
   statCategories(gameKey: string): Promise<StatCategory[]>;
   statCategories(gameKey: string, cb: Callback<StatCategory[]>): void;
-  statCategories(gameKey: string, cb?: Callback<StatCategory[]>): Promise<StatCategory[]> | void {
-    const resultPromise = this.stat_categories(gameKey) as Promise<Game & { stat_categories: StatCategory[] }>;
-    const promise = resultPromise.then(result => result.stat_categories);
-
-    if (cb) {
-      promise
-        .then(categories => cb(null, categories))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  statCategories(
+    gameKey: string,
+    cb?: Callback<StatCategory[]>,
+  ): Promise<StatCategory[]> | void {
+    const resultPromise = this.stat_categories(gameKey) as Promise<
+      Game & { stat_categories: StatCategory[] }
+    >;
+    return this.aliasSubresource(resultPromise, "stat_categories", cb);
   }
 
   // Method overloads for position_types
-  position_types(gameKey: string): Promise<Game & { position_types: PositionType[] }>;
-  position_types(gameKey: string, cb: Callback<Game & { position_types: PositionType[] }>): void;
-  position_types(gameKey: string, cb?: Callback<Game & { position_types: PositionType[] }>): Promise<Game & { position_types: PositionType[] }> | void {
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/position_types`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const position_types = mapPositionTypes(
-          data.fantasy_content.game[1].position_types
-        );
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, position_types };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  position_types(
+    gameKey: string,
+  ): Promise<Game & { position_types: PositionType[] }>;
+  position_types(
+    gameKey: string,
+    cb: Callback<Game & { position_types: PositionType[] }>,
+  ): void;
+  position_types(
+    gameKey: string,
+    cb?: Callback<Game & { position_types: PositionType[] }>,
+  ): Promise<Game & { position_types: PositionType[] }> | void {
+    return this.gameSubresource(
+      gameKey,
+      "position_types",
+      "position_types",
+      (data) => mapPositionTypes(data.position_types),
+      cb,
+    );
   }
 
   // Alias for consistency with interface
   positionTypes(gameKey: string): Promise<PositionType[]>;
   positionTypes(gameKey: string, cb: Callback<PositionType[]>): void;
-  positionTypes(gameKey: string, cb?: Callback<PositionType[]>): Promise<PositionType[]> | void {
-    const resultPromise = this.position_types(gameKey) as Promise<Game & { position_types: PositionType[] }>;
-    const promise = resultPromise.then(result => result.position_types);
-
-    if (cb) {
-      promise
-        .then(types => cb(null, types))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  positionTypes(
+    gameKey: string,
+    cb?: Callback<PositionType[]>,
+  ): Promise<PositionType[]> | void {
+    const resultPromise = this.position_types(gameKey) as Promise<
+      Game & { position_types: PositionType[] }
+    >;
+    return this.aliasSubresource(resultPromise, "position_types", cb);
   }
 
   // Method overloads for roster_positions
-  roster_positions(gameKey: string): Promise<Game & { roster_positions: RosterPosition[] }>;
-  roster_positions(gameKey: string, cb: Callback<Game & { roster_positions: RosterPosition[] }>): void;
-  roster_positions(gameKey: string, cb?: Callback<Game & { roster_positions: RosterPosition[] }>): Promise<Game & { roster_positions: RosterPosition[] }> | void {
-    const promise = (this.yf
-      .api(
-        this.yf.GET,
-        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/roster_positions`
-      ) as Promise<FantasyContent<{ game: any[] }>>)
-      .then((data) => {
-        const roster_positions = mapRosterPositions(
-          data.fantasy_content.game[1].roster_positions
-        );
-        const game = data.fantasy_content.game[0] as Game;
-
-        return { ...game, roster_positions };
-      });
-
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  roster_positions(
+    gameKey: string,
+  ): Promise<Game & { roster_positions: RosterPosition[] }>;
+  roster_positions(
+    gameKey: string,
+    cb: Callback<Game & { roster_positions: RosterPosition[] }>,
+  ): void;
+  roster_positions(
+    gameKey: string,
+    cb?: Callback<Game & { roster_positions: RosterPosition[] }>,
+  ): Promise<Game & { roster_positions: RosterPosition[] }> | void {
+    return this.gameSubresource(
+      gameKey,
+      "roster_positions",
+      "roster_positions",
+      (data) => mapRosterPositions(data.roster_positions),
+      cb,
+    );
   }
 
   // Alias for consistency with interface
   rosterPositions(gameKey: string): Promise<RosterPosition[]>;
   rosterPositions(gameKey: string, cb: Callback<RosterPosition[]>): void;
-  rosterPositions(gameKey: string, cb?: Callback<RosterPosition[]>): Promise<RosterPosition[]> | void {
-    const resultPromise = this.roster_positions(gameKey) as Promise<Game & { roster_positions: RosterPosition[] }>;
-    const promise = resultPromise.then(result => result.roster_positions);
-
-    if (cb) {
-      promise
-        .then(positions => cb(null, positions))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+  rosterPositions(
+    gameKey: string,
+    cb?: Callback<RosterPosition[]>,
+  ): Promise<RosterPosition[]> | void {
+    const resultPromise = this.roster_positions(gameKey) as Promise<
+      Game & { roster_positions: RosterPosition[] }
+    >;
+    return this.aliasSubresource(resultPromise, "roster_positions", cb);
   }
 }
 

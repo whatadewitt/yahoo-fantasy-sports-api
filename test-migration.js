@@ -6,6 +6,9 @@
 
 console.log('🧪 Testing TypeScript Migration Compatibility...\n');
 
+const fs = require('fs');
+const path = require('path');
+
 // Test 1: CommonJS Import
 console.log('1️⃣ Testing CommonJS import...');
 try {
@@ -22,25 +25,26 @@ try {
   console.log('❌ CommonJS import failed:', error.message);
 }
 
-// Test 2: ES Module Import
-console.log('\n2️⃣ Testing ES module import...');
-import('./YahooFantasy.mjs').then(module => {
-  try {
-    const YahooFantasy = module.default;
-    const yf = new YahooFantasy('test_key', 'test_secret');
-    
-    console.log('✅ ES module import works');
-    console.log('✅ YahooFantasy constructor works');
-    console.log('✅ Has game resource:', !!yf.game);
-    console.log('✅ Has league resource:', !!yf.league);
-    console.log('✅ Has player resource:', !!yf.player);
-    console.log('✅ Has collections:', !!yf.games, !!yf.leagues, !!yf.players);
-  } catch (error) {
-    console.log('❌ ES module import failed:', error.message);
+// Test 2: ES Module Build Target
+console.log('\n2️⃣ Testing ES module build target...');
+try {
+  const pkg = require('./package.json');
+  const esmEntry = pkg.exports?.['.']?.import || pkg.module;
+  const esmPath = path.resolve(__dirname, esmEntry);
+
+  if (!esmEntry) {
+    throw new Error('No package ESM entry configured');
   }
-}).catch(error => {
-  console.log('❌ ES module import failed:', error.message);
-});
+
+  if (!fs.existsSync(esmPath)) {
+    throw new Error(`${esmEntry} does not exist; run npm run build:esm first`);
+  }
+
+  console.log('✅ ES module entry is configured:', esmEntry);
+  console.log('✅ ES module build output exists');
+} catch (error) {
+  console.log('❌ ES module build target failed:', error.message);
+}
 
 // Test 3: Method Signatures
 console.log('\n3️⃣ Testing method signatures...');

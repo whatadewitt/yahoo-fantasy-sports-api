@@ -1,17 +1,44 @@
-const YahooFantasy = require('../index.js');
-const nock = require('nock');
+const YahooFantasy = require("../index.js");
+const nock = require("nock");
 
-describe ("collection: transactionsCollection", function(){
-  const yf = new YahooFantasy(
-    'Y!APPLICATION_KEY',
-    'Y!APPLICATION_SECRET')
-    , transactions = yf.transactions;
+describe("collection: transactionsCollection", function () {
+  const yf = new YahooFantasy("Y!APPLICATION_KEY", "Y!APPLICATION_SECRET"),
+    transactions = yf.transactions;
 
-
-  it ("should be defined", function() {
+  it("should be defined", function () {
     expect(transactions).not.toBe(null);
   });
+});
 
+describe("collection: transactionsCollection reads", function () {
+  const yf = new YahooFantasy("Y!KEY", "Y!SECRET");
+  const transactions = yf.transactions;
+
+  beforeEach(function () {
+    yf.setUserToken("testusertoken==");
+    spyOn(yf, "api").and.returnValue(
+      Promise.resolve({
+        fantasy_content: {
+          leagues: { count: 0 },
+        },
+      }),
+    );
+  });
+
+  it("builds league transaction urls with filters", function () {
+    const result = transactions.leagues(["nfl.l.1"], {
+      types: ["add", "drop"],
+      team_key: "nfl.l.1.t.1",
+      count: 10,
+      start: 5,
+    });
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=nfl.l.1/transactions;types=add,drop;team_key=nfl.l.1.t.1;count=10;start=5",
+    );
+    return result.then((items) => expect(items).toEqual([]));
+  });
 });
 
 describe("collection: transactionsCollection writes", function () {
@@ -38,7 +65,7 @@ describe("collection: transactionsCollection writes", function () {
     expect(yf.api).toHaveBeenCalledWith(
       "POST",
       "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.1/transactions",
-      expected
+      expected,
     );
     return result;
   });
@@ -73,7 +100,7 @@ describe("collection: transactionsCollection writes", function () {
         expect(err).toBeNull();
         expect(data).toEqual({ fantasy_content: {} });
         done();
-      }
+      },
     );
   });
 
@@ -87,11 +114,15 @@ describe("collection: transactionsCollection writes", function () {
     nock("https://fantasysports.yahooapis.com")
       .post("/fantasy/v2/league/nfl.l.1/transactions?format=json", expected)
       .reply(200, { fantasy_content: {} });
-    const result = transactions.drop_player("nfl.l.1", "nfl.l.1.t.1", "nfl.p.2");
+    const result = transactions.drop_player(
+      "nfl.l.1",
+      "nfl.l.1.t.1",
+      "nfl.p.2",
+    );
     expect(yf.api).toHaveBeenCalledWith(
       "POST",
       "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.1/transactions",
-      expected
+      expected,
     );
     return result;
   });
@@ -110,11 +141,16 @@ describe("collection: transactionsCollection writes", function () {
     nock("https://fantasysports.yahooapis.com")
       .post("/fantasy/v2/league/nfl.l.1/transactions?format=json", expected)
       .reply(200, { fantasy_content: {} });
-    const result = transactions.add_drop("nfl.l.1", "nfl.l.1.t.1", "nfl.p.1", "nfl.p.2");
+    const result = transactions.add_drop(
+      "nfl.l.1",
+      "nfl.l.1.t.1",
+      "nfl.p.1",
+      "nfl.p.2",
+    );
     expect(yf.api).toHaveBeenCalledWith(
       "POST",
       "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.1/transactions",
-      expected
+      expected,
     );
     return result;
   });
@@ -129,11 +165,16 @@ describe("collection: transactionsCollection writes", function () {
     nock("https://fantasysports.yahooapis.com")
       .post("/fantasy/v2/league/nfl.l.1/transactions?format=json", expected)
       .reply(200, { fantasy_content: {} });
-    const result = transactions.waiver_claim("nfl.l.1", "nfl.l.1.t.1", "nfl.p.1", { faab_bid: 17 });
+    const result = transactions.waiver_claim(
+      "nfl.l.1",
+      "nfl.l.1.t.1",
+      "nfl.p.1",
+      { faab_bid: 17 },
+    );
     expect(yf.api).toHaveBeenCalledWith(
       "POST",
       "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.1/transactions",
-      expected
+      expected,
     );
     return result;
   });
@@ -148,10 +189,15 @@ describe("collection: transactionsCollection writes", function () {
     nock("https://fantasysports.yahooapis.com")
       .post("/fantasy/v2/league/nfl.l.1/transactions?format=json", expected)
       .reply(200, { fantasy_content: {} });
-    transactions.waiver_claim("nfl.l.1", "nfl.l.1.t.1", "nfl.p.1", function (err, data) {
-      expect(err).toBeNull();
-      expect(data).toEqual({ fantasy_content: {} });
-      done();
-    });
+    transactions.waiver_claim(
+      "nfl.l.1",
+      "nfl.l.1.t.1",
+      "nfl.p.1",
+      function (err, data) {
+        expect(err).toBeNull();
+        expect(data).toEqual({ fantasy_content: {} });
+        done();
+      },
+    );
   });
 });

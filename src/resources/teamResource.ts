@@ -7,6 +7,45 @@ import {
   mapDraft,
   mapMatchups,
 } from "../helpers/teamHelper";
+import { withCallback } from "../helpers/requestHelper";
+
+function teamStatsUrl(
+  teamKey: string,
+  statParam?: number | string | Callback<any>,
+): string {
+  const url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
+
+  if (typeof statParam === "string" && statParam.indexOf("-") > 0) {
+    return `${url};type=date;date=${statParam}`;
+  }
+
+  const week = Number(statParam);
+  return week > 0 ? `${url};type=week;week=${week}` : url;
+}
+
+function mapTeamStatsResponse(data: any): MappedTeam {
+  const teamData = data.fantasy_content.team;
+  const team = mapTeam(teamData[0]);
+
+  team.stats = {
+    coverage_type: teamData[1].team_stats.coverage_type,
+    stats: mapStats(teamData[1].team_stats.stats),
+    ...(teamData[1].team_stats.coverage_type === "week"
+      ? { week: teamData[1].team_stats.week }
+      : {}),
+    ...(teamData[1].team_stats.coverage_type === "date"
+      ? { date: teamData[1].team_stats.date }
+      : {}),
+    ...(teamData[1].team_points
+      ? { points: teamData[1].team_points.total }
+      : {}),
+    ...(teamData[1].team_remaining_games
+      ? { remaining: teamData[1].team_remaining_games.total }
+      : {}),
+  } as any;
+
+  return team;
+}
 
 class TeamResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -16,7 +55,7 @@ class TeamResource {
   meta(teamKey: string, cb?: Callback<MappedTeam>): Promise<MappedTeam> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data: any) => {
@@ -41,83 +80,27 @@ class TeamResource {
   stats(
     teamKey: string,
     weekDateOrCb?: number | string | Callback<any>,
-    cb?: Callback<any>
+    cb?: Callback<any>,
   ): Promise<any> | void {
-    // Simplified implementation
     const actualCb = typeof weekDateOrCb === "function" ? weekDateOrCb : cb;
-    const param = typeof weekDateOrCb !== "function" ? weekDateOrCb : undefined;
+    const statParam =
+      typeof weekDateOrCb === "function" ? undefined : weekDateOrCb;
+    const promise = (
+      this.yf.api(this.yf.GET, teamStatsUrl(teamKey, statParam)) as Promise<any>
+    ).then(mapTeamStatsResponse);
 
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
-
-    if (param !== undefined && param !== null && param !== "") {
-      if (typeof param === "string" && param.indexOf("-") > 0) {
-        // string is date, of format YYYY-MM-DD
-        url += `;type=date;date=${param}`;
-      } else if (typeof param === "number" && param > 0) {
-        // number is week (and greater than 0)
-        url += `;type=week;week=${param}`;
-      } else if (
-        typeof param === "string" &&
-        !isNaN(Number(param)) &&
-        Number(param) > 0
-      ) {
-        // numeric string is week (and greater than 0)
-        const week = Number(param);
-        url += `;type=week;week=${week}`;
-      }
-    }
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-    const resultPromise = promise.then((data) => {
-      const rawStats = data.fantasy_content.team[1].team_stats;
-      const team = mapTeam(data.fantasy_content.team[0]);
-
-      // Build enhanced stats object
-      const statsObj: any = {
-        coverage_type: rawStats.coverage_type,
-        stats: rawStats.stats.map((s: any) => s.stat),
-      };
-
-      // Add coverage value (week or date)
-      if (rawStats.coverage_type === "week") {
-        statsObj.week = rawStats.week;
-      } else if (rawStats.coverage_type === "date") {
-        statsObj.date = rawStats.date;
-      }
-
-      // Add team_points if available (just the total)
-      if (data.fantasy_content.team[1].team_points) {
-        statsObj.points = data.fantasy_content.team[1].team_points.total;
-      }
-
-      // Add team_remaining_games if available (just the total)
-      if (data.fantasy_content.team[1].team_remaining_games) {
-        statsObj.remaining =
-          data.fantasy_content.team[1].team_remaining_games.total;
-      }
-
-      team.stats = statsObj;
-      return team;
-    });
-
-    if (actualCb) {
-      resultPromise
-        .then((result) => actualCb(null, result))
-        .catch((e) => actualCb(e));
-      return;
-    }
-    return resultPromise;
+    return withCallback(promise, actualCb);
   }
 
   standings(teamKey: string): Promise<MappedTeam>;
   standings(teamKey: string, cb: Callback<MappedTeam>): void;
   standings(
     teamKey: string,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data) => {
@@ -142,7 +125,7 @@ class TeamResource {
   roster(
     teamKey: string,
     weekOrCb?: number | Callback<MappedTeam>,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
     const actualCb = typeof weekOrCb === "function" ? weekOrCb : cb;
     const week = typeof weekOrCb === "number" ? weekOrCb : undefined;
@@ -173,13 +156,13 @@ class TeamResource {
   draft_results(teamKey: string, cb?: Callback<any>): Promise<any> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data) => {
       const team = mapTeam(data.fantasy_content.team[0]);
       const draft_results = mapDraft(
-        data.fantasy_content.team[1].draft_results
+        data.fantasy_content.team[1].draft_results,
       );
 
       team.draft_results = draft_results;
@@ -200,35 +183,27 @@ class TeamResource {
   matchups(
     teamKey: string,
     weeksOrCb?: number[] | Callback<MappedTeam>,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
     const actualCb = typeof weeksOrCb === "function" ? weeksOrCb : cb;
-    const weeks = Array.isArray(weeksOrCb)
-      ? weeksOrCb.map((w) => Number(w))
-      : typeof weeksOrCb === "number" ||
-        (typeof weeksOrCb === "string" && !isNaN(Number(weeksOrCb)))
-      ? [Number(weeksOrCb)]
-      : undefined;
+    let weeks: number[] | undefined;
 
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
-    if (weeks) url += `;weeks=${weeks.join(",")}`;
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-    const resultPromise = promise.then((data) => {
-      const team = mapTeam(data.fantasy_content.team[0]);
-      const matchups = mapMatchups(data.fantasy_content.team[1].matchups);
-
-      team.matchups = matchups;
-      return team;
-    });
-
-    if (actualCb) {
-      resultPromise
-        .then((result) => actualCb(null, result))
-        .catch((e) => actualCb(e));
-      return;
+    if (Array.isArray(weeksOrCb)) {
+      weeks = weeksOrCb.map((week) => Number(week));
     }
-    return resultPromise;
+
+    const url = weeks?.length
+      ? `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups;weeks=${weeks.join(",")}`
+      : `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
+    const promise = (this.yf.api(this.yf.GET, url) as Promise<any>).then(
+      (data) => {
+        const team = mapTeam(data.fantasy_content.team[0]);
+        team.matchups = mapMatchups(data.fantasy_content.team[1].matchups);
+        return team;
+      },
+    );
+
+    return withCallback(promise, actualCb);
   }
 }
 

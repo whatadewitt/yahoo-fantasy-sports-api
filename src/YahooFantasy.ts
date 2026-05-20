@@ -35,6 +35,13 @@ interface AuthResponse {
   send(data: any): void;
 }
 
+interface ApiArgs {
+  method: HttpMethod;
+  url: string;
+  postData: any;
+  callback?: Callback<any>;
+}
+
 class YahooFantasy {
   public CONSUMER_KEY: string;
   public CONSUMER_SECRET: string;
@@ -67,7 +74,7 @@ class YahooFantasy {
     consumerKey: string,
     consumerSecret: string,
     tokenCallbackFn?: TokenCallbackFunction,
-    redirectUri?: string
+    redirectUri?: string,
   ) {
     this.CONSUMER_KEY = consumerKey;
     this.CONSUMER_SECRET = consumerSecret;
@@ -143,7 +150,7 @@ class YahooFantasy {
 
   public authCallback(
     req: AuthRequest,
-    cb: Callback<OAuthTokenCallbackData>
+    cb: Callback<OAuthTokenCallbackData>,
   ): void {
     const tokenData: Record<string, string> = {
       client_id: this.CONSUMER_KEY,
@@ -166,7 +173,7 @@ class YahooFantasy {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Basic ${Buffer.from(
-          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`
+          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`,
         ).toString("base64")}`,
       },
     };
@@ -181,7 +188,7 @@ class YahooFantasy {
       tokenResponse.on("end", async () => {
         try {
           const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString()
+            Buffer.concat(chunks).toString(),
           );
 
           this.yahooUserToken = tokenData.access_token;
@@ -245,7 +252,7 @@ class YahooFantasy {
   // Alias for consistency with PRD
   public refreshAuthToken(
     refreshToken: string,
-    cb?: Callback<OAuthTokens>
+    cb?: Callback<OAuthTokens>,
   ): Promise<OAuthTokens> | void {
     this.setRefreshToken(refreshToken);
     return cb ? this.refreshToken(cb) : this.refreshToken();
@@ -271,7 +278,7 @@ class YahooFantasy {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Basic ${Buffer.from(
-          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`
+          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`,
         ).toString("base64")}`,
       },
     };
@@ -286,7 +293,7 @@ class YahooFantasy {
       tokenResponse.on("end", async () => {
         try {
           const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString()
+            Buffer.concat(chunks).toString(),
           );
 
           this.setUserToken(tokenData.access_token);
@@ -311,145 +318,203 @@ class YahooFantasy {
     tokenRequest.end();
   }
 
-  // API method with overloads
-  public api(method: HttpMethod, url: string, cb: Callback<any>): void;
-  public api(
-    method: HttpMethod,
-    url: string,
-    data: any,
-    cb: Callback<any>
-  ): void;
-  public api(method: HttpMethod, url: string): Promise<any>;
-  public api(method: HttpMethod, url: string, data: any): Promise<any>;
-  public api(...args: any[]): Promise<any> | void {
+  private parseApiArgs(args: any[]): ApiArgs {
     const method = args[0] as HttpMethod;
     const url = args[1] as string;
-    let postData: any = false;
-    let callback: Callback<any> | undefined;
+    const callback = args.find((arg) => typeof arg === "function") as
+      | Callback<any>
+      | undefined;
+    const postData =
+      args.length > 3 || (args.length === 3 && !callback) ? args[2] : false;
 
-    // Parse arguments
-    if (args.length === 3) {
-      // method, url, callback
-      if (typeof args[2] === "function") {
-        callback = args[2];
-      } else {
-        // method, url, data
-        postData = args[2];
-      }
-    } else if (args.length === 4) {
-      // method, url, data, callback
-      postData = args[2];
-      callback = args[3];
+    return { method, url, postData, callback };
+  }
+
+  private buildApiParams(method: HttpMethod, url: string): Record<string, any> {
+    const params: Record<string, any> = { format: "json" };
+
+    if (this.yahooUserToken) {
+      return params;
     }
 
-    const performRequest = (): Promise<any> => {
-      return new Promise((resolve, reject) => {
-        let params: Record<string, any> = {
-          format: "json",
-        };
+    const oauthParams = {
+      ...params,
+      oauth_consumer_key: this.CONSUMER_KEY,
+      oauth_signature_method: "HMAC-SHA1",
+      oauth_timestamp: Math.floor(Date.now() / 1000),
+      oauth_nonce: crypto.randomBytes(12).toString("base64"),
+      oauth_version: "1.0",
+    };
+    const signature = oauthSignature.generate(
+      method,
+      url,
+      oauthParams,
+      this.CONSUMER_SECRET,
+    );
 
-        const headers: Record<string, string> = {};
+    return {
+      ...oauthParams,
+      oauth_signature: decodeURIComponent(signature),
+    };
+  }
 
-        if (!this.yahooUserToken) {
-          // OAuth 1.0a flow
-          params = {
-            ...params,
-            oauth_consumer_key: this.CONSUMER_KEY,
-            oauth_signature_method: "HMAC-SHA1",
-            oauth_timestamp: Math.floor(Date.now() / 1000),
-            oauth_nonce: crypto.randomBytes(12).toString("base64"),
-            oauth_version: "1.0",
-          };
+  private hasWritableBody(method: HttpMethod, postData: any): boolean {
+    return Boolean(postData) && (method === this.POST || method === this.PUT);
+  }
 
-          const signature = oauthSignature.generate(
-            method,
-            url,
-            params,
-            this.CONSUMER_SECRET
-          );
+  private buildApiHeaders(
+    method: HttpMethod,
+    postData: any,
+  ): Record<string, string> {
+    const headers: Record<string, string> = {};
 
-          params = {
-            ...params,
-            oauth_signature: decodeURIComponent(signature),
-          };
-        } else {
-          headers.Authorization = `Bearer ${this.yahooUserToken}`;
-        }
+    if (this.yahooUserToken) {
+      headers.Authorization = `Bearer ${this.yahooUserToken}`;
+    }
 
-        if (postData && (method === "POST" || method === "PUT")) {
-          headers["Content-Type"] = "application/xml";
-        }
+    if (this.hasWritableBody(method, postData)) {
+      headers["Content-Type"] = "application/xml";
+    }
 
-        const options: https.RequestOptions = {
-          hostname: "fantasysports.yahooapis.com",
-          path: `${url.replace(
-            "https://fantasysports.yahooapis.com",
-            ""
-          )}?${new URLSearchParams(Object.entries(params).map(([k, v]): [string, string] => [k, String(v)])).toString()}`,
-          method: method,
-          headers,
-        };
+    return headers;
+  }
 
-        const request = https.request(options, (resp) => {
+  private buildApiPath(url: string, params: Record<string, any>): string {
+    const apiPath = url.replace("https://fantasysports.yahooapis.com", "");
+    const query = new URLSearchParams(
+      Object.entries(params).map(([key, value]): [string, string] => [
+        key,
+        String(value),
+      ]),
+    ).toString();
+
+    return `${apiPath}?${query}`;
+  }
+
+  private buildApiRequestOptions(
+    method: HttpMethod,
+    url: string,
+    postData: any,
+  ): https.RequestOptions {
+    const params = this.buildApiParams(method, url);
+
+    return {
+      hostname: "fantasysports.yahooapis.com",
+      path: this.buildApiPath(url, params),
+      method,
+      headers: this.buildApiHeaders(method, postData),
+    };
+  }
+
+  private writeRequestBody(
+    request: ReturnType<typeof https.request>,
+    method: HttpMethod,
+    postData: any,
+  ): void {
+    if (this.hasWritableBody(method, postData)) {
+      request.write(
+        typeof postData === "string" ? postData : JSON.stringify(postData),
+      );
+    }
+  }
+
+  private isExpiredTokenError(error: any): boolean {
+    return /"token_expired"/i.test(error?.description || "");
+  }
+
+  private async handleApiError(
+    error: any,
+    statusCode: number | undefined,
+    method: HttpMethod,
+    url: string,
+    postData: any,
+  ): Promise<any> {
+    if (this.isExpiredTokenError(error)) {
+      await this.refreshToken();
+      return this.api(method, url, postData);
+    }
+
+    throw new YahooFantasyError(
+      error.description || error.message,
+      error.name,
+      statusCode,
+    );
+  }
+
+  private async parseApiResponse(
+    data: string,
+    statusCode: number | undefined,
+    method: HttpMethod,
+    url: string,
+    postData: any,
+  ): Promise<any> {
+    let parsedData: any;
+
+    try {
+      parsedData = JSON.parse(data);
+    } catch (parseError) {
+      throw new Error(`Failed to parse response: ${parseError}`);
+    }
+
+    return parsedData.error
+      ? this.handleApiError(parsedData.error, statusCode, method, url, postData)
+      : parsedData;
+  }
+
+  private performRequest(
+    method: HttpMethod,
+    url: string,
+    postData: any,
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const request = https.request(
+        this.buildApiRequestOptions(method, url, postData),
+        (resp) => {
           let data = "";
 
           resp.on("data", (chunk) => {
             data += chunk;
           });
 
-          resp.on("end", async () => {
-            try {
-              const parsedData = JSON.parse(data);
-
-              if (parsedData.error) {
-                if (/"token_expired"/i.test(parsedData.error.description)) {
-                  // Token expired, refresh and retry
-                  try {
-                    await this.refreshToken();
-                    const retryResult = await this.api(method, url, postData);
-                    resolve(retryResult);
-                  } catch (refreshError) {
-                    reject(refreshError);
-                  }
-                } else {
-                  reject(
-                    new YahooFantasyError(
-                      parsedData.error.description || parsedData.error.message,
-                      parsedData.error.name,
-                      resp.statusCode
-                    )
-                  );
-                }
-              } else {
-                resolve(parsedData);
-              }
-            } catch (parseError) {
-              reject(new Error(`Failed to parse response: ${parseError}`));
-            }
+          resp.on("end", () => {
+            this.parseApiResponse(data, resp.statusCode, method, url, postData)
+              .then(resolve)
+              .catch(reject);
           });
-        });
+        },
+      );
 
-        request.on("error", (err) => {
-          reject(new Error(err.message));
-        });
-
-        if (postData && (method === "POST" || method === "PUT")) {
-          request.write(
-            typeof postData === "string" ? postData : JSON.stringify(postData)
-          );
-        }
-
-        request.end();
+      request.on("error", (err) => {
+        reject(new Error(err.message));
       });
-    };
+
+      this.writeRequestBody(request, method, postData);
+      request.end();
+    });
+  }
+
+  // API method with overloads
+  public api(method: HttpMethod, url: string, cb: Callback<any>): void;
+  public api(
+    method: HttpMethod,
+    url: string,
+    data: any,
+    cb: Callback<any>,
+  ): void;
+  public api(method: HttpMethod, url: string): Promise<any>;
+  public api(method: HttpMethod, url: string, data: any): Promise<any>;
+  public api(...args: any[]): Promise<any> | void {
+    const { method, url, postData, callback } = this.parseApiArgs(args);
+    const request = this.performRequest(method, url, postData);
 
     if (callback) {
-      performRequest()
+      request
         .then((data) => callback(null, data))
         .catch((err) => callback(err));
-    } else {
-      return performRequest();
+      return;
     }
+
+    return request;
   }
 }
 
