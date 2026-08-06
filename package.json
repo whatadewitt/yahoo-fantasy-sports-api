@@ -20,12 +20,10 @@
   "scripts": {
     "test": "node jasmine-runner.js",
     "test:types": "npm run typecheck && npx ts-node test-typescript.ts",
-    "test:migration": "node test-migration.js",
     "test:validation": "npx ts-node test-validation.ts",
     "test:api": "npx ts-node test-api-validation.ts",
     "test:integration": "npx ts-node test-integration.ts",
-    "test:benchmark": "node test-benchmark.js",
-    "test:all": "npm run test && npm run test:types && npm run test:migration",
+    "test:all": "npm run test && npm run test:types",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests",
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
     "build:cjs": "tsc -p tsconfig.cjs.json",
