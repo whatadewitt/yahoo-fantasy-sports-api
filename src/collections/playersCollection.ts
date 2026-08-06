@@ -2,7 +2,7 @@ import { YahooFantasyInstance, Callback } from "../types/core";
 import { MappedPlayer } from "../types/api-responses";
 import { PaginationParams, FilterParams } from "../types/utils";
 import { parseCollection, parseLeagueCollection, parseTeamCollection } from "../helpers/playerHelper";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 
 class PlayersCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -42,11 +42,7 @@ class PlayersCollection {
       return parseCollection(data.fantasy_content.players, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((players) => cb(null, players)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   leagues(leagueKeys: string | string[]): Promise<any[]>;
@@ -98,11 +94,7 @@ class PlayersCollection {
       return parseLeagueCollection(data.fantasy_content.leagues, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((leagues) => cb(null, leagues)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Keep this for backward compatibility with single league queries
@@ -132,11 +124,7 @@ class PlayersCollection {
       return parseCollection(data.fantasy_content.league[1].players);
     });
 
-    if (cb) {
-      resultPromise.then((players) => cb(null, players)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   teams(teamKeys: string | string[]): Promise<any[]>;
@@ -194,11 +182,7 @@ class PlayersCollection {
       return parseTeamCollection(data.fantasy_content.teams, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((teams) => cb(null, teams)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Keep this for backward compatibility with single team queries
@@ -227,11 +211,7 @@ class PlayersCollection {
       return parseCollection(data.fantasy_content.team[1].players, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((players) => cb(null, players)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   freeAgents(leagueKey: string): Promise<MappedPlayer[]>;
@@ -263,11 +243,7 @@ class PlayersCollection {
       return parseCollection(data.fantasy_content.league[1].players);
     });
 
-    if (cb) {
-      resultPromise.then((ownership) => cb(null, ownership)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 }
 

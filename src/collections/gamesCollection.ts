@@ -1,7 +1,7 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
 import { Game } from '../types/api-responses';
 import { parseCollection } from '../helpers/gameHelper';
-import { extractCallback } from '../helpers/argsParser';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
 
 class GamesCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -43,11 +43,7 @@ class GamesCollection {
       return games;
     });
 
-    if (cb) {
-      resultPromise.then(games => cb(null, games)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   user(): Promise<Game[]>;
@@ -102,11 +98,7 @@ class GamesCollection {
       );
     });
 
-    if (cb) {
-      resultPromise.then((games) => cb(null, games)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   userFetch(gameKeys: string[]): Promise<Game[]>;

@@ -1,4 +1,5 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
+import { toCallbackOrPromise } from '../helpers/argsParser';
 import { UserGame, UserLeague, MappedTeam } from '../types/api-responses';
 import { mapTeam } from '../helpers/teamHelper';
 
@@ -21,11 +22,7 @@ class UserResource {
       });
     });
 
-    if (cb) {
-      resultPromise.then(games => cb(null, games)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   game_leagues(gameKey: string): Promise<UserLeague[]>;
@@ -44,11 +41,7 @@ class UserResource {
       });
     });
 
-    if (cb) {
-      resultPromise.then(leagues => cb(null, leagues)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   game_teams(gameKey: string): Promise<MappedTeam[]>;
@@ -69,11 +62,7 @@ class UserResource {
       });
     });
 
-    if (cb) {
-      resultPromise.then(teams => cb(null, teams)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   leagues(): Promise<any[]>;
@@ -114,11 +103,7 @@ class UserResource {
       return gamesArray;
     });
 
-    if (cb) {
-      resultPromise.then(leagues => cb(null, leagues)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   teams(): Promise<any[]>;
@@ -154,11 +139,7 @@ class UserResource {
       return allTeams;
     });
 
-    if (cb) {
-      resultPromise.then(teams => cb(null, teams)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 }
 

@@ -5,7 +5,7 @@ import {
   parseLeagueCollection, 
   parseGameCollection 
 } from '../helpers/teamHelper';
-import { extractCallback } from '../helpers/argsParser';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
 
 class TeamsCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -39,11 +39,7 @@ class TeamsCollection {
       return parseCollection(data.fantasy_content.teams, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((teams) => cb(null, teams)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   leagues(leagueKeys: string[]): Promise<any[]>;
@@ -75,11 +71,7 @@ class TeamsCollection {
       return parseLeagueCollection(data.fantasy_content.leagues, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((leagues) => cb(null, leagues)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   userFetch(): Promise<any[]>;
@@ -106,11 +98,7 @@ class TeamsCollection {
       return parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((games) => cb(null, games)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   games(gameKeys: string[]): Promise<any[]>;
@@ -142,11 +130,7 @@ class TeamsCollection {
       return parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((games) => cb(null, games)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Keep these for backward compatibility with the current TypeScript collection
@@ -165,11 +149,7 @@ class TeamsCollection {
       return parseCollection(data.fantasy_content.league[1].teams);
     });
 
-    if (cb) {
-      resultPromise.then((teams) => cb(null, teams)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   user(): Promise<MappedTeam[]>;
@@ -186,11 +166,7 @@ class TeamsCollection {
       return parseCollection(data.fantasy_content.users[0].user[1].games);
     });
 
-    if (cb) {
-      resultPromise.then((teams) => cb(null, teams)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 }
 

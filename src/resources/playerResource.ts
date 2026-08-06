@@ -7,7 +7,7 @@ import {
   FantasyContent,
 } from "../types/api-responses";
 import { mapPlayer, mapStats, mapDraftAnalysis } from "../helpers/playerHelper";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 
 class PlayerResource {
   constructor(public yf: YahooFantasyInstance) {}
@@ -29,12 +29,7 @@ class PlayerResource {
       return meta;
     });
 
-    if (cb) {
-      resultPromise.then((meta) => cb(null, meta)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for stats
@@ -112,11 +107,7 @@ class PlayerResource {
       }
     );
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for percent_owned
@@ -144,11 +135,7 @@ class PlayerResource {
       return { ...player, percent_owned: percent_owned.value };
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Alias for consistency with interface
@@ -194,11 +181,7 @@ class PlayerResource {
       } as unknown as PlayerOwnership;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for draft_analysis
@@ -227,11 +210,7 @@ class PlayerResource {
       return { ...player, draft_analysis };
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Alias for consistency with interface

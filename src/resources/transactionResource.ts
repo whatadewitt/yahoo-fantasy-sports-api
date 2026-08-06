@@ -1,4 +1,5 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
+import { toCallbackOrPromise } from '../helpers/argsParser';
 import { Transaction, MappedPlayer } from '../types/api-responses';
 import { mapPlayers } from '../helpers/gameHelper';
 import {
@@ -27,11 +28,7 @@ class TransactionResource {
       return transaction;
     });
 
-    if (cb) {
-      resultPromise.then(transaction => cb(null, transaction)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   players(transactionKey: string): Promise<MappedPlayer[]>;
@@ -52,11 +49,7 @@ class TransactionResource {
       };
     });
 
-    if (cb) {
-      resultPromise.then(players => cb(null, players)).catch(e => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   private putTransaction(
@@ -66,11 +59,7 @@ class TransactionResource {
   ): Promise<any> | void {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}`;
     const promise = this.yf.api(this.yf.PUT, url, body) as Promise<any>;
-    if (cb) {
-      promise.then((d) => cb(null, d)).catch((e) => cb(e));
-      return;
-    }
-    return promise;
+    return toCallbackOrPromise(promise, cb);
   }
 
   private deleteTransaction(
@@ -79,11 +68,7 @@ class TransactionResource {
   ): Promise<any> | void {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/transaction/${transactionKey}`;
     const promise = this.yf.api(this.yf.DELETE, url) as Promise<any>;
-    if (cb) {
-      promise.then((d) => cb(null, d)).catch((e) => cb(e));
-      return;
-    }
-    return promise;
+    return toCallbackOrPromise(promise, cb);
   }
 
   private respond(

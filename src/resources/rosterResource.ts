@@ -1,7 +1,7 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
 import { MappedTeam, FantasyContent } from "../types/api-responses";
 import { mapTeam, mapRoster } from "../helpers/teamHelper";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 import { buildRosterPayload, RosterCoverage, RosterSlot } from "../helpers/xmlHelper";
 
 class RosterResource {
@@ -53,11 +53,7 @@ class RosterResource {
       return team;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   players(teamKey: string): Promise<MappedTeam>;
@@ -150,11 +146,7 @@ class RosterResource {
       return team;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   update(
@@ -178,11 +170,7 @@ class RosterResource {
     const body = buildRosterPayload(coverage, players);
     const promise = this.yf.api(this.yf.PUT, url, body) as Promise<any>;
 
-    if (cb) {
-      promise.then((data) => cb(null, data)).catch((e) => cb(e));
-      return;
-    }
-    return promise;
+    return toCallbackOrPromise(promise, cb);
   }
 }
 

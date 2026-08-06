@@ -1,7 +1,7 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
 import { League } from "../types/api-responses";
 import { parseCollection } from "../helpers/leagueHelper";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 
 class LeaguesCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -41,11 +41,7 @@ class LeaguesCollection {
       return parseCollection(data.fantasy_content.leagues, subresources);
     });
 
-    if (cb) {
-      resultPromise.then((leagues) => cb(null, leagues)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   user(): Promise<League[]>;
@@ -62,11 +58,7 @@ class LeaguesCollection {
       return parseCollection(data.fantasy_content.users[0].user[1].games);
     });
 
-    if (cb) {
-      resultPromise.then((leagues) => cb(null, leagues)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   userFetch(leagueKeys: string[]): Promise<League[]>;
@@ -77,11 +69,7 @@ class LeaguesCollection {
 
     const result = this.fetch(leagueKeys);
 
-    if (cb) {
-      result.then((leagues) => cb(null, leagues)).catch((e) => cb(e));
-      return;
-    }
-    return result;
+    return toCallbackOrPromise(result, cb);
   }
 }
 

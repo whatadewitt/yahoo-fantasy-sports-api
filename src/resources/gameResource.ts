@@ -1,4 +1,5 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
+import { toCallbackOrPromise } from '../helpers/argsParser';
 import { 
   Game, 
   GameWeek, 
@@ -35,14 +36,7 @@ class GameResource {
       return meta;
     });
 
-    if (cb) {
-      resultPromise
-        .then((meta) => cb(null, meta))
-        .catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // REMOVED: game.leagues method (deprecated)
@@ -67,14 +61,7 @@ class GameResource {
         return { ...game, weeks };
       });
 
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Alias for consistency with interface
@@ -84,14 +71,7 @@ class GameResource {
     const resultPromise = this.game_weeks(gameKey) as Promise<Game & { weeks: GameWeek[] }>;
     const promise = resultPromise.then(result => result.weeks);
 
-    if (cb) {
-      promise
-        .then(weeks => cb(null, weeks))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Method overloads for stat_categories
@@ -112,14 +92,7 @@ class GameResource {
         return { ...game, stat_categories };
       });
 
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Alias for consistency with interface
@@ -129,14 +102,7 @@ class GameResource {
     const resultPromise = this.stat_categories(gameKey) as Promise<Game & { stat_categories: StatCategory[] }>;
     const promise = resultPromise.then(result => result.stat_categories);
 
-    if (cb) {
-      promise
-        .then(categories => cb(null, categories))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Method overloads for position_types
@@ -157,14 +123,7 @@ class GameResource {
         return { ...game, position_types };
       });
 
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Alias for consistency with interface
@@ -174,14 +133,7 @@ class GameResource {
     const resultPromise = this.position_types(gameKey) as Promise<Game & { position_types: PositionType[] }>;
     const promise = resultPromise.then(result => result.position_types);
 
-    if (cb) {
-      promise
-        .then(types => cb(null, types))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Method overloads for roster_positions
@@ -202,14 +154,7 @@ class GameResource {
         return { ...game, roster_positions };
       });
 
-    if (cb) {
-      promise
-        .then(result => cb(null, result))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 
   // Alias for consistency with interface
@@ -219,14 +164,7 @@ class GameResource {
     const resultPromise = this.roster_positions(gameKey) as Promise<Game & { roster_positions: RosterPosition[] }>;
     const promise = resultPromise.then(result => result.roster_positions);
 
-    if (cb) {
-      promise
-        .then(positions => cb(null, positions))
-        .catch(e => cb(e));
-      return;
-    } else {
-      return promise;
-    }
+    return toCallbackOrPromise(promise, cb);
   }
 }
 

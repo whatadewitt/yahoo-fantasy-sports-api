@@ -1,6 +1,6 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
 import { Transaction } from "../types/api-responses";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 import { parseTransactionCollection } from "../helpers/transactionHelper";
 import {
   buildAddPayload,
@@ -73,11 +73,7 @@ class TransactionsCollection {
       return parseTransactionCollection(transactionsData);
     });
 
-    if (cb) {
-      resultPromise.then((transactions) => cb(null, transactions)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   leagues(leagueKeys: string | string[]): Promise<Transaction[]>;
@@ -161,11 +157,7 @@ class TransactionsCollection {
       return allTransactions;
     });
 
-    if (cb) {
-      resultPromise.then((transactions) => cb(null, transactions)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   private postTransaction(
@@ -175,11 +167,7 @@ class TransactionsCollection {
   ): Promise<any> | void {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions`;
     const promise = this.yf.api(this.yf.POST, url, body) as Promise<any>;
-    if (cb) {
-      promise.then((d) => cb(null, d)).catch((e) => cb(e));
-      return;
-    }
-    return promise;
+    return toCallbackOrPromise(promise, cb);
   }
 
   add_player(leagueKey: string, teamKey: string, playerKey: string): Promise<any>;

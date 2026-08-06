@@ -16,7 +16,7 @@ import {
   mapTransactions,
 } from "../helpers/leagueHelper";
 import { mapPlayers } from "../helpers/gameHelper";
-import { extractCallback } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 
 class LeagueResource {
   constructor(public yf: YahooFantasyInstance) {}
@@ -38,12 +38,7 @@ class LeagueResource {
       return meta;
     });
 
-    if (cb) {
-      resultPromise.then((meta) => cb(null, meta)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for settings
@@ -66,12 +61,7 @@ class LeagueResource {
       return settings;
     });
 
-    if (cb) {
-      resultPromise.then((settings) => cb(null, settings)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for standings
@@ -99,12 +89,7 @@ class LeagueResource {
       return { ...league, standings };
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for scoreboard (h2h only)
@@ -143,12 +128,7 @@ class LeagueResource {
       return league;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for teams
@@ -165,12 +145,7 @@ class LeagueResource {
       return teams;
     });
 
-    if (cb) {
-      resultPromise.then((teams) => cb(null, teams)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for draft_results
@@ -187,12 +162,7 @@ class LeagueResource {
       return draft;
     });
 
-    if (cb) {
-      resultPromise.then((draft) => cb(null, draft)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Alias for consistency with interface
@@ -223,14 +193,7 @@ class LeagueResource {
       return transactions;
     });
 
-    if (cb) {
-      resultPromise
-        .then((transactions) => cb(null, transactions))
-        .catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   // Method overloads for players (WIP... not sure this is useful... certainly doesn't feel good...)
@@ -293,12 +256,7 @@ class LeagueResource {
       return players;
     });
 
-    if (cb) {
-      resultPromise.then((players) => cb(null, players)).catch((e) => cb(e));
-      return;
-    } else {
-      return resultPromise;
-    }
+    return toCallbackOrPromise(resultPromise, cb);
   }
 }
 

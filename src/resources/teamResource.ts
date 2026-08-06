@@ -1,4 +1,5 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
+import { toCallbackOrPromise } from "../helpers/argsParser";
 import { MappedTeam } from "../types/api-responses";
 import {
   mapTeam,
@@ -25,11 +26,7 @@ class TeamResource {
       return meta;
     });
 
-    if (cb) {
-      resultPromise.then((meta) => cb(null, meta)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   stats(teamKey: string): Promise<any>;
@@ -128,11 +125,7 @@ class TeamResource {
       return team;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   roster(teamKey: string): Promise<MappedTeam>;
@@ -186,11 +179,7 @@ class TeamResource {
       return team;
     });
 
-    if (cb) {
-      resultPromise.then((result) => cb(null, result)).catch((e) => cb(e));
-      return;
-    }
-    return resultPromise;
+    return toCallbackOrPromise(resultPromise, cb);
   }
 
   matchups(teamKey: string): Promise<MappedTeam>;
