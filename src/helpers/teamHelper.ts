@@ -1,5 +1,4 @@
 import { mapPlayers } from './gameHelper';
-import { parseCollection as parsePlayerCollection } from './playerHelper';
 import { mergeObjects, mapDraft, yahooArray } from './sharedHelper';
 import { MappedTeam, MappedPlayer, Manager } from '../types/api-responses';
 
@@ -152,15 +151,6 @@ export function parseLeagueCollection(ls: any, subresources: string[] = []): any
     league.teams = parseCollection(l.league[1].teams, subresources);
 
     return league;
-  });
-}
-
-export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  return yahooArray(ts).map((t: any) => {
-    let team = mapTeam(t.team[0]);
-    team.players = parsePlayerCollection(t.team[1].players, subresources);
-
-    return team;
   });
 }
 
