@@ -100,12 +100,6 @@ class GamesCollection {
 
     return toCallbackOrPromise(resultPromise, cb);
   }
-
-  userFetch(gameKeys: string[]): Promise<Game[]>;
-  userFetch(gameKeys: string[], cb: Callback<Game[]>): void;
-  userFetch(gameKeys: string[], cb?: Callback<Game[]>): Promise<Game[]> | void {
-    return cb ? this.fetch(gameKeys, cb) : this.fetch(gameKeys);
-  }
 }
 
 export default GamesCollection;

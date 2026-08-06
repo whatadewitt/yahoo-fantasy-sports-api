@@ -1,5 +1,4 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
-import { Transaction } from "../types/api-responses";
 import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 import { parseTransactionCollection } from "../helpers/transactionHelper";
 import {
@@ -71,90 +70,6 @@ class TransactionsCollection {
       }
 
       return parseTransactionCollection(transactionsData);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  leagues(leagueKeys: string | string[]): Promise<Transaction[]>;
-  leagues(leagueKeys: string | string[], cb: Callback<Transaction[]>): void;
-  leagues(leagueKeys: string | string[], filters: any): Promise<Transaction[]>;
-  leagues(
-    leagueKeys: string | string[],
-    filters: any,
-    cb: Callback<Transaction[]>
-  ): void;
-  leagues(...args: any[]): Promise<Transaction[]> | void {
-    const cb = extractCallback(args);
-    let leagueKeys = args.shift();
-    let filters = args.length ? args.shift() : {};
-
-    // Handle single league key
-    if (!Array.isArray(leagueKeys)) {
-      leagueKeys = [leagueKeys];
-    }
-
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=${leagueKeys.join(
-      ","
-    )}/transactions`;
-
-    // Add filters to the URL
-    if (filters && Object.keys(filters).length) {
-      const filterParams: string[] = [];
-
-      // Handle types filter (can be array or string)
-      if (filters.types) {
-        const types = Array.isArray(filters.types)
-          ? filters.types
-          : [filters.types];
-        filterParams.push(`types=${types.join(",")}`);
-      }
-
-      // Handle team_key filter
-      if (filters.team_key) {
-        filterParams.push(`team_key=${filters.team_key}`);
-      }
-
-      // Handle pagination
-      if (filters.count) {
-        filterParams.push(`count=${filters.count}`);
-      }
-
-      if (filters.start) {
-        filterParams.push(`start=${filters.start}`);
-      }
-
-      if (filterParams.length) {
-        url += `;${filterParams.join(";")}`;
-      }
-    }
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      const leagues = data.fantasy_content.leagues;
-
-      if (!leagues || leagues.count === 0) {
-        return [];
-      }
-
-      const allTransactions: any[] = [];
-
-      for (let i = 0; i < leagues.count; i++) {
-        const league = leagues[i];
-        if (
-          league &&
-          league.league &&
-          league.league[1] &&
-          league.league[1].transactions
-        ) {
-          const transactionsData = league.league[1].transactions;
-          const transactions = parseTransactionCollection(transactionsData);
-          allTransactions.push(...transactions);
-        }
-      }
-
-      return allTransactions;
     });
 
     return toCallbackOrPromise(resultPromise, cb);

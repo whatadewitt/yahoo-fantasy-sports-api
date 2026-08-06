@@ -8,7 +8,6 @@ const {
   buildProposeTradePayload,
   buildTradeResponsePayload,
   buildEditWaiverPayload,
-  buildEditTradePayload,
 } = require("../dist/cjs/helpers/xmlHelper");
 
 describe("xmlHelper.escapeXml", function () {
@@ -176,15 +175,6 @@ describe("xmlHelper trade builders", function () {
       "<?xml version='1.0'?><fantasy_content><transaction>" +
         "<transaction_key>k2</transaction_key><type>waiver</type>" +
         "<waiver_priority>2</waiver_priority><faab_bid>8</faab_bid>" +
-        "</transaction></fantasy_content>"
-    );
-  });
-
-  it("buildEditTradePayload", function () {
-    expect(buildEditTradePayload("k3", { trade_note: "rev" })).toBe(
-      "<?xml version='1.0'?><fantasy_content><transaction>" +
-        "<transaction_key>k3</transaction_key><type>pending_trade</type>" +
-        "<action>edit_trade</action><trade_note>rev</trade_note>" +
         "</transaction></fantasy_content>"
     );
   });

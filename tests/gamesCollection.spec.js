@@ -17,10 +17,6 @@ describe("collection: gamesCollection", function() {
     expect(games.user).not.toBe(null);
   });
 
-  it("should have a userFetch function", function() {
-    expect(games.userFetch).not.toBe(null);
-  });
-
   beforeEach(function() {
     yf.setUserToken("testuser.token==");
     spyOn(yf, "api").and.callThrough();

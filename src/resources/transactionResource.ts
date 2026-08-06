@@ -5,10 +5,8 @@ import { mapPlayers } from '../helpers/gameHelper';
 import {
   buildTradeResponsePayload,
   buildEditWaiverPayload,
-  buildEditTradePayload,
   TradeResponseOptions,
   EditWaiverOptions,
-  EditTradeOptions,
 } from '../helpers/xmlHelper';
 
 class TransactionResource {
@@ -124,12 +122,6 @@ class TransactionResource {
   edit_waiver(transactionKey: string, opts: EditWaiverOptions, cb: Callback<any>): void;
   edit_waiver(transactionKey: string, opts: EditWaiverOptions, cb?: Callback<any>): Promise<any> | void {
     return this.putTransaction(transactionKey, buildEditWaiverPayload(transactionKey, opts), cb);
-  }
-
-  edit_trade(transactionKey: string, opts: EditTradeOptions): Promise<any>;
-  edit_trade(transactionKey: string, opts: EditTradeOptions, cb: Callback<any>): void;
-  edit_trade(transactionKey: string, opts: EditTradeOptions, cb?: Callback<any>): Promise<any> | void {
-    return this.putTransaction(transactionKey, buildEditTradePayload(transactionKey, opts), cb);
   }
 
   cancel(transactionKey: string): Promise<any>;

@@ -194,10 +194,6 @@ export interface EditWaiverOptions {
   faab_bid?: number;
 }
 
-export interface EditTradeOptions {
-  trade_note?: string;
-}
-
 export function buildEditWaiverPayload(
   transactionKey: string,
   opts: EditWaiverOptions
@@ -213,17 +209,4 @@ export function buildEditWaiverPayload(
   return `${DECL}<fantasy_content><transaction><transaction_key>${escapeXml(
     transactionKey
   )}</transaction_key><type>waiver</type>${prio}${faab}</transaction></fantasy_content>`;
-}
-
-export function buildEditTradePayload(
-  transactionKey: string,
-  opts: EditTradeOptions
-): string {
-  const note =
-    opts.trade_note !== undefined
-      ? `<trade_note>${escapeXml(opts.trade_note)}</trade_note>`
-      : "";
-  return `${DECL}<fantasy_content><transaction><transaction_key>${escapeXml(
-    transactionKey
-  )}</transaction_key><type>pending_trade</type><action>edit_trade</action>${note}</transaction></fantasy_content>`;
 }

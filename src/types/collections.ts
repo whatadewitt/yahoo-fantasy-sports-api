@@ -27,9 +27,6 @@ export interface GamesCollectionResource extends BaseCollection {
   
   user(cb: Callback<Game[]>): void;
   user(): Promise<Game[]>;
-  
-  userFetch(gameKeys: string[], cb: Callback<Game[]>): void;
-  userFetch(gameKeys: string[]): Promise<Game[]>;
 }
 
 // Leagues Collection

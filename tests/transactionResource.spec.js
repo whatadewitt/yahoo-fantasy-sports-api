@@ -180,22 +180,4 @@ describe("resource: transactionResource writes", function () {
     );
     return result;
   });
-
-  it("edit_trade PUTs trade edit XML", function () {
-    const expected =
-      "<?xml version='1.0'?><fantasy_content><transaction>" +
-      "<transaction_key>k3</transaction_key><type>pending_trade</type>" +
-      "<action>edit_trade</action><trade_note>rev</trade_note>" +
-      "</transaction></fantasy_content>";
-    nock("https://fantasysports.yahooapis.com")
-      .put("/fantasy/v2/transaction/k3?format=json", expected)
-      .reply(200, { fantasy_content: {} });
-    const result = transaction.edit_trade("k3", { trade_note: "rev" });
-    expect(yf.api).toHaveBeenCalledWith(
-      "PUT",
-      "https://fantasysports.yahooapis.com/fantasy/v2/transaction/k3",
-      expected
-    );
-    return result;
-  });
 });

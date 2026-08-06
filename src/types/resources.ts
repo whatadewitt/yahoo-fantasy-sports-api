@@ -10,7 +10,6 @@ import { RosterCoverage, RosterSlot } from '../helpers/xmlHelper';
 import {
   TradeResponseOptions,
   EditWaiverOptions,
-  EditTradeOptions,
 } from '../helpers/xmlHelper';
 
 import {
@@ -174,9 +173,6 @@ export interface TransactionResource extends BaseResource {
   edit_waiver(transactionKey: string, opts: EditWaiverOptions): Promise<any>;
   edit_waiver(transactionKey: string, opts: EditWaiverOptions, cb: Callback<any>): void;
 
-  edit_trade(transactionKey: string, opts: EditTradeOptions): Promise<any>;
-  edit_trade(transactionKey: string, opts: EditTradeOptions, cb: Callback<any>): void;
-
   cancel(transactionKey: string): Promise<any>;
   cancel(transactionKey: string, cb: Callback<any>): void;
 }
@@ -191,10 +187,4 @@ export interface UserResource extends BaseResource {
   
   game_teams(gameKey: string, cb: Callback<MappedTeam[]>): void;
   game_teams(gameKey: string): Promise<MappedTeam[]>;
-  
-  leagues(cb: Callback<UserLeague[]>): void;
-  leagues(): Promise<UserLeague[]>;
-  
-  teams(cb: Callback<MappedTeam[]>): void;
-  teams(): Promise<MappedTeam[]>;
 }

@@ -57,8 +57,6 @@ module.exports = {
     "fetch": {
     },
     "user": {
-    },
-    "userFetch": {
     }
   },
   "leagues": {
