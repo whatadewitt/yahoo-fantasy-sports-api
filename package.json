@@ -1,28 +1,57 @@
 {
   "name": "yahoo-fantasy",
-  "version": "5.3.0",
-  "description": "An API to help facilitate the use of the Yahoo! Fantasy Sports API in NodeJS projects.",
-  "main": "./index.js",
+  "version": "6.0.0",
+  "description": "A TypeScript/JavaScript wrapper for the Yahoo! Fantasy Sports API with full type safety and IntelliSense support.",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "import": "./YahooFantasy.mjs",
-    "require": "./index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "node -r esm jasmine-runner.js",
-    "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
+    "pretest": "npm run build",
+    "test": "node jasmine-runner.js",
+    "test:types": "npm run typecheck && npx ts-node test-typescript.ts",
+    "test:validation": "npx ts-node test-validation.ts",
+    "test:api": "npx ts-node test-api-validation.ts",
+    "test:integration": "npx ts-node test-integration.ts",
+    "test:all": "npm run test && npm run test:types",
+    "istanbul": "istanbul cover --include-all-sources jasmine-node tests",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run clean && npm run build && npm run test:all"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/whatadewitt/yfsapi.git"
   },
   "engines": {
-    "node": ">= 8.10.0"
+    "node": ">= 18.0.0"
   },
   "keywords": [
     "yahoo",
     "fantasy sports",
     "sports",
-    "fantasy"
+    "fantasy",
+    "typescript",
+    "api",
+    "nfl",
+    "nba",
+    "mlb",
+    "nhl"
   ],
   "author": "Luke DeWitt <dewittl@gmail.com> (http://www.whatadewitt.ca/)",
   "license": "MIT",
@@ -31,17 +60,22 @@
   },
   "homepage": "https://yahoo-fantasy-node-docs.vercel.app/",
   "dependencies": {
-    "esm": "^3.2.25",
     "follow-redirects": "^1.13.0",
     "oauth-signature": "^1.5.0",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "jasmine": "^3.4.0",
-    "jasmine-spec-reporter": "^4.2.1",
-    "nock": "^9.6.1",
-    "prettier": "^1.18.2",
-    "q": "^1.4.1"
+    "@biomejs/biome": "^2.5.7",
+    "@types/node": "^20.19.6",
+    "@types/oauth-signature": "^1.5.2",
+    "@types/uuid": "^10.0.0",
+    "dotenv": "^17.2.0",
+    "jasmine": "^5.13.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "nock": "^14.0.5",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "directories": {
     "test": "tests"

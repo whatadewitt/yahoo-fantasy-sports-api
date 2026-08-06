@@ -4,11 +4,35 @@ This is a node module created to wrap the Yahoo! Fantasy Sports API ([link](http
 
 The API is designed to act as a helper for those interacting with the Y! Fantasy API. The goal is for ease of use for the user, both in terms of querying endpoints and parsing responses. I've noticed that in working with the API, the data is not always the easiest to understand, so hopefully what I have created here will help people out.
 
+## 🎉 TypeScript Support (v6.0+)
+
+Starting with version 6.0, this library includes full TypeScript support with:
+
+- **Complete type definitions** for all API responses
+- **Method overloads** supporting both callbacks and promises
+- **IntelliSense support** for better developer experience
+- **Compile-time safety** to catch errors before runtime
+- **Full backwards compatibility** with existing JavaScript code
+
 ## Installation
 
 You can install the module via npm by running:
 
-    $ npm install yahoo-fantasy
+```bash
+$ npm install yahoo-fantasy
+```
+
+### TypeScript Setup
+
+If you're using TypeScript, the type definitions are included automatically. For the best experience, ensure you're using:
+
+- **Node.js 14+** (required for ES2018 features)
+- **TypeScript 4.0+** (recommended)
+
+```bash
+$ npm install yahoo-fantasy
+$ npm install -D typescript @types/node
+```
 
 ## Licence
 
@@ -20,82 +44,231 @@ More complete documentation can be found using the application sandbox ([Link](h
 
 The API can be used by simply importing the module and querying data, since version 4.0 the authentication flow has been built into the library to make things easier for users.
 
-    // import the library
-    const YahooFantasy = require('yahoo-fantasy');
+### JavaScript Usage
 
-    // you can get an application key/secret by creating a new application on Yahoo!
-    const yf = new YahooFantasy(
-      Y!APPLICATION_KEY, // Yahoo! Application Key
-      Y!APPLICATION_SECRET, // Yahoo! Application Secret
-      tokenCallbackFunction, // callback function when user token is refreshed (optional)
-      redirectUri // redirect endpoint when user authenticates (optional)
-    );
+```javascript
+// import the library
+const YahooFantasy = require('yahoo-fantasy');
 
-    // you can authenticate a user by setting a route to call the auth function
-    // note: from v4.0 on, public queries are now supported; that is, you can query
-    // public resources without authenticating a user (ie/ game meta, player meta,
-    // and information from public leagues)
-    yf.auth(
-      response // response object to redirect the user to the Yahoo! login screen
-    )
+// you can get an application key/secret by creating a new application on Yahoo!
+const yf = new YahooFantasy(
+  Y!APPLICATION_KEY, // Yahoo! Application Key
+  Y!APPLICATION_SECRET, // Yahoo! Application Secret
+  tokenCallbackFunction, // callback function when user token is refreshed (optional)
+  redirectUri // redirect endpoint when user authenticates (optional)
+);
+```
 
-    // you also need to set up the callback route (defined as the redirect uri above)
-    // note: this will automatically set the user and refresh token if the request is
-    // successful, but you can also call them manually, described below
-    yf.authCallback(
-      request, // the request will contain the auth code from Yahoo!
-      callback // callback function that will be called after the token has been retrieved
-    )
+### TypeScript Usage
 
-    // if you're not authenticating via the library you'll need to set the Yahoo!
-    // token for the user
-    yf.setUserToken(
-      Y!CLIENT_TOKEN
-    );
+```typescript
+import YahooFantasy, { Game, League, Player, Team } from 'yahoo-fantasy';
 
-    // you can do the same for the refresh token...
-    // if you set this and the token expires (lasts an hour) then the token will automatically
-    // refresh and call the above "tokenCallbackFunction" that you've specified to persist the
-    // token elsewhere
-    yf.setRefreshToken(
-      Y!CLIENT_REFRESH_TOKEN
-    );
+// Create instance with full type safety
+const yf = new YahooFantasy(
+  process.env.YAHOO_CLIENT_ID!,
+  process.env.YAHOO_CLIENT_SECRET!,
+  (tokens) => {
+    // Token callback with typed parameters
+    console.log('Access token:', tokens.access_token);
+    console.log('Refresh token:', tokens.refresh_token);
+  },
+  'http://localhost:3000/auth/callback'
+);
 
-    // query a resource/subresource
-    yf.{resource}.{subresource} (
-      {possible argument(s)},
-      function cb(err, data) {
-        // handle error
-        // callback function
-        // do your thing
-      }
-    );
+// All methods support both callbacks and promises with proper typing
+const game: Game = await yf.game.meta('328');
+const league: League = await yf.league.meta('328.l.34014');
+const player: Player = await yf.player.meta('328.p.6619');
+```
+
+```javascript
+// you can authenticate a user by setting a route to call the auth function
+// note: from v4.0 on, public queries are now supported; that is, you can query
+// public resources without authenticating a user (ie/ game meta, player meta,
+// and information from public leagues)
+yf.auth(
+  response // response object to redirect the user to the Yahoo! login screen
+)
+
+// you also need to set up the callback route (defined as the redirect uri above)
+// note: this will automatically set the user and refresh token if the request is
+// successful, but you can also call them manually, described below
+yf.authCallback(
+  request, // the request will contain the auth code from Yahoo!
+  callback // callback function that will be called after the token has been retrieved
+)
+```
+
+```javascript
+// if you're not authenticating via the library you'll need to set the Yahoo!
+// token for the user
+yf.setUserToken(
+  Y!CLIENT_TOKEN
+);
+
+// you can do the same for the refresh token...
+// if you set this and the token expires (lasts an hour) then the token will automatically
+// refresh and call the above "tokenCallbackFunction" that you've specified to persist the
+// token elsewhere
+yf.setRefreshToken(
+  Y!CLIENT_REFRESH_TOKEN
+);
+```
+
+```javascript
+// query a resource/subresource
+yf.{resource}.{subresource} (
+  {possible argument(s)},
+  function cb(err, data) {
+    // handle error
+    // callback function
+    // do your thing
+  }
+);
+```
 
 ### Starting with v3.1.0 you can also use a promise chain to query resources and subresources
 
-    yf.{resource}.{subresource} (
-      {possible argument(s)}
-    )
-    .then(data => // do your thing)
-    .catch(err => // handle error)
+```javascript
+yf.{resource}.{subresource} (
+  {possible argument(s)}
+)
+.then(data => // do your thing)
+.catch(err => // handle error)
+```
 
 ### This also opens the door to use async/await in version of node that support it
 
-    try {
-      let data = await yf.{resource}.{subresource} (
-        {possible argument(s)}
-      )
+```javascript
+try {
+  let data = await yf.{resource}.{subresource} (
+    {possible argument(s)}
+  )
 
-      // do your thing
-    } catch(err) {
-      // handle error
-    }
+  // do your thing
+} catch(err) {
+  // handle error
+}
+```
+
+## TypeScript Examples
+
+### Basic Usage with Types
+
+```typescript
+import YahooFantasy, { Game, League, Player } from 'yahoo-fantasy';
+
+const yf = new YahooFantasy(
+  process.env.YAHOO_CLIENT_ID!,
+  process.env.YAHOO_CLIENT_SECRET!
+);
+
+// Type-safe API calls with IntelliSense support
+const game: Game = await yf.game.meta('328');
+console.log(game.name); // "Football"
+console.log(game.season); // "2020"
+
+const league: League = await yf.league.meta('328.l.34014');
+console.log(league.league_key); // "328.l.34014"
+console.log(league.num_teams); // 12
+```
+
+### Callback Style with Types
+
+```typescript
+import YahooFantasy, { Player } from 'yahoo-fantasy';
+
+const yf = new YahooFantasy('key', 'secret');
+
+// Callbacks are fully typed
+yf.player.meta('328.p.6619', (error, player) => {
+  if (error) {
+    console.error('Error:', error.message);
+    return;
+  }
+  
+  // player is typed as Player, providing IntelliSense
+  console.log(player.name.full); // "Adrian Peterson"
+  console.log(player.display_position); // "RB"
+  console.log(player.eligible_positions); // ["RB"]
+});
+```
+
+### Advanced Usage with Method Overloads
+
+```typescript
+import YahooFantasy from 'yahoo-fantasy';
+
+const yf = new YahooFantasy('key', 'secret');
+
+// Different parameter combinations are supported
+await yf.league.scoreboard('328.l.34014'); // Current week
+await yf.league.scoreboard('328.l.34014', 5); // Specific week
+
+// Player stats with different date formats
+await yf.player.stats('328.p.6619'); // Season stats
+await yf.player.stats('328.p.6619', 5); // Week 5
+await yf.player.stats('328.p.6619', '2020-10-15'); // Specific date
+await yf.player.stats('328.p.6619', 'lastweek'); // Last week
+```
+
+### Type Imports
+
+```typescript
+// Import specific types for your application
+import {
+  Game,
+  League,
+  Player,
+  Team,
+  GameWeek,
+  StatCategory,
+  Transaction,
+  YahooFantasyConfig
+} from 'yahoo-fantasy';
+
+// Use types for function parameters and return values
+function processLeague(league: League): string {
+  return `${league.name} has ${league.num_teams} teams`;
+}
+
+function formatPlayer(player: Player): string {
+  return `${player.name.full} (${player.display_position})`;
+}
+```
+
+## IDE Setup Recommendations
+
+For the best TypeScript development experience:
+
+### VS Code
+- Install the "TypeScript Hero" extension for better imports
+- Enable "typescript.suggest.autoImports" in settings
+- Use "typescript.preferences.quickSuggestions" for faster completions
+
+### Other IDEs
+- **WebStorm**: TypeScript support is built-in
+- **Vim/Neovim**: Use CoC with `coc-tsserver`
+- **Atom**: Install `atom-typescript` package
 
 ## Bugs & Issues
 
 This project is very much still a work in progress, please report any issues via the [GitHub issues page](https://github.com/whatadewitt/yfsapi/issues).
 
 ## Changelog
+
+### 6.0.0 (TypeScript Migration)
+
+- **BREAKING**: Minimum Node.js version is now 14.0.0
+- Added full TypeScript support with comprehensive type definitions
+- All API responses are now fully typed (30+ interfaces)
+- Method overloads support both callback and promise patterns
+- Backwards compatible with existing JavaScript code
+- Added compile-time safety and IntelliSense support
+- Zero runtime performance impact
+- Dual module support (CommonJS + ESM)
+- Complete test suite with type validation
 
 ### 5.3.0
 

@@ -57,8 +57,6 @@ module.exports = {
     "fetch": {
     },
     "user": {
-    },
-    "userFetch": {
     }
   },
   "leagues": {
@@ -77,8 +75,6 @@ module.exports = {
     "fetch": {
     },
     "leagues": {
-    },
-    "userFetch": {
     },
     "games": {
     }
