@@ -12,7 +12,9 @@ This is a TypeScript/JavaScript wrapper for the Yahoo Fantasy Sports API. The pr
 - Full TypeScript support with strict type checking
 - Dual module support (CommonJS and ES Modules)
 - Backward compatibility maintained for existing JavaScript users
-- All 84 tests passing
+- Requires Node.js 18+
+- All 119 unit tests passing
+- The legacy pre-migration `.mjs` source tree has been removed; all source lives in `src/`
 
 ### 2. OAuth Implementation
 - Supports both OAuth 1.0a and OAuth 2.0
@@ -44,6 +46,8 @@ npm run test:all      # Run all test suites
 Write operations (roster.update, transactions.*, transaction.*) are covered by
 unit tests only (mocked HTTP, asserting method/URL/XML body). They are
 intentionally excluded from integration tests because they mutate real leagues.
+This project does not currently have Yahoo write API access, so write
+operations cannot be exercised against the real API.
 
 ## Common Issues & Solutions
 
@@ -102,12 +106,23 @@ Optional:
 
 The package is published as `yahoo-fantasy` on npm. Version 6.0.0 includes the complete TypeScript migration.
 
+## Yahoo API Reference
+
+- Base URL: `https://fantasysports.yahooapis.com/fantasy/v2`
+- Key formats:
+  - League: `{game_key}.l.{league_id}`
+  - Team: `{game_key}.l.{league_id}.t.{team_id}`
+  - Player: `{game_key}.p.{player_id}`
+  - Transaction: `{game_key}.l.{league_id}.tr.{transaction_id}`
+- Common subresources: `stats`, `roster`, `players`, `teams`, `standings`, `scoreboard`, `transactions`
+
 ## Gotchas
 
 1. Yahoo API returns data in array format with numeric indices
 2. Player data needs special mapping (see `mapPlayer` function)
 3. Some endpoints require OAuth 2.0 (user-specific data)
-4. Always run lint/typecheck before committing:
+4. All values interpolated into XML request payloads must go through `escapeXml` (see `src/helpers/xmlHelper.ts`)
+5. Always run lint/typecheck before committing:
    ```bash
    npm run typecheck
    ```
