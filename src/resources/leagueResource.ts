@@ -165,15 +165,6 @@ class LeagueResource {
     return toCallbackOrPromise(resultPromise, cb);
   }
 
-  // Alias for consistency with interface
-  draftResults(leagueKey: string): Promise<any>;
-  draftResults(leagueKey: string, cb: Callback<any>): void;
-  draftResults(leagueKey: string, cb?: Callback<any>): Promise<any> | void {
-    return cb
-      ? this.draft_results(leagueKey, cb)
-      : this.draft_results(leagueKey);
-  }
-
   // Method overloads for transactions
   transactions(leagueKey: string): Promise<Transaction[]>;
   transactions(leagueKey: string, cb: Callback<Transaction[]>): void;

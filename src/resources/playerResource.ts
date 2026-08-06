@@ -138,15 +138,6 @@ class PlayerResource {
     return toCallbackOrPromise(resultPromise, cb);
   }
 
-  // Alias for consistency with interface
-  percentOwned(playerKey: string): Promise<any>;
-  percentOwned(playerKey: string, cb: Callback<any>): void;
-  percentOwned(playerKey: string, cb?: Callback<any>): Promise<any> | void {
-    return cb
-      ? this.percent_owned(playerKey, cb)
-      : this.percent_owned(playerKey);
-  }
-
   // Method overloads for ownership
   ownership(playerKey: string, leagueKey: string): Promise<PlayerOwnership>;
   ownership(
@@ -211,15 +202,6 @@ class PlayerResource {
     });
 
     return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  // Alias for consistency with interface
-  draftAnalysis(playerKey: string): Promise<any>;
-  draftAnalysis(playerKey: string, cb: Callback<any>): void;
-  draftAnalysis(playerKey: string, cb?: Callback<any>): Promise<any> | void {
-    return cb
-      ? this.draft_analysis(playerKey, cb)
-      : this.draft_analysis(playerKey);
   }
 }
 

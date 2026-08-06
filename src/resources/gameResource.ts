@@ -64,16 +64,6 @@ class GameResource {
     return toCallbackOrPromise(promise, cb);
   }
 
-  // Alias for consistency with interface
-  weeks(gameKey: string): Promise<GameWeek[]>;
-  weeks(gameKey: string, cb: Callback<GameWeek[]>): void;
-  weeks(gameKey: string, cb?: Callback<GameWeek[]>): Promise<GameWeek[]> | void {
-    const resultPromise = this.game_weeks(gameKey) as Promise<Game & { weeks: GameWeek[] }>;
-    const promise = resultPromise.then(result => result.weeks);
-
-    return toCallbackOrPromise(promise, cb);
-  }
-
   // Method overloads for stat_categories
   stat_categories(gameKey: string): Promise<Game & { stat_categories: StatCategory[] }>;
   stat_categories(gameKey: string, cb: Callback<Game & { stat_categories: StatCategory[] }>): void;
@@ -91,16 +81,6 @@ class GameResource {
 
         return { ...game, stat_categories };
       });
-
-    return toCallbackOrPromise(promise, cb);
-  }
-
-  // Alias for consistency with interface
-  statCategories(gameKey: string): Promise<StatCategory[]>;
-  statCategories(gameKey: string, cb: Callback<StatCategory[]>): void;
-  statCategories(gameKey: string, cb?: Callback<StatCategory[]>): Promise<StatCategory[]> | void {
-    const resultPromise = this.stat_categories(gameKey) as Promise<Game & { stat_categories: StatCategory[] }>;
-    const promise = resultPromise.then(result => result.stat_categories);
 
     return toCallbackOrPromise(promise, cb);
   }
@@ -126,16 +106,6 @@ class GameResource {
     return toCallbackOrPromise(promise, cb);
   }
 
-  // Alias for consistency with interface
-  positionTypes(gameKey: string): Promise<PositionType[]>;
-  positionTypes(gameKey: string, cb: Callback<PositionType[]>): void;
-  positionTypes(gameKey: string, cb?: Callback<PositionType[]>): Promise<PositionType[]> | void {
-    const resultPromise = this.position_types(gameKey) as Promise<Game & { position_types: PositionType[] }>;
-    const promise = resultPromise.then(result => result.position_types);
-
-    return toCallbackOrPromise(promise, cb);
-  }
-
   // Method overloads for roster_positions
   roster_positions(gameKey: string): Promise<Game & { roster_positions: RosterPosition[] }>;
   roster_positions(gameKey: string, cb: Callback<Game & { roster_positions: RosterPosition[] }>): void;
@@ -153,16 +123,6 @@ class GameResource {
 
         return { ...game, roster_positions };
       });
-
-    return toCallbackOrPromise(promise, cb);
-  }
-
-  // Alias for consistency with interface
-  rosterPositions(gameKey: string): Promise<RosterPosition[]>;
-  rosterPositions(gameKey: string, cb: Callback<RosterPosition[]>): void;
-  rosterPositions(gameKey: string, cb?: Callback<RosterPosition[]>): Promise<RosterPosition[]> | void {
-    const resultPromise = this.roster_positions(gameKey) as Promise<Game & { roster_positions: RosterPosition[] }>;
-    const promise = resultPromise.then(result => result.roster_positions);
 
     return toCallbackOrPromise(promise, cb);
   }

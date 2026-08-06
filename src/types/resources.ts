@@ -74,8 +74,8 @@ export interface LeagueResource extends BaseResource {
   players(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
   players(leagueKey: string): Promise<MappedPlayer[]>;
   
-  draftResults(leagueKey: string, cb: Callback<any>): void;
-  draftResults(leagueKey: string): Promise<any>;
+  draft_results(leagueKey: string, cb: Callback<any>): void;
+  draft_results(leagueKey: string): Promise<any>;
   
   transactions(leagueKey: string, cb: Callback<Transaction[]>): void;
   transactions(leagueKey: string): Promise<Transaction[]>;
