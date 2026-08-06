@@ -78,8 +78,6 @@ module.exports = {
     },
     "leagues": {
     },
-    "userFetch": {
-    },
     "games": {
     }
   },

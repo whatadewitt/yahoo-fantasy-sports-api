@@ -43,34 +43,6 @@ class LeaguesCollection {
 
     return toCallbackOrPromise(resultPromise, cb);
   }
-
-  user(): Promise<League[]>;
-  user(cb: Callback<League[]>): void;
-  user(...args: any[]): Promise<League[]> | void {
-    const cb = extractCallback(args);
-
-    const promise = this.yf.api(
-      this.yf.GET,
-      "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues"
-    ) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseCollection(data.fantasy_content.users[0].user[1].games);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  userFetch(leagueKeys: string[]): Promise<League[]>;
-  userFetch(leagueKeys: string[], cb: Callback<League[]>): void;
-  userFetch(...args: any[]): Promise<League[]> | void {
-    const cb = extractCallback(args);
-    const leagueKeys = args[0];
-
-    const result = this.fetch(leagueKeys);
-
-    return toCallbackOrPromise(result, cb);
-  }
 }
 
 export default LeaguesCollection;

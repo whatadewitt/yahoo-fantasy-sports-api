@@ -1,6 +1,5 @@
 import { YahooFantasyInstance, Callback } from "../types/core";
 import { MappedPlayer } from "../types/api-responses";
-import { PaginationParams, FilterParams } from "../types/utils";
 import { parseCollection, parseLeagueCollection, parseTeamCollection } from "../helpers/playerHelper";
 import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
 
@@ -97,36 +96,6 @@ class PlayersCollection {
     return toCallbackOrPromise(resultPromise, cb);
   }
 
-  // Keep this for backward compatibility with single league queries
-  league(leagueKey: string): Promise<MappedPlayer[]>;
-  league(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
-  league(leagueKey: string, params: PaginationParams & FilterParams): Promise<MappedPlayer[]>;
-  league(leagueKey: string, params: PaginationParams & FilterParams, cb: Callback<MappedPlayer[]>): void;
-  league(...args: any[]): Promise<MappedPlayer[]> | void {
-    const cb = extractCallback(args);
-    const leagueKey = args[0];
-    const params = args.length > 1 && typeof args[1] === "object" ? args[1] : {};
-
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players`;
-
-    const queryParams: string[] = [];
-    if (params.start) queryParams.push(`start=${params.start}`);
-    if (params.count) queryParams.push(`count=${params.count}`);
-    if (params.filters) queryParams.push(`filters=${params.filters.join(",")}`);
-
-    if (queryParams.length) {
-      url += `;${queryParams.join(";")}`;
-    }
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseCollection(data.fantasy_content.league[1].players);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
   teams(teamKeys: string | string[]): Promise<any[]>;
   teams(teamKeys: string | string[], cb: Callback<any[]>): void;
   teams(teamKeys: string | string[], filters: any): Promise<any[]>;
@@ -180,67 +149,6 @@ class PlayersCollection {
 
     const resultPromise = promise.then((data) => {
       return parseTeamCollection(data.fantasy_content.teams, subresources);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  // Keep this for backward compatibility with single team queries
-  team(teamKey: string): Promise<MappedPlayer[]>;
-  team(teamKey: string, cb: Callback<MappedPlayer[]>): void;
-  team(teamKey: string, subresources: string[]): Promise<MappedPlayer[]>;
-  team(teamKey: string, subresources: string[], cb: Callback<MappedPlayer[]>): void;
-  team(...args: any[]): Promise<MappedPlayer[]> | void {
-    const cb = extractCallback(args);
-    const teamKey = args.shift();
-    let subresources = args.length ? args.shift() : [];
-
-    if (typeof subresources === 'string') {
-      subresources = [subresources];
-    }
-
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/players`;
-
-    if (subresources.length) {
-      url += `;out=${subresources.join(',')}`;
-    }
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseCollection(data.fantasy_content.team[1].players, subresources);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  freeAgents(leagueKey: string): Promise<MappedPlayer[]>;
-  freeAgents(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
-  freeAgents(
-    leagueKey: string,
-    cb?: Callback<MappedPlayer[]>
-  ): Promise<MappedPlayer[]> | void {
-    return cb
-      ? this.leagues(leagueKey, { filters: ["FA"] }, cb)
-      : this.leagues(leagueKey, { filters: ["FA"] });
-  }
-
-  ownership(leagueKey: string, playerKeys: string[]): Promise<any[]>;
-  ownership(leagueKey: string, playerKeys: string[], cb: Callback<any[]>): void;
-  ownership(...args: any[]): Promise<any[]> | void {
-    const cb = extractCallback(args);
-    const leagueKey = args[0];
-    const playerKeys = args[1];
-
-    const promise = this.yf.api(
-      this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;player_keys=${playerKeys.join(
-        ","
-      )}/ownership`
-    ) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseCollection(data.fantasy_content.league[1].players);
     });
 
     return toCallbackOrPromise(resultPromise, cb);

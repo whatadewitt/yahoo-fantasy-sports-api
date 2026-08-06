@@ -15,11 +15,6 @@ import {
 
 import { WaiverOptions, ProposeTrade } from '../helpers/xmlHelper';
 
-import {
-  FilterParams,
-  PaginationParams
-} from './utils';
-
 // Base collection interface
 export interface BaseCollection extends BaseResource {
   // Common collection methods could go here
@@ -41,39 +36,12 @@ export interface GamesCollectionResource extends BaseCollection {
 export interface LeaguesCollectionResource extends BaseCollection {
   fetch(leagueKeys: string[], cb: Callback<League[]>): void;
   fetch(leagueKeys: string[]): Promise<League[]>;
-  
-  user(cb: Callback<League[]>): void;
-  user(): Promise<League[]>;
-  
-  userFetch(leagueKeys: string[], cb: Callback<League[]>): void;
-  userFetch(leagueKeys: string[]): Promise<League[]>;
 }
 
 // Players Collection
 export interface PlayersCollectionResource extends BaseCollection {
   fetch(playerKeys: string[], cb: Callback<MappedPlayer[]>): void;
   fetch(playerKeys: string[]): Promise<MappedPlayer[]>;
-  
-  league(
-    leagueKey: string, 
-    params: PaginationParams & FilterParams, 
-    cb: Callback<MappedPlayer[]>
-  ): void;
-  league(
-    leagueKey: string, 
-    params: PaginationParams & FilterParams
-  ): Promise<MappedPlayer[]>;
-  league(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
-  league(leagueKey: string): Promise<MappedPlayer[]>;
-  
-  team(teamKey: string, cb: Callback<MappedPlayer[]>): void;
-  team(teamKey: string): Promise<MappedPlayer[]>;
-  
-  freeAgents(leagueKey: string, cb: Callback<MappedPlayer[]>): void;
-  freeAgents(leagueKey: string): Promise<MappedPlayer[]>;
-  
-  ownership(leagueKey: string, playerKeys: string[], cb: Callback<any[]>): void;
-  ownership(leagueKey: string, playerKeys: string[]): Promise<any[]>;
 }
 
 // Teams Collection  
@@ -83,12 +51,6 @@ export interface TeamsCollectionResource extends BaseCollection {
   
   league(leagueKey: string, cb: Callback<MappedTeam[]>): void;
   league(leagueKey: string): Promise<MappedTeam[]>;
-  
-  user(cb: Callback<MappedTeam[]>): void;
-  user(): Promise<MappedTeam[]>;
-  
-  userFetch(teamKeys: string[], cb: Callback<MappedTeam[]>): void;
-  userFetch(teamKeys: string[]): Promise<MappedTeam[]>;
 }
 
 // Transactions Collection

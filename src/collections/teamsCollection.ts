@@ -74,33 +74,6 @@ class TeamsCollection {
     return toCallbackOrPromise(resultPromise, cb);
   }
 
-  userFetch(): Promise<any[]>;
-  userFetch(cb: Callback<any[]>): void;
-  userFetch(subresources: string[]): Promise<any[]>;
-  userFetch(subresources: string[], cb: Callback<any[]>): void;
-  userFetch(...args: any[]): Promise<any[]> | void {
-    const cb = extractCallback(args);
-    let subresources = args.length ? args.shift() : [];
-
-    let url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams';
-
-    if (typeof subresources === 'string') {
-      subresources = [subresources];
-    }
-
-    if (subresources.length) {
-      url += `;out=${subresources.join(',')}`;
-    }
-
-    const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
   games(gameKeys: string[]): Promise<any[]>;
   games(gameKeys: string[], cb: Callback<any[]>): void;
   games(gameKeys: string[], subresources: string[]): Promise<any[]>;
@@ -147,23 +120,6 @@ class TeamsCollection {
 
     const resultPromise = promise.then((data) => {
       return parseCollection(data.fantasy_content.league[1].teams);
-    });
-
-    return toCallbackOrPromise(resultPromise, cb);
-  }
-
-  user(): Promise<MappedTeam[]>;
-  user(cb: Callback<MappedTeam[]>): void;
-  user(...args: any[]): Promise<MappedTeam[]> | void {
-    const cb = extractCallback(args);
-
-    const promise = this.yf.api(
-      this.yf.GET,
-      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/teams'
-    ) as Promise<any>;
-
-    const resultPromise = promise.then((data) => {
-      return parseCollection(data.fantasy_content.users[0].user[1].games);
     });
 
     return toCallbackOrPromise(resultPromise, cb);
