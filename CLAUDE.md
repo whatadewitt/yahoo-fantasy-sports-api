@@ -122,7 +122,8 @@ The package is published as `yahoo-fantasy` on npm. Version 6.0.0 includes the c
 2. Player data needs special mapping (see `mapPlayer` function)
 3. Some endpoints require OAuth 2.0 (user-specific data)
 4. All values interpolated into XML request payloads must go through `escapeXml` (see `src/helpers/xmlHelper.ts`)
-5. Always run lint/typecheck before committing:
+5. Unit tests run against the compiled `dist/` output (specs `require("../index.js")`), not `src/` — `npm test` rebuilds automatically via the `pretest` script, but running jasmine directly against a stale build tests old code
+6. Always run lint/typecheck before committing:
    ```bash
    npm run typecheck
    ```

@@ -18,6 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "pretest": "npm run build",
     "test": "node jasmine-runner.js",
     "test:types": "npm run typecheck && npx ts-node test-typescript.ts",
     "test:validation": "npx ts-node test-validation.ts",
