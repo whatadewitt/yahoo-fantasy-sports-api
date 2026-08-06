@@ -1,13 +1,12 @@
-import { YahooFantasyInstance, Callback } from "../types/core";
-import { toCallbackOrPromise } from "../helpers/argsParser";
-import { MappedTeam } from "../types/api-responses";
+import { toCallbackOrPromise } from '../helpers/argsParser';
 import {
-  mapTeam,
-  mapStats,
-  mapRoster,
   mapDraft,
   mapMatchups,
-} from "../helpers/teamHelper";
+  mapRoster,
+  mapTeam,
+} from '../helpers/teamHelper';
+import type { MappedTeam } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class TeamResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -17,12 +16,12 @@ class TeamResource {
   meta(teamKey: string, cb?: Callback<MappedTeam>): Promise<MappedTeam> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/metadata`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data: any) => {
       const meta = mapTeam(data.fantasy_content.team[0]);
-      if (!meta) throw new Error("No team data found");
+      if (!meta) throw new Error('No team data found');
       return meta;
     });
 
@@ -38,24 +37,24 @@ class TeamResource {
   stats(
     teamKey: string,
     weekDateOrCb?: number | string | Callback<any>,
-    cb?: Callback<any>
+    cb?: Callback<any>,
   ): Promise<any> | void {
     // Simplified implementation
-    const actualCb = typeof weekDateOrCb === "function" ? weekDateOrCb : cb;
-    const param = typeof weekDateOrCb !== "function" ? weekDateOrCb : undefined;
+    const actualCb = typeof weekDateOrCb === 'function' ? weekDateOrCb : cb;
+    const param = typeof weekDateOrCb !== 'function' ? weekDateOrCb : undefined;
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
 
-    if (param !== undefined && param !== null && param !== "") {
-      if (typeof param === "string" && param.indexOf("-") > 0) {
+    if (param !== undefined && param !== null && param !== '') {
+      if (typeof param === 'string' && param.indexOf('-') > 0) {
         // string is date, of format YYYY-MM-DD
         url += `;type=date;date=${param}`;
-      } else if (typeof param === "number" && param > 0) {
+      } else if (typeof param === 'number' && param > 0) {
         // number is week (and greater than 0)
         url += `;type=week;week=${param}`;
       } else if (
-        typeof param === "string" &&
-        !isNaN(Number(param)) &&
+        typeof param === 'string' &&
+        !Number.isNaN(Number(param)) &&
         Number(param) > 0
       ) {
         // numeric string is week (and greater than 0)
@@ -76,9 +75,9 @@ class TeamResource {
       };
 
       // Add coverage value (week or date)
-      if (rawStats.coverage_type === "week") {
+      if (rawStats.coverage_type === 'week') {
         statsObj.week = rawStats.week;
-      } else if (rawStats.coverage_type === "date") {
+      } else if (rawStats.coverage_type === 'date') {
         statsObj.date = rawStats.date;
       }
 
@@ -110,11 +109,11 @@ class TeamResource {
   standings(teamKey: string, cb: Callback<MappedTeam>): void;
   standings(
     teamKey: string,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/standings`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data) => {
@@ -135,10 +134,10 @@ class TeamResource {
   roster(
     teamKey: string,
     weekOrCb?: number | Callback<MappedTeam>,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
-    const actualCb = typeof weekOrCb === "function" ? weekOrCb : cb;
-    const week = typeof weekOrCb === "number" ? weekOrCb : undefined;
+    const actualCb = typeof weekOrCb === 'function' ? weekOrCb : cb;
+    const week = typeof weekOrCb === 'number' ? weekOrCb : undefined;
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
     if (week) url += `;week=${week}`;
@@ -166,13 +165,13 @@ class TeamResource {
   draft_results(teamKey: string, cb?: Callback<any>): Promise<any> | void {
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`
+      `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/draftresults`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data) => {
       const team = mapTeam(data.fantasy_content.team[0]);
       const draft_results = mapDraft(
-        data.fantasy_content.team[1].draft_results
+        data.fantasy_content.team[1].draft_results,
       );
 
       team.draft_results = draft_results;
@@ -189,18 +188,18 @@ class TeamResource {
   matchups(
     teamKey: string,
     weeksOrCb?: number[] | Callback<MappedTeam>,
-    cb?: Callback<MappedTeam>
+    cb?: Callback<MappedTeam>,
   ): Promise<MappedTeam> | void {
-    const actualCb = typeof weeksOrCb === "function" ? weeksOrCb : cb;
+    const actualCb = typeof weeksOrCb === 'function' ? weeksOrCb : cb;
     const weeks = Array.isArray(weeksOrCb)
       ? weeksOrCb.map((w) => Number(w))
-      : typeof weeksOrCb === "number" ||
-        (typeof weeksOrCb === "string" && !isNaN(Number(weeksOrCb)))
-      ? [Number(weeksOrCb)]
-      : undefined;
+      : typeof weeksOrCb === 'number' ||
+          (typeof weeksOrCb === 'string' && !Number.isNaN(Number(weeksOrCb)))
+        ? [Number(weeksOrCb)]
+        : undefined;
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/matchups`;
-    if (weeks) url += `;weeks=${weeks.join(",")}`;
+    if (weeks) url += `;weeks=${weeks.join(',')}`;
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
     const resultPromise = promise.then((data) => {

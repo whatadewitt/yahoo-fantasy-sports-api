@@ -1,13 +1,13 @@
+import type { MappedTeam } from '../types/api-responses';
+import { mapDraft, yahooArray } from './sharedHelper';
 import { mapTeam, mapTeamPoints } from './teamHelper';
 import { mapTransactionPlayers } from './transactionHelper';
-import { mapDraft, yahooArray } from './sharedHelper';
-import { MappedTeam } from '../types/api-responses';
 
 export function mapSettings(settings: any): any {
   settings.stat_categories = settings.stat_categories.stats.map((s: any) => {
     s.stat.stat_position_types = s.stat.stat_position_types
       ? s.stat.stat_position_types.map(
-          (pt: any) => pt.stat_position_type.position_type
+          (pt: any) => pt.stat_position_type.position_type,
         )
       : [];
 
@@ -15,7 +15,7 @@ export function mapSettings(settings: any): any {
   });
 
   settings.roster_positions = settings.roster_positions.map(
-    (p: any) => p.roster_position
+    (p: any) => p.roster_position,
   );
 
   if (settings.waiver_days) {
@@ -35,12 +35,12 @@ export function mapStandings(ts: any): MappedTeam[] {
 
 export function mapScoreboard(sb: any): any {
   const scoreboard = Object.values(sb);
-  
+
   // Process matchups following the original implementation
   const matchups = scoreboard.reduce((matchupsResult: any[], m: any) => {
     if (m.matchup) {
       m = m.matchup;
-      
+
       if (m.matchup_grades) {
         m.matchup_grades = m.matchup_grades.map((grade: any) => {
           return {
@@ -112,33 +112,33 @@ export function mapTransactions(ts: any): any[] {
 
 export function parseCollection(ls: any, subresources: string[] = []): any[] {
   return yahooArray(ls).map((l: any) => {
-    let league = l.league[0];
+    const league = l.league[0];
 
     subresources.forEach((resource, idx) => {
       switch (resource) {
-        case "settings":
+        case 'settings':
           league.settings = mapSettings(l.league[idx + 1].settings[0]);
           break;
 
-        case "standings":
+        case 'standings':
           league.standings = mapStandings(l.league[idx + 1].standings[0].teams);
           break;
 
-        case "scoreboard":
+        case 'scoreboard':
           league.scoreboard = mapScoreboard(
-            l.league[idx + 1].scoreboard[0].matchups
+            l.league[idx + 1].scoreboard[0].matchups,
           );
           break;
 
-        case "teams":
+        case 'teams':
           league.teams = mapTeams(l.league[idx + 1].teams);
           break;
 
-        case "draftresults":
+        case 'draftresults':
           league.draftresults = mapDraft(l.league[idx + 1].draft_results);
           break;
 
-        case "transactions":
+        case 'transactions':
           league.transactions = mapTransactions(l.league[idx + 1].transactions);
           break;
 

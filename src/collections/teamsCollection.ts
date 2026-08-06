@@ -1,11 +1,11 @@
-import { YahooFantasyInstance, Callback } from '../types/core';
-import { MappedTeam } from '../types/api-responses';
-import { 
-  parseCollection, 
-  parseLeagueCollection, 
-  parseGameCollection 
-} from '../helpers/teamHelper';
 import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import {
+  parseCollection,
+  parseGameCollection,
+  parseLeagueCollection,
+} from '../helpers/teamHelper';
+import type { MappedTeam } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class TeamsCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -13,7 +13,11 @@ class TeamsCollection {
   fetch(teamKeys: string[]): Promise<MappedTeam[]>;
   fetch(teamKeys: string[], cb: Callback<MappedTeam[]>): void;
   fetch(teamKeys: string[], subresources: string[]): Promise<MappedTeam[]>;
-  fetch(teamKeys: string[], subresources: string[], cb: Callback<MappedTeam[]>): void;
+  fetch(
+    teamKeys: string[],
+    subresources: string[],
+    cb: Callback<MappedTeam[]>,
+  ): void;
   fetch(...args: any[]): Promise<MappedTeam[]> | void {
     const cb = extractCallback(args);
     let teamKeys = args.shift();
@@ -45,7 +49,11 @@ class TeamsCollection {
   leagues(leagueKeys: string[]): Promise<any[]>;
   leagues(leagueKeys: string[], cb: Callback<any[]>): void;
   leagues(leagueKeys: string[], subresources: string[]): Promise<any[]>;
-  leagues(leagueKeys: string[], subresources: string[], cb: Callback<any[]>): void;
+  leagues(
+    leagueKeys: string[],
+    subresources: string[],
+    cb: Callback<any[]>,
+  ): void;
   leagues(...args: any[]): Promise<any[]> | void {
     const cb = extractCallback(args);
     let leagueKeys = args.shift();
@@ -100,7 +108,10 @@ class TeamsCollection {
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
 
     const resultPromise = promise.then((data) => {
-      return parseGameCollection(data.fantasy_content.users[0].user[1].games, subresources);
+      return parseGameCollection(
+        data.fantasy_content.users[0].user[1].games,
+        subresources,
+      );
     });
 
     return toCallbackOrPromise(resultPromise, cb);
@@ -115,7 +126,7 @@ class TeamsCollection {
 
     const promise = this.yf.api(
       this.yf.GET,
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/teams`,
     ) as Promise<any>;
 
     const resultPromise = promise.then((data) => {

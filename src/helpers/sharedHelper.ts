@@ -15,7 +15,7 @@ export function mergeObjects(arrayOfObjects: any[]): any {
   if (arrayOfObjects) {
     arrayOfObjects.forEach((obj) => {
       Object.keys(obj).forEach((key) => {
-        if (typeof key !== "undefined") {
+        if (typeof key !== 'undefined') {
           destinationObj[key] = obj[key];
         }
       });

@@ -1,7 +1,11 @@
-import { YahooFantasyInstance, Callback } from "../types/core";
-import { MappedPlayer } from "../types/api-responses";
-import { parseCollection, parseLeagueCollection, parseTeamCollection } from "../helpers/playerHelper";
-import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import {
+  parseCollection,
+  parseLeagueCollection,
+  parseTeamCollection,
+} from '../helpers/playerHelper';
+import type { MappedPlayer } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class PlayersCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -12,7 +16,7 @@ class PlayersCollection {
   fetch(
     playerKeys: string[],
     subresources: string[],
-    cb: Callback<MappedPlayer[]>
+    cb: Callback<MappedPlayer[]>,
   ): void;
   fetch(...args: any[]): Promise<MappedPlayer[]> | void {
     const cb = extractCallback(args);
@@ -24,15 +28,15 @@ class PlayersCollection {
     }
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=${playerKeys.join(
-      ","
+      ',',
     )}`;
 
-    if (typeof subresources === "string") {
+    if (typeof subresources === 'string') {
       subresources = [subresources];
     }
 
     if (subresources.length) {
-      url += `;out=${subresources.join(",")}`;
+      url += `;out=${subresources.join(',')}`;
     }
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
@@ -47,9 +51,22 @@ class PlayersCollection {
   leagues(leagueKeys: string | string[]): Promise<any[]>;
   leagues(leagueKeys: string | string[], cb: Callback<any[]>): void;
   leagues(leagueKeys: string | string[], filters: any): Promise<any[]>;
-  leagues(leagueKeys: string | string[], filters: any, cb: Callback<any[]>): void;
-  leagues(leagueKeys: string | string[], filters: any, subresources: string[]): Promise<any[]>;
-  leagues(leagueKeys: string | string[], filters: any, subresources: string[], cb: Callback<any[]>): void;
+  leagues(
+    leagueKeys: string | string[],
+    filters: any,
+    cb: Callback<any[]>,
+  ): void;
+  leagues(
+    leagueKeys: string | string[],
+    filters: any,
+    subresources: string[],
+  ): Promise<any[]>;
+  leagues(
+    leagueKeys: string | string[],
+    filters: any,
+    subresources: string[],
+    cb: Callback<any[]>,
+  ): void;
   leagues(...args: any[]): Promise<any[]> | void {
     let leagueKeys = args.shift();
     let filters: any = {};
@@ -100,8 +117,17 @@ class PlayersCollection {
   teams(teamKeys: string | string[], cb: Callback<any[]>): void;
   teams(teamKeys: string | string[], filters: any): Promise<any[]>;
   teams(teamKeys: string | string[], filters: any, cb: Callback<any[]>): void;
-  teams(teamKeys: string | string[], filters: any, subresources: string[]): Promise<any[]>;
-  teams(teamKeys: string | string[], filters: any, subresources: string[], cb: Callback<any[]>): void;
+  teams(
+    teamKeys: string | string[],
+    filters: any,
+    subresources: string[],
+  ): Promise<any[]>;
+  teams(
+    teamKeys: string | string[],
+    filters: any,
+    subresources: string[],
+    cb: Callback<any[]>,
+  ): void;
   teams(...args: any[]): Promise<any[]> | void {
     let teamKeys = args.shift();
     let filters: any = {};
@@ -121,7 +147,7 @@ class PlayersCollection {
       subresources = args.shift();
     } else if (args.length) {
       // only 1... if array, subresources
-      let arg = args.shift();
+      const arg = args.shift();
       if (Array.isArray(arg)) {
         subresources = arg;
       } else if (typeof arg === 'string') {

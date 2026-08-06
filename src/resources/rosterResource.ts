@@ -1,8 +1,12 @@
-import { YahooFantasyInstance, Callback } from "../types/core";
-import { MappedTeam, FantasyContent } from "../types/api-responses";
-import { mapTeam, mapRoster } from "../helpers/teamHelper";
-import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
-import { buildRosterPayload, RosterCoverage, RosterSlot } from "../helpers/xmlHelper";
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { mapRoster, mapTeam } from '../helpers/teamHelper';
+import {
+  buildRosterPayload,
+  type RosterCoverage,
+  type RosterSlot,
+} from '../helpers/xmlHelper';
+import type { FantasyContent, MappedTeam } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class RosterResource {
   constructor(private yf: YahooFantasyInstance) {}
@@ -12,31 +16,20 @@ class RosterResource {
   fetch(teamKey: string, date: string): Promise<MappedTeam>;
   fetch(teamKey: string, week: number): Promise<MappedTeam>;
   fetch(teamKey: string, cb: Callback<MappedTeam>): void;
-  fetch(
-    teamKey: string,
-    date: string,
-    cb: Callback<MappedTeam>
-  ): void;
-  fetch(
-    teamKey: string,
-    week: number,
-    cb: Callback<MappedTeam>
-  ): void;
-  fetch(
-    teamKey: string,
-    ...args: any[]
-  ): Promise<MappedTeam> | void {
+  fetch(teamKey: string, date: string, cb: Callback<MappedTeam>): void;
+  fetch(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
+  fetch(teamKey: string, ...args: any[]): Promise<MappedTeam> | void {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
     const cb = extractCallback(args);
 
     if (args.length) {
       const date = args[0];
-      if (typeof date === "string" && date.indexOf("-") > 0) {
+      if (typeof date === 'string' && date.indexOf('-') > 0) {
         // string is date, of format y-m-d
         url += `;date=${date}`;
       } else if (
-        typeof date === "number" ||
-        (typeof date === "string" && !isNaN(Number(date)))
+        typeof date === 'number' ||
+        (typeof date === 'string' && !Number.isNaN(Number(date)))
       ) {
         // number is week...
         url += `;week=${date}`;
@@ -57,84 +50,87 @@ class RosterResource {
   }
 
   players(teamKey: string): Promise<MappedTeam>;
-  players(teamKey: string, subresources: string | string[]): Promise<MappedTeam>;
+  players(
+    teamKey: string,
+    subresources: string | string[],
+  ): Promise<MappedTeam>;
   players(
     teamKey: string,
     date: string,
-    subresources?: string | string[]
+    subresources?: string | string[],
   ): Promise<MappedTeam>;
   players(
     teamKey: string,
     week: number,
-    subresources?: string | string[]
+    subresources?: string | string[],
   ): Promise<MappedTeam>;
   players(teamKey: string, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     subresources: string | string[],
-    cb: Callback<MappedTeam>
+    cb: Callback<MappedTeam>,
   ): void;
   players(teamKey: string, date: string, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     date: string,
     subresources: string | string[],
-    cb: Callback<MappedTeam>
+    cb: Callback<MappedTeam>,
   ): void;
   players(teamKey: string, week: number, cb: Callback<MappedTeam>): void;
   players(
     teamKey: string,
     week: number,
     subresources: string | string[],
-    cb: Callback<MappedTeam>
+    cb: Callback<MappedTeam>,
   ): void;
   players(teamKey: string, ...args: any[]): Promise<MappedTeam> | void {
     const cb = extractCallback(args);
 
     let dateWeekParam: string | number | undefined;
-    let subresource: string = "";
+    let subresource: string = '';
 
     for (const arg of args) {
-      if (typeof arg === "string") {
-        if (arg.indexOf("-") > 0) {
+      if (typeof arg === 'string') {
+        if (arg.indexOf('-') > 0) {
           // Date format YYYY-MM-DD
           dateWeekParam = arg;
-        } else if (isNaN(Number(arg))) {
+        } else if (Number.isNaN(Number(arg))) {
           // Non-numeric string, likely a subresource
           subresource = arg;
         } else {
           // Numeric string, treat as week
           dateWeekParam = arg;
         }
-      } else if (typeof arg === "number") {
+      } else if (typeof arg === 'number') {
         dateWeekParam = arg;
       }
     }
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
 
-    let dateType = "season";
-    let dateValue = "";
+    let dateType = 'season';
+    let dateValue = '';
 
     if (dateWeekParam) {
-      if (typeof dateWeekParam === "string" && dateWeekParam.indexOf("-") > 0) {
-        dateType = "date";
+      if (typeof dateWeekParam === 'string' && dateWeekParam.indexOf('-') > 0) {
+        dateType = 'date';
         dateValue = dateWeekParam;
       } else {
-        dateType = "week";
+        dateType = 'week';
         dateValue = String(dateWeekParam);
       }
     }
 
     if (subresource && dateType) {
-      if (dateType !== "season") {
+      if (dateType !== 'season') {
         url += `;${dateType}=${dateValue}`;
       }
       url += `/players/${subresource};type=${dateType}`;
-      if (dateType !== "season") {
+      if (dateType !== 'season') {
         url += `;${dateType}=${dateValue}`;
       }
-    } else if (dateType !== "season") {
+    } else if (dateType !== 'season') {
       url += `;${dateType}=${dateValue}`;
     }
 
@@ -152,19 +148,19 @@ class RosterResource {
   update(
     teamKey: string,
     coverage: RosterCoverage,
-    players: RosterSlot[]
+    players: RosterSlot[],
   ): Promise<any>;
   update(
     teamKey: string,
     coverage: RosterCoverage,
     players: RosterSlot[],
-    cb: Callback<any>
+    cb: Callback<any>,
   ): void;
   update(
     teamKey: string,
     coverage: RosterCoverage,
     players: RosterSlot[],
-    cb?: Callback<any>
+    cb?: Callback<any>,
   ): Promise<any> | void {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/roster`;
     const body = buildRosterPayload(coverage, players);

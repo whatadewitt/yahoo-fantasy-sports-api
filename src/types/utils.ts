@@ -35,7 +35,7 @@ export interface CollectionResponse<T> {
 }
 
 // Sub-resource types
-export type SubResource = 
+export type SubResource =
   | 'stats'
   | 'standings'
   | 'scoreboard'
@@ -63,24 +63,23 @@ export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
     ? DeepPartial<U>[]
     : T[P] extends object
-    ? DeepPartial<T[P]>
-    : T[P];
+      ? DeepPartial<T[P]>
+      : T[P];
 };
 
 // Helper type to extract promise type
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
 // Helper type for API method signatures
-export type ApiMethod<TParams = void, TResult = any> = 
-  TParams extends void
-    ? {
-        (cb: import('./core').Callback<TResult>): void;
-        (): Promise<TResult>;
-      }
-    : {
-        (params: TParams, cb: import('./core').Callback<TResult>): void;
-        (params: TParams): Promise<TResult>;
-      };
+export type ApiMethod<TParams = void, TResult = any> = TParams extends void
+  ? {
+      (cb: import('./core').Callback<TResult>): void;
+      (): Promise<TResult>;
+    }
+  : {
+      (params: TParams, cb: import('./core').Callback<TResult>): void;
+      (params: TParams): Promise<TResult>;
+    };
 
 // Query builder types
 export interface QueryOptions {

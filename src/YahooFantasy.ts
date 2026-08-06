@@ -1,7 +1,9 @@
-import * as https from "https";
-import * as crypto from "crypto";
-const oauthSignature = require("oauth-signature");
+import * as crypto from 'node:crypto';
+import * as https from 'node:https';
 
+const oauthSignature = require('oauth-signature');
+
+import { Games, Leagues, Players, Teams, Transactions } from './collections';
 import {
   Game,
   League,
@@ -10,18 +12,16 @@ import {
   Team,
   Transaction,
   User,
-} from "./resources";
-
-import { Games, Leagues, Players, Teams, Transactions } from "./collections";
+} from './resources';
 
 import {
-  TokenCallbackFunction,
-  OAuthTokens,
-  OAuthTokenCallbackData,
-  HttpMethod,
-  Callback,
+  type Callback,
+  type HttpMethod,
+  type OAuthTokenCallbackData,
+  type OAuthTokens,
+  type TokenCallbackFunction,
   YahooFantasyError,
-} from "./types";
+} from './types';
 
 interface AuthRequest {
   query: {
@@ -42,10 +42,10 @@ class YahooFantasy {
 
   public refreshTokenCallback: TokenCallbackFunction;
 
-  public readonly GET: HttpMethod = "GET";
-  public readonly POST: HttpMethod = "POST";
-  public readonly PUT: HttpMethod = "PUT";
-  public readonly DELETE: HttpMethod = "DELETE";
+  public readonly GET: HttpMethod = 'GET';
+  public readonly POST: HttpMethod = 'POST';
+  public readonly PUT: HttpMethod = 'PUT';
+  public readonly DELETE: HttpMethod = 'DELETE';
 
   public game: Game;
   public games: Games;
@@ -67,7 +67,7 @@ class YahooFantasy {
     consumerKey: string,
     consumerSecret: string,
     tokenCallbackFn?: TokenCallbackFunction,
-    redirectUri?: string
+    redirectUri?: string,
   ) {
     this.CONSUMER_KEY = consumerKey;
     this.CONSUMER_SECRET = consumerSecret;
@@ -100,8 +100,8 @@ class YahooFantasy {
   public auth(res: AuthResponse, state?: string | null): void {
     const authData: Record<string, string> = {
       client_id: this.CONSUMER_KEY,
-      redirect_uri: this.REDIRECT_URI || "",
-      response_type: "code",
+      redirect_uri: this.REDIRECT_URI || '',
+      response_type: 'code',
     };
 
     if (state) {
@@ -109,20 +109,20 @@ class YahooFantasy {
     }
 
     const options: https.RequestOptions = {
-      hostname: "api.login.yahoo.com",
+      hostname: 'api.login.yahoo.com',
       port: 443,
       path: `/oauth2/request_auth?${new URLSearchParams(authData).toString()}`,
-      method: "GET",
+      method: 'GET',
     };
 
     const authRequest = https.request(options, (authResponse) => {
-      let data = "";
+      let data = '';
 
-      authResponse.on("data", (chunk) => {
+      authResponse.on('data', (chunk) => {
         data += chunk;
       });
 
-      authResponse.on("end", () => {
+      authResponse.on('end', () => {
         if (authResponse.statusCode === 302) {
           const location = authResponse.headers.location;
           if (location) {
@@ -134,7 +134,7 @@ class YahooFantasy {
       });
     });
 
-    authRequest.on("error", (e) => {
+    authRequest.on('error', (e) => {
       res.send(`Error requesting Yahoo authorization: ${e.message}`);
     });
 
@@ -143,14 +143,14 @@ class YahooFantasy {
 
   public authCallback(
     req: AuthRequest,
-    cb: Callback<OAuthTokenCallbackData>
+    cb: Callback<OAuthTokenCallbackData>,
   ): void {
     const tokenData: Record<string, string> = {
       client_id: this.CONSUMER_KEY,
       client_secret: this.CONSUMER_SECRET,
-      redirect_uri: this.REDIRECT_URI || "",
+      redirect_uri: this.REDIRECT_URI || '',
       code: req.query.code,
-      grant_type: "authorization_code",
+      grant_type: 'authorization_code',
     };
 
     const state = req.query.state;
@@ -159,29 +159,29 @@ class YahooFantasy {
     }
 
     const options: https.RequestOptions = {
-      hostname: "api.login.yahoo.com",
+      hostname: 'api.login.yahoo.com',
       port: 443,
-      path: "/oauth2/get_token",
+      path: '/oauth2/get_token',
       method: this.POST,
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${Buffer.from(
-          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`
-        ).toString("base64")}`,
+          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`,
+        ).toString('base64')}`,
       },
     };
 
     const tokenRequest = https.request(options, (tokenResponse) => {
       const chunks: Buffer[] = [];
 
-      tokenResponse.on("data", (d) => {
+      tokenResponse.on('data', (d) => {
         chunks.push(d);
       });
 
-      tokenResponse.on("end", async () => {
+      tokenResponse.on('end', async () => {
         try {
           const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString()
+            Buffer.concat(chunks).toString(),
           );
 
           this.yahooUserToken = tokenData.access_token;
@@ -198,7 +198,7 @@ class YahooFantasy {
       });
     });
 
-    tokenRequest.on("error", (e) => {
+    tokenRequest.on('error', (e) => {
       cb(e);
     });
 
@@ -233,10 +233,10 @@ class YahooFantasy {
 
     return new Promise((resolve, reject) => {
       this.refreshTokenWithCallback((err, data) => {
-        if (err) {
-          reject(err);
+        if (err || !data) {
+          reject(err ?? new Error('No token data returned'));
         } else {
-          resolve(data!);
+          resolve(data);
         }
       });
     });
@@ -245,7 +245,7 @@ class YahooFantasy {
   // Alias for consistency with PRD
   public refreshAuthToken(
     refreshToken: string,
-    cb?: Callback<OAuthTokens>
+    cb?: Callback<OAuthTokens>,
   ): Promise<OAuthTokens> | void {
     this.setRefreshToken(refreshToken);
     return cb ? this.refreshToken(cb) : this.refreshToken();
@@ -253,40 +253,40 @@ class YahooFantasy {
 
   private refreshTokenWithCallback(cb: Callback<OAuthTokens>): void {
     if (!this.yahooRefreshToken) {
-      cb(new Error("No refresh token available"));
+      cb(new Error('No refresh token available'));
       return;
     }
 
     const refreshData = new URLSearchParams({
-      grant_type: "refresh_token",
-      redirect_uri: this.REDIRECT_URI || "",
+      grant_type: 'refresh_token',
+      redirect_uri: this.REDIRECT_URI || '',
       refresh_token: this.yahooRefreshToken,
     }).toString();
 
     const options: https.RequestOptions = {
-      hostname: "api.login.yahoo.com",
+      hostname: 'api.login.yahoo.com',
       port: 443,
-      path: "/oauth2/get_token",
+      path: '/oauth2/get_token',
       method: this.POST,
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${Buffer.from(
-          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`
-        ).toString("base64")}`,
+          `${this.CONSUMER_KEY}:${this.CONSUMER_SECRET}`,
+        ).toString('base64')}`,
       },
     };
 
     const tokenRequest = https.request(options, (tokenResponse) => {
       const chunks: Buffer[] = [];
 
-      tokenResponse.on("data", (d) => {
+      tokenResponse.on('data', (d) => {
         chunks.push(d);
       });
 
-      tokenResponse.on("end", async () => {
+      tokenResponse.on('end', async () => {
         try {
           const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString()
+            Buffer.concat(chunks).toString(),
           );
 
           this.setUserToken(tokenData.access_token);
@@ -303,7 +303,7 @@ class YahooFantasy {
       });
     });
 
-    tokenRequest.on("error", (e) => {
+    tokenRequest.on('error', (e) => {
       cb(e);
     });
 
@@ -317,7 +317,7 @@ class YahooFantasy {
     method: HttpMethod,
     url: string,
     data: any,
-    cb: Callback<any>
+    cb: Callback<any>,
   ): void;
   public api(method: HttpMethod, url: string): Promise<any>;
   public api(method: HttpMethod, url: string, data: any): Promise<any>;
@@ -330,7 +330,7 @@ class YahooFantasy {
     // Parse arguments
     if (args.length === 3) {
       // method, url, callback
-      if (typeof args[2] === "function") {
+      if (typeof args[2] === 'function') {
         callback = args[2];
       } else {
         // method, url, data
@@ -345,7 +345,7 @@ class YahooFantasy {
     const performRequest = (isRetry = false): Promise<any> => {
       return new Promise((resolve, reject) => {
         let params: Record<string, any> = {
-          format: "json",
+          format: 'json',
         };
 
         const headers: Record<string, string> = {};
@@ -355,17 +355,17 @@ class YahooFantasy {
           params = {
             ...params,
             oauth_consumer_key: this.CONSUMER_KEY,
-            oauth_signature_method: "HMAC-SHA1",
+            oauth_signature_method: 'HMAC-SHA1',
             oauth_timestamp: Math.floor(Date.now() / 1000),
-            oauth_nonce: crypto.randomBytes(12).toString("base64"),
-            oauth_version: "1.0",
+            oauth_nonce: crypto.randomBytes(12).toString('base64'),
+            oauth_version: '1.0',
           };
 
           const signature = oauthSignature.generate(
             method,
             url,
             params,
-            this.CONSUMER_SECRET
+            this.CONSUMER_SECRET,
           );
 
           params = {
@@ -376,28 +376,28 @@ class YahooFantasy {
           headers.Authorization = `Bearer ${this.yahooUserToken}`;
         }
 
-        if (postData && (method === "POST" || method === "PUT")) {
-          headers["Content-Type"] = "application/xml";
+        if (postData && (method === 'POST' || method === 'PUT')) {
+          headers['Content-Type'] = 'application/xml';
         }
 
         const options: https.RequestOptions = {
-          hostname: "fantasysports.yahooapis.com",
+          hostname: 'fantasysports.yahooapis.com',
           path: `${url.replace(
-            "https://fantasysports.yahooapis.com",
-            ""
+            'https://fantasysports.yahooapis.com',
+            '',
           )}?${new URLSearchParams(Object.entries(params).map(([k, v]): [string, string] => [k, String(v)])).toString()}`,
           method: method,
           headers,
         };
 
         const request = https.request(options, (resp) => {
-          let data = "";
+          let data = '';
 
-          resp.on("data", (chunk) => {
+          resp.on('data', (chunk) => {
             data += chunk;
           });
 
-          resp.on("end", async () => {
+          resp.on('end', async () => {
             try {
               const parsedData = JSON.parse(data);
 
@@ -418,8 +418,8 @@ class YahooFantasy {
                     new YahooFantasyError(
                       parsedData.error.description || parsedData.error.message,
                       parsedData.error.name,
-                      resp.statusCode
-                    )
+                      resp.statusCode,
+                    ),
                   );
                 }
               } else {
@@ -431,13 +431,13 @@ class YahooFantasy {
           });
         });
 
-        request.on("error", (err) => {
+        request.on('error', (err) => {
           reject(new Error(err.message));
         });
 
-        if (postData && (method === "POST" || method === "PUT")) {
+        if (postData && (method === 'POST' || method === 'PUT')) {
           request.write(
-            typeof postData === "string" ? postData : JSON.stringify(postData)
+            typeof postData === 'string' ? postData : JSON.stringify(postData),
           );
         }
 

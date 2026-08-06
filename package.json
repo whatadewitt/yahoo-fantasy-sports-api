@@ -65,6 +65,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.7",
     "@types/node": "^20.19.6",
     "@types/oauth-signature": "^1.5.2",
     "@types/uuid": "^10.0.0",

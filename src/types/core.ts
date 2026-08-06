@@ -19,14 +19,16 @@ export interface OAuthTokenCallbackData extends OAuthTokens {
   state?: string;
 }
 
-export type TokenCallbackFunction = (tokens: OAuthTokens) => void | Promise<void>;
+export type TokenCallbackFunction = (
+  tokens: OAuthTokens,
+) => void | Promise<void>;
 
 // Error types
 export class YahooFantasyError extends Error {
   constructor(
     message: string,
     public code?: string,
-    public statusCode?: number
+    public statusCode?: number,
   ) {
     super(message);
     this.name = 'YahooFantasyError';
@@ -75,23 +77,26 @@ export interface YahooFantasyInstance {
   yahooUserToken?: string | null;
   yahooRefreshToken?: string | null;
   refreshTokenCallback: TokenCallbackFunction;
-  
+
   GET: HttpMethod;
   POST: HttpMethod;
   PUT: HttpMethod;
   DELETE: HttpMethod;
-  
+
   // Method to make API requests
   api(
     method: HttpMethod,
     url: string,
     data?: any,
-    cb?: Callback<any>
+    cb?: Callback<any>,
   ): Promise<any> | void;
-  
+
   // OAuth methods
   authCallback(req: any, cb: Callback<OAuthTokenCallbackData>): void;
-  refreshAuthToken(refreshToken: string, cb?: Callback<OAuthTokens>): Promise<OAuthTokens> | void;
+  refreshAuthToken(
+    refreshToken: string,
+    cb?: Callback<OAuthTokens>,
+  ): Promise<OAuthTokens> | void;
   setRefreshToken(refreshToken: string): void;
   setAccessToken(accessToken: string): void;
   getAccessToken(): string | undefined;

@@ -1,6 +1,6 @@
-import { mapPlayer } from "./playerHelper";
-import { yahooArray } from "./sharedHelper";
-import { MappedPlayer } from "../types/api-responses";
+import type { MappedPlayer } from '../types/api-responses';
+import { mapPlayer } from './playerHelper';
+import { yahooArray } from './sharedHelper';
 
 export function mapTransactionPlayers(ps: any): MappedPlayer[] {
   return yahooArray(ps).map((p: any) => {
@@ -15,12 +15,12 @@ export function mapTransactionPlayers(ps: any): MappedPlayer[] {
 
 export function parseTransactionCollection(ts: any): any[] {
   return yahooArray(ts)
-    .filter((t: any) => t && t.transaction)
+    .filter((t: any) => t?.transaction)
     .map((t: any) => {
       const transaction = t.transaction[0];
 
       // If the transaction has players, map them
-      if (t.transaction[1] && t.transaction[1].players) {
+      if (t.transaction[1]?.players) {
         transaction.players = mapTransactionPlayers(t.transaction[1].players);
       }
 

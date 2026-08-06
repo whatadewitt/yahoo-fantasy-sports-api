@@ -1,13 +1,20 @@
-import { mapTeam } from './teamHelper';
+import type {
+  MappedDraftAnalysis,
+  MappedOwnership,
+  MappedPlayer,
+  MappedPoints,
+  MappedStats,
+  MappedTeam,
+} from '../types/api-responses';
 import { mergeObjects, yahooArray } from './sharedHelper';
-import { MappedPlayer, MappedStats, MappedPoints, MappedOwnership, MappedDraftAnalysis, MappedTeam } from '../types/api-responses';
+import { mapTeam } from './teamHelper';
 
 export function mapPlayer(p: any): MappedPlayer {
   const player = mergeObjects(p);
 
   if (player.eligible_positions) {
     player.eligible_positions = player.eligible_positions.map(
-      (p: any) => p.position
+      (p: any) => p.position,
     );
   }
 
@@ -38,7 +45,7 @@ export function mapPlayer(p: any): MappedPlayer {
   }
 
   // Convert headshot object to just the URL string
-  if (player.headshot && player.headshot.url) {
+  if (player.headshot?.url) {
     player.headshot = player.headshot.url;
   }
 
@@ -50,7 +57,7 @@ export function mapStats(stats: any): MappedStats {
 
   // Handle the structure: stats = { "0": { coverage_type: "season", season: "2014" }, "stats": [...] }
   // Some data uses string key "0", others use numeric index 0
-  const statsInfo = stats[0] || stats["0"];
+  const statsInfo = stats[0] || stats['0'];
   const coverage_type = statsInfo.coverage_type;
   return {
     coverage_type: coverage_type,
@@ -60,7 +67,7 @@ export function mapStats(stats: any): MappedStats {
 }
 
 export function mapPoints(points: any): MappedPoints {
-  const pointsInfo = points[0] || points["0"];
+  const pointsInfo = points[0] || points['0'];
   const coverage_type = pointsInfo.coverage_type;
   return {
     coverage_type,
@@ -74,7 +81,7 @@ export function mapOwnership(ownership: any): MappedOwnership {
     ownership_type: ownership.ownership_type,
   };
 
-  if ("team" === o.ownership_type) {
+  if ('team' === o.ownership_type) {
     o.owner_team_key = ownership.owner_team_key;
     o.owner_team_name = ownership.owner_team_name;
   }
@@ -94,63 +101,75 @@ export function mapDraftAnalysis(analysis: any): MappedDraftAnalysis {
     });
     return result;
   }
-  
+
   return analysis;
 }
 
-export function parseLeagueCollection(ls: any, subresources: string[] = []): any {
+export function parseLeagueCollection(
+  ls: any,
+  subresources: string[] = [],
+): any {
   return yahooArray(ls).map((l: any) => {
-    let league = l.league[0];
+    const league = l.league[0];
     league.players = parseCollection(l.league[1].players, subresources);
 
     return league;
   });
 }
 
-export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
+export function parseTeamCollection(
+  ts: any,
+  subresources: string[] = [],
+): MappedTeam[] {
   return yahooArray(ts).map((t: any) => {
-    let team = mapTeam(t.team[0]);
+    const team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 
     return team;
   });
 }
 
-export function parseCollection(ps: any, subresources: string[] = []): MappedPlayer[] {
+export function parseCollection(
+  ps: any,
+  subresources: string[] = [],
+): MappedPlayer[] {
   return yahooArray(ps).map((p: any) => {
-    let player = mapPlayer(p.player[0]);
+    const player = mapPlayer(p.player[0]);
 
     subresources.forEach((resource, idx) => {
       switch (resource) {
-        case "stats":
+        case 'stats':
           player.stats = mapStats(p.player[idx + 1].player_stats);
           break;
 
-        case "percent_owned":
+        case 'percent_owned': {
           // Handle the array structure for percent_owned
           const percentOwnedData = p.player[idx + 1].percent_owned;
           if (Array.isArray(percentOwnedData)) {
             player.percent_owned = {
               coverage_type: percentOwnedData[0].coverage_type,
-              coverage_value: percentOwnedData[0][percentOwnedData[0].coverage_type],
+              coverage_value:
+                percentOwnedData[0][percentOwnedData[0].coverage_type],
               value: percentOwnedData[1].value,
-              delta: percentOwnedData[2]?.delta || null
+              delta: percentOwnedData[2]?.delta || null,
             };
           } else {
             player.percent_owned = percentOwnedData;
           }
           break;
+        }
 
-        case "ownership":
+        case 'ownership': {
           const ownershipData = p.player[idx + 1].ownership;
           if (ownershipData) {
             player.ownership = mapOwnership(ownershipData);
           }
           break;
+        }
 
-        case "draft_analysis":
+        case 'draft_analysis':
           player.draft_analysis = mapDraftAnalysis(
-            p.player[idx + 1].draft_analysis
+            p.player[idx + 1].draft_analysis,
           );
           break;
 

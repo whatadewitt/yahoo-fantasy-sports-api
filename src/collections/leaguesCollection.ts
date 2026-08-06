@@ -1,7 +1,7 @@
-import { YahooFantasyInstance, Callback } from "../types/core";
-import { League } from "../types/api-responses";
-import { parseCollection } from "../helpers/leagueHelper";
-import { extractCallback, toCallbackOrPromise } from "../helpers/argsParser";
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { parseCollection } from '../helpers/leagueHelper';
+import type { League } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class LeaguesCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -12,7 +12,7 @@ class LeaguesCollection {
   fetch(
     leagueKeys: string[],
     subresources: string[],
-    cb: Callback<League[]>
+    cb: Callback<League[]>,
   ): void;
   fetch(...args: any[]): Promise<League[]> | void {
     const cb = extractCallback(args);
@@ -24,15 +24,15 @@ class LeaguesCollection {
     }
 
     let url =
-      "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
-    url += leagueKeys.join(",");
+      'https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=';
+    url += leagueKeys.join(',');
 
-    if (typeof subresources === "string") {
+    if (typeof subresources === 'string') {
       subresources = [subresources];
     }
 
     if (subresources.length > 0) {
-      url += `;out=${subresources.join(",")}`;
+      url += `;out=${subresources.join(',')}`;
     }
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;

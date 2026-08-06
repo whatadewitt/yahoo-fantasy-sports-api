@@ -1,7 +1,7 @@
-import { YahooFantasyInstance, Callback } from '../types/core';
-import { Game } from '../types/api-responses';
-import { parseCollection } from '../helpers/gameHelper';
 import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { parseCollection } from '../helpers/gameHelper';
+import type { Game } from '../types/api-responses';
+import type { Callback, YahooFantasyInstance } from '../types/core';
 
 class GamesCollection {
   constructor(private yf: YahooFantasyInstance) {}
@@ -77,7 +77,8 @@ class GamesCollection {
         break;
     }
 
-    let url = 'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
+    let url =
+      'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games';
 
     if (filters) {
       Object.keys(filters).forEach((key) => {
@@ -90,11 +91,11 @@ class GamesCollection {
     }
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
-    
+
     const resultPromise = promise.then((data) => {
       return parseCollection(
         data.fantasy_content.users[0].user[1].games,
-        subresources
+        subresources,
       );
     });
 

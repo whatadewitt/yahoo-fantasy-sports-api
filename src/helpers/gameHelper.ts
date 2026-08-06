@@ -1,6 +1,6 @@
+import type { MappedPlayer } from '../types/api-responses';
 import { mapPlayer } from './playerHelper';
 import { yahooArray } from './sharedHelper';
-import { MappedPlayer } from '../types/api-responses';
 
 export function mapLeagues(ls: any): any[] {
   const leagues = Object.values(ls);
@@ -45,20 +45,23 @@ export function mapStatCategories(statcats: any[]): any[] {
   statcats = statcats.map((statcat: any) => {
     if (typeof statcat.position_types !== 'undefined') {
       statcat.position_types = statcat.position_types.map(
-        (pt: any) => pt.position_type
+        (pt: any) => pt.position_type,
       );
     }
-    
+
     // Convert base_stats to simple array of stat_id strings
-    if (typeof statcat.base_stats !== 'undefined' && Array.isArray(statcat.base_stats)) {
+    if (
+      typeof statcat.base_stats !== 'undefined' &&
+      Array.isArray(statcat.base_stats)
+    ) {
       statcat.base_stats = statcat.base_stats.map((bs: any) => {
-        if (bs.base_stat && bs.base_stat.stat_id) {
+        if (bs.base_stat?.stat_id) {
           return bs.base_stat.stat_id;
         }
         return bs;
       });
     }
-    
+
     return statcat;
   });
 
@@ -85,38 +88,38 @@ export function mapRosterPositions(roster_positions: any[]): any[] {
 
 export function parseCollection(gs: any, subresources: string[] = []): any[] {
   return yahooArray(gs).map((g: any) => {
-    let game = Array.isArray(g.game) ? g.game[0] : g.game;
-    
+    const game = Array.isArray(g.game) ? g.game[0] : g.game;
+
     // Handle subresources
     subresources.forEach((resource, idx) => {
       switch (resource) {
-        case "leagues":
+        case 'leagues':
           game.leagues = mapLeagues(g.game[idx + 1].leagues);
           break;
 
-        case "players":
+        case 'players':
           game.players = mapPlayers(g.game[idx + 1].players);
           break;
 
-        case "game_weeks":
+        case 'game_weeks':
           game.game_weeks = mapWeeks(g.game[idx + 1].game_weeks);
           break;
 
-        case "stat_categories":
+        case 'stat_categories':
           game.stat_categories = mapStatCategories(
-            g.game[idx + 1].stat_categories.stats
+            g.game[idx + 1].stat_categories.stats,
           );
           break;
 
-        case "position_types":
+        case 'position_types':
           game.position_types = mapPositionTypes(
-            g.game[idx + 1].position_types
+            g.game[idx + 1].position_types,
           );
           break;
 
-        case "roster_positions":
+        case 'roster_positions':
           game.roster_positions = mapRosterPositions(
-            g.game[idx + 1].roster_positions
+            g.game[idx + 1].roster_positions,
           );
           break;
 
@@ -124,7 +127,7 @@ export function parseCollection(gs: any, subresources: string[] = []): any[] {
           break;
       }
     });
-    
+
     return game;
   });
 }

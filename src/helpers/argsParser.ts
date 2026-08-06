@@ -1,10 +1,10 @@
 // Args parser helper functions
 
-import { Callback } from "../types/core";
+import type { Callback } from '../types/core';
 
 export function toCallbackOrPromise<T>(
   promise: Promise<T>,
-  cb?: Callback<T>
+  cb?: Callback<T>,
 ): Promise<T> | void {
   if (cb) {
     promise.then((result) => cb(null, result)).catch((e) => cb(e));

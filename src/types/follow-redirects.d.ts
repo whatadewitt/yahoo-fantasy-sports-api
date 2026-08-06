@@ -1,7 +1,7 @@
 declare module 'follow-redirects' {
-  import * as http from 'http';
-  import * as https from 'https';
+  import * as nodeHttp from 'node:http';
+  import * as nodeHttps from 'node:https';
 
-  export const http: typeof http;
-  export const https: typeof https;
+  export const http: typeof nodeHttp;
+  export const https: typeof nodeHttps;
 }
