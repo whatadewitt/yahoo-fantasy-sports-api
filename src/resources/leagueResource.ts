@@ -1,4 +1,5 @@
 import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { parseWeek } from '../helpers/coverageHelper';
 import { mapPlayers } from '../helpers/gameHelper';
 import {
   mapDraft,
@@ -99,16 +100,9 @@ class LeagueResource {
   scoreboard(leagueKey: string, ...args: any[]): Promise<any> | void {
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/scoreboard`;
     const cb = extractCallback(args);
-    let requestedWeek: number | undefined;
-    if (args.length) {
-      const week = args[0];
-      if (
-        typeof week === 'number' ||
-        (typeof week === 'string' && !Number.isNaN(Number(week)))
-      ) {
-        requestedWeek = Number(week);
-        url += `;week=${requestedWeek}`;
-      }
+    const requestedWeek = parseWeek(args[0]);
+    if (requestedWeek !== undefined) {
+      url += `;week=${requestedWeek}`;
     }
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<
@@ -212,21 +206,11 @@ class LeagueResource {
   players(leagueKey: string, ...args: any[]): Promise<MappedPlayer[]> | void {
     const cb = extractCallback(args);
     let playerKeys: string[] = args.length ? args.shift() : [];
-    let week: number | false = false;
-
     if (playerKeys && !Array.isArray(playerKeys)) {
       playerKeys = [playerKeys];
     }
 
-    if (args.length) {
-      const weekParam = args.shift();
-      if (
-        typeof weekParam === 'number' ||
-        (typeof weekParam === 'string' && !Number.isNaN(Number(weekParam)))
-      ) {
-        week = Number(weekParam);
-      }
-    }
+    const week = parseWeek(args.shift());
 
     let url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/players;`;
 

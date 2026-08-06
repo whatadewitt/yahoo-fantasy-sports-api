@@ -1,4 +1,8 @@
 import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import {
+  resolveCoverage,
+  typedCoverageFilter,
+} from '../helpers/coverageHelper';
 import { mapDraftAnalysis, mapPlayer, mapStats } from '../helpers/playerHelper';
 import type {
   FantasyContent,
@@ -78,18 +82,13 @@ class PlayerResource {
     let dateType: string = '';
     if (args.length) {
       const date = args.pop();
-      // TODO: I could get more clever here, but need it working first...
       if (date === 'lastweek' || date === 'lastmonth') {
         dateType = date;
         url += `;type=${date}`;
-      } else if (typeof date === 'string' && date.indexOf('-') > 0) {
-        dateType = 'date';
-        // string is date, of format y-m-d
-        url += `;type=date;date=${date}`;
       } else {
-        dateType = 'week';
-        // number is week...
-        url += `;type=week;week=${date}`;
+        const coverage = resolveCoverage(date);
+        dateType = coverage.type;
+        url += typedCoverageFilter(coverage);
       }
     }
 

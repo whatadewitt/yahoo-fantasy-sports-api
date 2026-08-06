@@ -1,5 +1,9 @@
 import { toCallbackOrPromise } from '../helpers/argsParser';
 import {
+  resolveCoverage,
+  typedCoverageFilter,
+} from '../helpers/coverageHelper';
+import {
   mapDraft,
   mapMatchups,
   mapRoster,
@@ -43,25 +47,7 @@ class TeamResource {
     const actualCb = typeof weekDateOrCb === 'function' ? weekDateOrCb : cb;
     const param = typeof weekDateOrCb !== 'function' ? weekDateOrCb : undefined;
 
-    let url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats`;
-
-    if (param !== undefined && param !== null && param !== '') {
-      if (typeof param === 'string' && param.indexOf('-') > 0) {
-        // string is date, of format YYYY-MM-DD
-        url += `;type=date;date=${param}`;
-      } else if (typeof param === 'number' && param > 0) {
-        // number is week (and greater than 0)
-        url += `;type=week;week=${param}`;
-      } else if (
-        typeof param === 'string' &&
-        !Number.isNaN(Number(param)) &&
-        Number(param) > 0
-      ) {
-        // numeric string is week (and greater than 0)
-        const week = Number(param);
-        url += `;type=week;week=${week}`;
-      }
-    }
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${teamKey}/stats${typedCoverageFilter(resolveCoverage(param))}`;
 
     const promise = this.yf.api(this.yf.GET, url) as Promise<any>;
     const resultPromise = promise.then((data) => {

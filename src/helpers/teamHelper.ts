@@ -51,55 +51,42 @@ export function mapRoster(r: any): MappedPlayer[] {
 
 export { mapDraft } from './sharedHelper';
 
+function mapMatchupTeams(teams: any): MappedTeam[] {
+  return Object.keys(teams)
+    .filter((key) => key !== 'count')
+    .map((key) => teams[key]?.team)
+    .filter((team) => team)
+    .map((team) => mapTeam(team[0]));
+}
+
+function mapMatchup(matchup: any): any {
+  const mappedMatchup: any = {
+    week: matchup.week,
+    week_start: matchup.week_start,
+    week_end: matchup.week_end,
+    status: matchup.status,
+    is_playoffs: matchup.is_playoffs,
+    is_consolation: matchup.is_consolation,
+    is_matchup_of_the_week: matchup.is_matchup_of_the_week,
+  };
+
+  if (matchup.is_tied !== undefined) mappedMatchup.is_tied = matchup.is_tied;
+  if (matchup.winner_team_key)
+    mappedMatchup.winner_team_key = matchup.winner_team_key;
+
+  if (matchup[0]?.teams) {
+    mappedMatchup.teams = mapMatchupTeams(matchup[0].teams);
+  }
+
+  return mappedMatchup;
+}
+
 export function mapMatchups(matchups: any): any {
   if (!matchups) return matchups;
 
-  const results = [];
-  const keys = Object.keys(matchups);
-
-  for (const key of keys) {
-    if (matchups[key]?.matchup) {
-      const matchup = matchups[key].matchup;
-
-      // Start with the matchup properties (week, week_start, week_end, status, etc.)
-      const mappedMatchup: any = {
-        week: matchup.week,
-        week_start: matchup.week_start,
-        week_end: matchup.week_end,
-        status: matchup.status,
-        is_playoffs: matchup.is_playoffs,
-        is_consolation: matchup.is_consolation,
-        is_matchup_of_the_week: matchup.is_matchup_of_the_week,
-      };
-
-      // Add other properties that might exist
-      if (matchup.is_tied !== undefined)
-        mappedMatchup.is_tied = matchup.is_tied;
-      if (matchup.winner_team_key)
-        mappedMatchup.winner_team_key = matchup.winner_team_key;
-
-      // Handle teams in the matchup
-      if (matchup[0]?.teams) {
-        const teams = [];
-        const teamKeys = Object.keys(matchup[0].teams);
-
-        for (const teamKey of teamKeys) {
-          if (teamKey !== 'count') {
-            const teamData = matchup[0].teams[teamKey];
-            if (teamData?.team) {
-              teams.push(mapTeam(teamData.team[0]));
-            }
-          }
-        }
-
-        mappedMatchup.teams = teams;
-      }
-
-      results.push(mappedMatchup);
-    }
-  }
-
-  return results;
+  return Object.keys(matchups)
+    .filter((key) => matchups[key]?.matchup)
+    .map((key) => mapMatchup(matchups[key].matchup));
 }
 
 export function parseCollection(

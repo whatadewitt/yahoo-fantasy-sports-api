@@ -311,6 +311,35 @@ class YahooFantasy {
     tokenRequest.end();
   }
 
+  private async handleApiResponse(
+    data: string,
+    statusCode: number | undefined,
+    isRetry: boolean,
+    performRequest: (isRetry?: boolean) => Promise<any>,
+  ): Promise<any> {
+    let parsedData: any;
+    try {
+      parsedData = JSON.parse(data);
+    } catch (parseError) {
+      throw new Error(`Failed to parse response: ${parseError}`);
+    }
+
+    if (!parsedData.error) {
+      return parsedData;
+    }
+
+    if (!isRetry && /"token_expired"/i.test(parsedData.error.description)) {
+      await this.refreshToken();
+      return performRequest(true);
+    }
+
+    throw new YahooFantasyError(
+      parsedData.error.description || parsedData.error.message,
+      parsedData.error.name,
+      statusCode,
+    );
+  }
+
   // API method with overloads
   public api(method: HttpMethod, url: string, cb: Callback<any>): void;
   public api(
@@ -397,37 +426,13 @@ class YahooFantasy {
             data += chunk;
           });
 
-          resp.on('end', async () => {
-            try {
-              const parsedData = JSON.parse(data);
-
-              if (parsedData.error) {
-                if (
-                  !isRetry &&
-                  /"token_expired"/i.test(parsedData.error.description)
-                ) {
-                  // Token expired, refresh and retry once
-                  try {
-                    await this.refreshToken();
-                    resolve(await performRequest(true));
-                  } catch (refreshError) {
-                    reject(refreshError);
-                  }
-                } else {
-                  reject(
-                    new YahooFantasyError(
-                      parsedData.error.description || parsedData.error.message,
-                      parsedData.error.name,
-                      resp.statusCode,
-                    ),
-                  );
-                }
-              } else {
-                resolve(parsedData);
-              }
-            } catch (parseError) {
-              reject(new Error(`Failed to parse response: ${parseError}`));
-            }
+          resp.on('end', () => {
+            this.handleApiResponse(
+              data,
+              resp.statusCode,
+              isRetry,
+              performRequest,
+            ).then(resolve, reject);
           });
         });
 
