@@ -135,7 +135,7 @@ class YahooFantasy {
     });
 
     authRequest.on("error", (e) => {
-      throw new Error(e.message);
+      res.send(`Error requesting Yahoo authorization: ${e.message}`);
     });
 
     authRequest.end();
@@ -342,7 +342,7 @@ class YahooFantasy {
       callback = args[3];
     }
 
-    const performRequest = (): Promise<any> => {
+    const performRequest = (isRetry = false): Promise<any> => {
       return new Promise((resolve, reject) => {
         let params: Record<string, any> = {
           format: "json",
@@ -402,12 +402,14 @@ class YahooFantasy {
               const parsedData = JSON.parse(data);
 
               if (parsedData.error) {
-                if (/"token_expired"/i.test(parsedData.error.description)) {
-                  // Token expired, refresh and retry
+                if (
+                  !isRetry &&
+                  /"token_expired"/i.test(parsedData.error.description)
+                ) {
+                  // Token expired, refresh and retry once
                   try {
                     await this.refreshToken();
-                    const retryResult = await this.api(method, url, postData);
-                    resolve(retryResult);
+                    resolve(await performRequest(true));
                   } catch (refreshError) {
                     reject(refreshError);
                   }
