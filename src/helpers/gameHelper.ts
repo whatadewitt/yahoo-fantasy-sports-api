@@ -1,4 +1,5 @@
 import { mapPlayer } from './playerHelper';
+import { yahooArray } from './sharedHelper';
 import { MappedPlayer } from '../types/api-responses';
 
 export function mapLeagues(ls: any): any[] {
@@ -83,14 +84,7 @@ export function mapRosterPositions(roster_positions: any[]): any[] {
 }
 
 export function parseCollection(gs: any, subresources: string[] = []): any[] {
-  const count = gs.count;
-  const games = [];
-
-  for (let i = 0; i < count; i++) {
-    games.push(gs[i]);
-  }
-
-  return games.map((g: any) => {
+  return yahooArray(gs).map((g: any) => {
     let game = Array.isArray(g.game) ? g.game[0] : g.game;
     
     // Handle subresources

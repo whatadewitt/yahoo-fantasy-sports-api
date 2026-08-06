@@ -1,6 +1,6 @@
 import { mapPlayers } from './gameHelper';
 import { parseCollection as parsePlayerCollection } from './playerHelper';
-import { mergeObjects, mapDraft } from './sharedHelper';
+import { mergeObjects, mapDraft, yahooArray } from './sharedHelper';
 import { MappedTeam, MappedPlayer, Manager } from '../types/api-responses';
 
 export function mapTeam(t: any): MappedTeam {
@@ -100,14 +100,7 @@ export function mapMatchups(matchups: any): any {
 }
 
 export function parseCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    teams.push(ts[i]);
-  }
-
-  return teams.map((t: any) => {
+  return yahooArray(ts).map((t: any) => {
     // this is only here because user games collection is adding an extra null
     // and I cannot for the life of me figure out why.
     t.team = t.team.filter((o: any) => null !== o);
@@ -154,14 +147,7 @@ export function parseCollection(ts: any, subresources: string[] = []): MappedTea
 }
 
 export function parseLeagueCollection(ls: any, subresources: string[] = []): any[] {
-  const count = ls.count;
-  const leagues = [];
-
-  for (let i = 0; i < count; i++) {
-    leagues.push(ls[i]);
-  }
-
-  return leagues.map((l: any) => {
+  return yahooArray(ls).map((l: any) => {
     let league = l.league[0];
     league.teams = parseCollection(l.league[1].teams, subresources);
 
@@ -170,14 +156,7 @@ export function parseLeagueCollection(ls: any, subresources: string[] = []): any
 }
 
 export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    teams.push(ts[i]);
-  }
-
-  return teams.map((t: any) => {
+  return yahooArray(ts).map((t: any) => {
     let team = mapTeam(t.team[0]);
     team.players = parsePlayerCollection(t.team[1].players, subresources);
 
@@ -186,14 +165,7 @@ export function parseTeamCollection(ts: any, subresources: string[] = []): Mappe
 }
 
 export function parseGameCollection(gs: any, subresources: string[] = []): any[] {
-  const count = gs.count;
-  const games = [];
-
-  for (let i = 0; i < count; i++) {
-    games.push(gs[i]);
-  }
-
-  return games.map((g: any) => {
+  return yahooArray(gs).map((g: any) => {
     let game = g.game[0];
     game.teams = parseCollection(g.game[1].teams, subresources);
 

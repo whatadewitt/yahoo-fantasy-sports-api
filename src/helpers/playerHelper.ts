@@ -1,5 +1,5 @@
 import { mapTeam } from './teamHelper';
-import { mergeObjects } from './sharedHelper';
+import { mergeObjects, yahooArray } from './sharedHelper';
 import { MappedPlayer, MappedStats, MappedPoints, MappedOwnership, MappedDraftAnalysis, MappedTeam } from '../types/api-responses';
 
 export function mapPlayer(p: any): MappedPlayer {
@@ -99,14 +99,7 @@ export function mapDraftAnalysis(analysis: any): MappedDraftAnalysis {
 }
 
 export function parseLeagueCollection(ls: any, subresources: string[] = []): any {
-  const count = ls.count;
-  const leagues = [];
-
-  for (let i = 0; i < count; i++) {
-    leagues.push(ls[i]);
-  }
-
-  return leagues.map((l: any) => {
+  return yahooArray(ls).map((l: any) => {
     let league = l.league[0];
     league.players = parseCollection(l.league[1].players, subresources);
 
@@ -115,14 +108,7 @@ export function parseLeagueCollection(ls: any, subresources: string[] = []): any
 }
 
 export function parseTeamCollection(ts: any, subresources: string[] = []): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    teams.push(ts[i]);
-  }
-
-  return teams.map((t: any) => {
+  return yahooArray(ts).map((t: any) => {
     let team = mapTeam(t.team[0]);
     team.players = parseCollection(t.team[1].players, subresources);
 
@@ -131,14 +117,7 @@ export function parseTeamCollection(ts: any, subresources: string[] = []): Mappe
 }
 
 export function parseCollection(ps: any, subresources: string[] = []): MappedPlayer[] {
-  const count = ps.count;
-  const players = [];
-
-  for (let i = 0; i < count; i++) {
-    players.push(ps[i]);
-  }
-
-  return players.map((p: any) => {
+  return yahooArray(ps).map((p: any) => {
     let player = mapPlayer(p.player[0]);
 
     subresources.forEach((resource, idx) => {

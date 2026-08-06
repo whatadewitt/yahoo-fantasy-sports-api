@@ -1,3 +1,14 @@
+export function yahooArray(collection: any): any[] {
+  const count = collection.count || 0;
+  const items = [];
+
+  for (let i = 0; i < count; i++) {
+    items.push(collection[i]);
+  }
+
+  return items;
+}
+
 export function mergeObjects(arrayOfObjects: any[]): any {
   const destinationObj: any = {};
 

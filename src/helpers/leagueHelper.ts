@@ -1,6 +1,6 @@
 import { mapTeam, mapTeamPoints } from './teamHelper';
 import { mapTransactionPlayers } from './transactionHelper';
-import { mapDraft } from './sharedHelper';
+import { mapDraft, yahooArray } from './sharedHelper';
 import { MappedTeam } from '../types/api-responses';
 
 export function mapSettings(settings: any): any {
@@ -26,16 +26,11 @@ export function mapSettings(settings: any): any {
 }
 
 export function mapStandings(ts: any): MappedTeam[] {
-  const count = ts.count;
-  const teams = [];
-
-  for (let i = 0; i < count; i++) {
-    const team = mapTeam(ts[i].team[0]);
-    team.standings = ts[i].team[2].team_standings;
-    teams.push(team);
-  }
-
-  return teams;
+  return yahooArray(ts).map((t: any) => {
+    const team = mapTeam(t.team[0]);
+    team.standings = t.team[2].team_standings;
+    return team;
+  });
 }
 
 export function mapScoreboard(sb: any): any {
@@ -102,33 +97,21 @@ export function mapTeams(ts: any): MappedTeam[] {
 export { mapDraft } from './sharedHelper';
 
 export function mapTransactions(ts: any): any[] {
-  const count = ts.count;
-  const transactions = [];
+  return yahooArray(ts).map((t: any) => {
+    const transaction = Object.assign({ players: [] }, t.transaction[0]);
 
-  for (let i = 0; i < count; i++) {
-    let transaction = Object.assign({ players: [] }, ts[i].transaction[0]);
-
-    if (ts[i].transaction.length > 1 && ts[i].transaction[1].players) {
-      transaction.players = mapTransactionPlayers(ts[i].transaction[1].players);
+    if (t.transaction.length > 1 && t.transaction[1].players) {
+      transaction.players = mapTransactionPlayers(t.transaction[1].players);
     } else {
       transaction.players = [];
     }
 
-    transactions.push(transaction);
-  }
-
-  return transactions;
+    return transaction;
+  });
 }
 
 export function parseCollection(ls: any, subresources: string[] = []): any[] {
-  const count = ls.count;
-  const leagues = [];
-
-  for (let i = 0; i < count; i++) {
-    leagues.push(ls[i]);
-  }
-
-  return leagues.map((l: any) => {
+  return yahooArray(ls).map((l: any) => {
     let league = l.league[0];
 
     subresources.forEach((resource, idx) => {
