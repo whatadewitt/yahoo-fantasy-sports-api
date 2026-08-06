@@ -1,12 +1,13 @@
 import { YahooFantasyInstance, Callback } from '../types/core';
 import { toCallbackOrPromise } from '../helpers/argsParser';
-import { 
-  Game, 
-  GameWeek, 
-  StatCategory, 
-  PositionType, 
+import {
+  Game,
+  GameDates,
+  GameWeek,
+  StatCategory,
+  PositionType,
   RosterPosition,
-  FantasyContent 
+  FantasyContent
 } from '../types/api-responses';
 import {
   mapWeeks,
@@ -44,6 +45,25 @@ class GameResource {
 
   // REMOVED: game.players method (deprecated)
   // Use player.meta() instead for retrieving player information
+
+  // Method overloads for dates
+  dates(gameKey: string): Promise<Game & { dates: GameDates }>;
+  dates(gameKey: string, cb: Callback<Game & { dates: GameDates }>): void;
+  dates(gameKey: string, cb?: Callback<Game & { dates: GameDates }>): Promise<Game & { dates: GameDates }> | void {
+    const promise = (this.yf
+      .api(
+        this.yf.GET,
+        `https://fantasysports.yahooapis.com/fantasy/v2/game/${gameKey}/dates`
+      ) as Promise<FantasyContent<{ game: any[] }>>)
+      .then((data) => {
+        const dates = data.fantasy_content.game[1].dates as GameDates;
+        const game = data.fantasy_content.game[0] as Game;
+
+        return { ...game, dates };
+      });
+
+    return toCallbackOrPromise(promise, cb);
+  }
 
   // Method overloads for game_weeks
   game_weeks(gameKey: string): Promise<Game & { weeks: GameWeek[] }>;

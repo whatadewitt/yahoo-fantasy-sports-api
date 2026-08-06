@@ -21,6 +21,10 @@ describe("resource : gameResource", function() {
     expect(game.game_weeks).not.toBe(null);
   });
 
+  it("should have a dates function", function() {
+    expect(game.dates).not.toBe(null);
+  });
+
   it("should have a stat_categories function", function() {
     expect(game.stat_categories).not.toBe(null);
   });
@@ -98,6 +102,49 @@ describe("resource : gameResource", function() {
     );
 
     return promise;
+  });
+
+  // dates
+  it("should build a proper url to retrieve game dates using a numeric game key", function() {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/game/470/dates?format=json")
+      .reply(200, require("./nock-data/gameDates").dates);
+    const promise = game.dates(470);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/470/dates"
+    );
+
+    return promise;
+  });
+
+  it("should build a proper url to retrieve game dates using a string game key", function() {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/game/nfl/dates?format=json")
+      .reply(200, require("./nock-data/gameDates").dates);
+    const promise = game.dates("nfl");
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl/dates"
+    );
+
+    return promise;
+  });
+
+  it("should return game metadata with the dates object attached", function() {
+    const data = require("./nock-data/gameDates").dates;
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/game/nfl/dates?format=json")
+      .reply(200, data);
+
+    return game.dates("nfl").then((result) => {
+      expect(result.game_key).toEqual("470");
+      expect(result.dates).toEqual(
+        data.fantasy_content.game[1].dates
+      );
+    });
   });
 
   // stat_categories

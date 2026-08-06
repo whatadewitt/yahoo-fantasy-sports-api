@@ -14,6 +14,7 @@ import {
 
 import {
   Game,
+  GameDates,
   GameWeek,
   StatCategory,
   PositionType,
@@ -39,6 +40,9 @@ export interface GameResource extends BaseResource {
   // REMOVED: leagues() and players() methods (deprecated)
   // Use league.meta() and player.meta() instead
   
+  dates(gameKey: string, cb: Callback<Game & { dates: GameDates }>): void;
+  dates(gameKey: string): Promise<Game & { dates: GameDates }>;
+
   game_weeks(gameKey: string, cb: Callback<Game & { weeks: GameWeek[] }>): void;
   game_weeks(gameKey: string): Promise<Game & { weeks: GameWeek[] }>;
   

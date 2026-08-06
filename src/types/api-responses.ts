@@ -57,6 +57,14 @@ export interface GameWeek {
   end: string;
 }
 
+export interface GameDates {
+  season?: {
+    start_date: string;
+    end_date: string;
+  };
+  [key: string]: any;
+}
+
 export interface StatCategory {
   stat_id: string;
   name: string;
