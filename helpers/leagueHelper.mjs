@@ -157,6 +157,7 @@ export function parseCollection(ls, subresources) {
           league.scoreboard = mapScoreboard(
             l.league[idx + 1].scoreboard[0].matchups
           );
+          league.scoreboard.week = l.league[idx + 1].scoreboard.week;
           break;
 
         case "teams":
