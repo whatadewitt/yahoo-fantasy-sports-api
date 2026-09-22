@@ -2,9 +2,7 @@
 import https from "https";
 import { stringify } from "querystring";
 import crypto from "crypto";
-// TODO: we can remove this fairly easily: https://medium.com/@pandeysoni/how-to-create-oauth-1-0a-signature-in-node-js-7d477dead170
-// just make sure that each param is fully encoded (ie/ format=json not just the json piece)
-import oauthSignature from "oauth-signature";
+import { generate as generateOauthSignature } from "./helpers/oauthSignature.mjs";
 
 import {
   Game,
@@ -249,7 +247,7 @@ class YahooFantasy {
         oauth_version: "1.0",
       };
 
-      const signature = oauthSignature.generate(
+      const signature = generateOauthSignature(
         method,
         url,
         params,
