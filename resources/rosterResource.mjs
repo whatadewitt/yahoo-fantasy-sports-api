@@ -54,7 +54,7 @@ class RosterResource {
       if (dateType !== "season") {
         url += `;${dateType}=${date}`;
       }
-    } else if (dateType !== "season") {
+    } else if (dateType && dateType !== "season") {
       url += `;${dateType}=${date}`;
     }
 
