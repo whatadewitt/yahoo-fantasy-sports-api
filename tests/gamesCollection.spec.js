@@ -31,14 +31,40 @@ describe("collection: gamesCollection", function() {
   // fetch
   it("should build a proper url to retrieve metadata via a numeric game key", function(done) {
     nock("https://fantasysports.yahooapis.com")
-      .get("/fantasy/v2/games?format=json")
+      .get("/fantasy/v2/games;game_keys=328?format=json")
       .reply(200, { fantasy_content: { games: [] } });
 
     games.fetch(328, done);
 
     expect(yf.api).toHaveBeenCalledWith(
       "GET",
-      "https://fantasysports.yahooapis.com/fantasy/v2/games"
+      "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=328"
+    );
+  });
+
+  it("should build a proper url to retrieve metadata via a string game key", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/games;game_keys=nfl?format=json")
+      .reply(200, { fantasy_content: { games: [] } });
+
+    games.fetch("nfl", done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=nfl"
+    );
+  });
+
+  it("should build a proper url for multiple game keys", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/games;game_keys=nfl,mlb?format=json")
+      .reply(200, { fantasy_content: { games: [] } });
+
+    games.fetch(["nfl", "mlb"], done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=nfl,mlb"
     );
   });
 });
