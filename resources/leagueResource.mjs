@@ -92,14 +92,12 @@ class LeagueResource {
     return this.yf
       .api(this.yf.GET, url)
       .then((data) => {
-        const week = data.fantasy_content.league[1].scoreboard.week;
         const scoreboard = mapScoreboard(
-          data.fantasy_content.league[1].scoreboard[0].matchups
+          data.fantasy_content.league[1].scoreboard
         );
         const league = data.fantasy_content.league[0];
 
         league.scoreboard = scoreboard;
-        league.scoreboard.week = week;
         cb(null, league);
         return league;
       })

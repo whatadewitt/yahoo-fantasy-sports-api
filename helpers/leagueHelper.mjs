@@ -64,7 +64,7 @@ export function mapDraft(d) {
 }
 
 export function mapScoreboard(sb) {
-  const scoreboard = Object.values(sb);
+  const scoreboard = Object.values(sb[0].matchups);
 
   // TODO this is still gross... 3 array iterations :(
   const matchups = scoreboard.reduce((matchupsResult, m) => {
@@ -109,7 +109,7 @@ export function mapScoreboard(sb) {
 
   return {
     matchups: matchups,
-    week: scoreboard.week,
+    week: sb.week,
   };
 }
 
@@ -154,10 +154,7 @@ export function parseCollection(ls, subresources) {
           break;
 
         case "scoreboard":
-          league.scoreboard = mapScoreboard(
-            l.league[idx + 1].scoreboard[0].matchups
-          );
-          league.scoreboard.week = l.league[idx + 1].scoreboard.week;
+          league.scoreboard = mapScoreboard(l.league[idx + 1].scoreboard);
           break;
 
         case "teams":
