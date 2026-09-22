@@ -129,4 +129,30 @@ describe("resource: playerResource", function() {
       "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/draft_analysis"
     );
   });
+
+  it("should build a proper url to retrieve player stats for a week", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/player/328.p.6619/stats;type=week;week=5?format=json")
+      .reply(200, require("./nock-data/playerStats"));
+
+    player.stats("328.p.6619", "5", done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats;type=week;week=5"
+    );
+  });
+
+  it("should accept a numeric week for stats()", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/player/328.p.6619/stats;type=week;week=5?format=json")
+      .reply(200, require("./nock-data/playerStats"));
+
+    player.stats("328.p.6619", 5, done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/player/328.p.6619/stats;type=week;week=5"
+    );
+  });
 });

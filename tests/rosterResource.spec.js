@@ -47,6 +47,45 @@ describe("resource: rosterResource", function() {
     );
   });
 
+  it("should accept a numeric week for players()", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/roster;week=5?format=json")
+      .reply(200, require("./nock-data/teamRoster"));
+
+    roster.players("328.l.34014.t.1", 5, done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster;week=5"
+    );
+  });
+
+  it("should build a proper url to retrieve a roster for a week via fetch()", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/roster;week=5?format=json")
+      .reply(200, require("./nock-data/teamRoster"));
+
+    roster.fetch("328.l.34014.t.1", "5", done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster;week=5"
+    );
+  });
+
+  it("should accept a numeric week for fetch()", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/roster;week=5?format=json")
+      .reply(200, require("./nock-data/teamRoster"));
+
+    roster.fetch("328.l.34014.t.1", 5, done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/roster;week=5"
+    );
+  });
+
   it("should build a proper url to retrieve a roster for a date", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/roster;date=2024-01-15?format=json")

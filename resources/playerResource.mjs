@@ -40,7 +40,7 @@ class PlayerResource {
 
     let dateType;
     if (args.length) {
-      const date = args.pop();
+      const date = `${args.pop()}`;
       // TODO: I could get more clever here, but need it working first...
       if (date === "lastweek" || date === "lastmonth") {
         dateType = date;
