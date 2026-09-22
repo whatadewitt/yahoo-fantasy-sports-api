@@ -1,5 +1,5 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
-import { parseTransactionCollection } from '../helpers/transactionHelper';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
+import { parseTransactionCollection } from '../helpers/transactionHelper.js';
 import {
   buildAddDropPayload,
   buildAddPayload,
@@ -8,8 +8,8 @@ import {
   buildWaiverPayload,
   type ProposeTrade,
   type WaiverOptions,
-} from '../helpers/xmlHelper';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../helpers/xmlHelper.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class TransactionsCollection {
   constructor(private yf: YahooFantasyInstance) {}

@@ -1,10 +1,10 @@
-import { toCallbackOrPromise } from '../helpers/argsParser';
+import { toCallbackOrPromise } from '../helpers/argsParser.js';
 import {
   mapPositionTypes,
   mapRosterPositions,
   mapStatCategories,
   mapWeeks,
-} from '../helpers/gameHelper';
+} from '../helpers/gameHelper.js';
 import type {
   FantasyContent,
   Game,
@@ -13,8 +13,8 @@ import type {
   PositionType,
   RosterPosition,
   StatCategory,
-} from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class GameResource {
   constructor(public yf: YahooFantasyInstance) {}

@@ -1,11 +1,11 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
 import {
   parseCollection,
   parseLeagueCollection,
   parseTeamCollection,
-} from '../helpers/playerHelper';
-import type { MappedPlayer } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../helpers/playerHelper.js';
+import type { MappedPlayer } from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class PlayersCollection {
   constructor(private yf: YahooFantasyInstance) {}

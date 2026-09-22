@@ -1,9 +1,15 @@
 import * as crypto from 'node:crypto';
 import * as https from 'node:https';
+import oauthSignature from 'oauth-signature';
 
-const oauthSignature = require('oauth-signature');
-
-import { Games, Leagues, Players, Teams, Transactions } from './collections';
+import {
+  Games,
+  Leagues,
+  Players,
+  Teams,
+  Transactions,
+} from './collections/index.js';
+import { buildApiError, describeYahooError } from './helpers/errorHelper.js';
 import {
   Game,
   League,
@@ -12,7 +18,7 @@ import {
   Team,
   Transaction,
   User,
-} from './resources';
+} from './resources/index.js';
 
 import {
   type Callback,
@@ -21,7 +27,7 @@ import {
   type OAuthTokens,
   type TokenCallbackFunction,
   YahooFantasyError,
-} from './types';
+} from './types/index.js';
 
 interface AuthRequest {
   query: {
@@ -179,10 +185,35 @@ class YahooFantasy {
       });
 
       tokenResponse.on('end', async () => {
+        const body = Buffer.concat(chunks).toString();
+
         try {
-          const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString(),
-          );
+          let parsed: any;
+          try {
+            parsed = JSON.parse(body);
+          } catch (parseError) {
+            throw buildApiError({
+              method: this.POST,
+              url: 'https://api.login.yahoo.com/oauth2/get_token',
+              statusCode: tokenResponse.statusCode,
+              body,
+              cause: parseError,
+              fallback: 'Token exchange returned a non-JSON response',
+            });
+          }
+
+          if (parsed.error || !parsed.access_token) {
+            throw buildApiError({
+              method: this.POST,
+              url: 'https://api.login.yahoo.com/oauth2/get_token',
+              statusCode: tokenResponse.statusCode,
+              body,
+              parsed,
+              fallback: 'Token exchange did not return an access token',
+            });
+          }
+
+          const tokenData: OAuthTokens = parsed;
 
           this.yahooUserToken = tokenData.access_token;
           this.yahooRefreshToken = tokenData.refresh_token;
@@ -284,10 +315,35 @@ class YahooFantasy {
       });
 
       tokenResponse.on('end', async () => {
+        const body = Buffer.concat(chunks).toString();
+
         try {
-          const tokenData: OAuthTokens = JSON.parse(
-            Buffer.concat(chunks).toString(),
-          );
+          let parsed: any;
+          try {
+            parsed = JSON.parse(body);
+          } catch (parseError) {
+            throw buildApiError({
+              method: this.POST,
+              url: 'https://api.login.yahoo.com/oauth2/get_token',
+              statusCode: tokenResponse.statusCode,
+              body,
+              cause: parseError,
+              fallback: 'Token refresh returned a non-JSON response',
+            });
+          }
+
+          if (parsed.error || !parsed.access_token) {
+            throw buildApiError({
+              method: this.POST,
+              url: 'https://api.login.yahoo.com/oauth2/get_token',
+              statusCode: tokenResponse.statusCode,
+              body,
+              parsed,
+              fallback: 'Token refresh did not return an access token',
+            });
+          }
+
+          const tokenData: OAuthTokens = parsed;
 
           this.setUserToken(tokenData.access_token);
           this.setRefreshToken(tokenData.refresh_token);
@@ -316,28 +372,51 @@ class YahooFantasy {
     statusCode: number | undefined,
     isRetry: boolean,
     performRequest: (isRetry?: boolean) => Promise<any>,
+    method: HttpMethod,
+    url: string,
   ): Promise<any> {
     let parsedData: any;
     try {
       parsedData = JSON.parse(data);
     } catch (parseError) {
-      throw new Error(`Failed to parse response: ${parseError}`);
+      throw buildApiError({
+        method,
+        url,
+        statusCode,
+        body: data,
+        cause: parseError,
+        fallback: `Yahoo returned a non-JSON response${
+          statusCode ? ` with HTTP ${statusCode}` : ''
+        }`,
+      });
     }
 
-    if (!parsedData.error) {
+    const hasErrorPayload =
+      parsedData && typeof parsedData === 'object' && 'error' in parsedData;
+
+    if (!hasErrorPayload && (statusCode === undefined || statusCode < 400)) {
       return parsedData;
     }
 
-    if (!isRetry && /"token_expired"/i.test(parsedData.error.description)) {
+    const { description, code } = describeYahooError(parsedData);
+    const expiredSignal = `${description ?? ''} ${code ?? ''}`;
+
+    if (
+      !isRetry &&
+      this.yahooRefreshToken &&
+      /token_expired|invalid_token/i.test(expiredSignal)
+    ) {
       await this.refreshToken();
       return performRequest(true);
     }
 
-    throw new YahooFantasyError(
-      parsedData.error.description || parsedData.error.message,
-      parsedData.error.name,
+    throw buildApiError({
+      method,
+      url,
       statusCode,
-    );
+      body: data,
+      parsed: parsedData,
+    });
   }
 
   // API method with overloads
@@ -432,12 +511,22 @@ class YahooFantasy {
               resp.statusCode,
               isRetry,
               performRequest,
+              method,
+              url,
             ).then(resolve, reject);
           });
         });
 
         request.on('error', (err) => {
-          reject(new Error(err.message));
+          reject(
+            buildApiError({
+              method,
+              url,
+              code: (err as NodeJS.ErrnoException).code,
+              cause: err,
+              fallback: `Yahoo API request failed: ${err.message}`,
+            }),
+          );
         });
 
         if (postData && (method === 'POST' || method === 'PUT')) {

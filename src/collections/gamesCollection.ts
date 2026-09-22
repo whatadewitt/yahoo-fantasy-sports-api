@@ -1,7 +1,7 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
-import { parseCollection } from '../helpers/gameHelper';
-import type { Game } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
+import { parseCollection } from '../helpers/gameHelper.js';
+import type { Game } from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class GamesCollection {
   constructor(private yf: YahooFantasyInstance) {}

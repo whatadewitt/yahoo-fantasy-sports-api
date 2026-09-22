@@ -1,16 +1,16 @@
-import { toCallbackOrPromise } from '../helpers/argsParser';
+import { toCallbackOrPromise } from '../helpers/argsParser.js';
 import {
   resolveCoverage,
   typedCoverageFilter,
-} from '../helpers/coverageHelper';
+} from '../helpers/coverageHelper.js';
 import {
   mapDraft,
   mapMatchups,
   mapRoster,
   mapTeam,
-} from '../helpers/teamHelper';
-import type { MappedTeam } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../helpers/teamHelper.js';
+import type { MappedTeam } from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class TeamResource {
   constructor(private yf: YahooFantasyInstance) {}

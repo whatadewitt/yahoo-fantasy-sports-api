@@ -25,6 +25,14 @@ export type TokenCallbackFunction = (
 
 // Error types
 export class YahooFantasyError extends Error {
+  public method?: string;
+  public url?: string;
+  public description?: string;
+  public detail?: string;
+  public responseBody?: string;
+  public details?: any;
+  public cause?: unknown;
+
   constructor(
     message: string,
     public code?: string,
@@ -32,6 +40,20 @@ export class YahooFantasyError extends Error {
   ) {
     super(message);
     this.name = 'YahooFantasyError';
+  }
+
+  toJSON(): Record<string, any> {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      description: this.description,
+      detail: this.detail,
+      method: this.method,
+      url: this.url,
+      details: this.details,
+    };
   }
 }
 

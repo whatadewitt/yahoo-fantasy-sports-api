@@ -1,6 +1,6 @@
-import type { MappedPlayer, MappedTeam } from '../types/api-responses';
-import { mapPlayers } from './gameHelper';
-import { mapDraft, mergeObjects, yahooArray } from './sharedHelper';
+import type { MappedPlayer, MappedTeam } from '../types/api-responses.js';
+import { mapPlayers } from './gameHelper.js';
+import { mapDraft, mergeObjects, yahooArray } from './sharedHelper.js';
 
 export function mapTeam(t: any): MappedTeam {
   const team = mergeObjects(t);
@@ -49,7 +49,7 @@ export function mapRoster(r: any): MappedPlayer[] {
   return mapPlayers(players);
 }
 
-export { mapDraft } from './sharedHelper';
+export { mapDraft } from './sharedHelper.js';
 
 function mapMatchupTeams(teams: any): MappedTeam[] {
   return Object.keys(teams)

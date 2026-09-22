@@ -1,7 +1,11 @@
-import { toCallbackOrPromise } from '../helpers/argsParser';
-import { mapTeam } from '../helpers/teamHelper';
-import type { MappedTeam, UserGame, UserLeague } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+import { toCallbackOrPromise } from '../helpers/argsParser.js';
+import { mapTeam } from '../helpers/teamHelper.js';
+import type {
+  MappedTeam,
+  UserGame,
+  UserLeague,
+} from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class UserResource {
   constructor(private yf: YahooFantasyInstance) {}

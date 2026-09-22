@@ -1,6 +1,6 @@
-import type { MappedPlayer } from '../types/api-responses';
-import { mapPlayer } from './playerHelper';
-import { yahooArray } from './sharedHelper';
+import type { MappedPlayer } from '../types/api-responses.js';
+import { mapPlayer } from './playerHelper.js';
+import { yahooArray } from './sharedHelper.js';
 
 export function mapLeagues(ls: any): any[] {
   const leagues = Object.values(ls);

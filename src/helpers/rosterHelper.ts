@@ -1,6 +1,6 @@
-import type { FantasyContent, MappedTeam } from '../types/api-responses';
-import { type Coverage, coverageFilter } from './coverageHelper';
-import { mapRoster, mapTeam } from './teamHelper';
+import type { FantasyContent, MappedTeam } from '../types/api-responses.js';
+import { type Coverage, coverageFilter } from './coverageHelper.js';
+import { mapRoster, mapTeam } from './teamHelper.js';
 
 export function parseRosterArgs(args: any[]): {
   param?: string | number;

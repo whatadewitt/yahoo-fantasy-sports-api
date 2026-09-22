@@ -13,12 +13,12 @@ This is a TypeScript/JavaScript wrapper for the Yahoo Fantasy Sports API. The pr
 - Dual module support (CommonJS and ES Modules)
 - Backward compatibility maintained for existing JavaScript users
 - Requires Node.js 18+
-- All 119 unit tests passing
+- All 139 unit tests passing
 - The legacy pre-migration `.mjs` source tree has been removed; all source lives in `src/`
 
 ### 2. OAuth Implementation
 - Supports both OAuth 1.0a and OAuth 2.0
-- Uses `oauth-signature` library (CommonJS require, not ES import)
+- Uses `oauth-signature` library (CommonJS package, imported as an ES default import)
 - Consumer key/secret stored in `.env` file (never commit!)
 
 ### 3. API Structure
@@ -52,14 +52,19 @@ operations cannot be exercised against the real API.
 ## Common Issues & Solutions
 
 ### 1. OAuth Signature Import
-The `oauth-signature` library must be imported using CommonJS:
+The `oauth-signature` library must be imported as an ES default import:
 ```typescript
-const oauthSignature = require('oauth-signature');
+import oauthSignature from 'oauth-signature';
 ```
 NOT:
 ```typescript
-import oauthSignature from 'oauth-signature'; // This will fail!
+const oauthSignature = require('oauth-signature'); // Breaks the ESM build!
 ```
+A bare `require()` is emitted verbatim into `dist/esm/`, where `require` does not
+exist, so any ESM consumer fails with `ReferenceError: require is not defined in
+ES module scope`. `oauth-signature` is CommonJS with no `exports` map, so Node's
+interop exposes `module.exports` as the default; `esModuleInterop` makes the CJS
+build emit the matching `__importDefault` wrapper. Both builds work.
 
 ### 2. Test Failures
 - If tests fail with "consumer_key_unknown", check that `.env` file exists with valid credentials
@@ -76,6 +81,10 @@ npm run build  # Builds CommonJS, ES modules, and type definitions
 2. Use `const` instead of `var`
 3. Maintain snake_case for Yahoo API methods (e.g., `draft_results`, not `draftResults`)
 4. Follow existing patterns for method overloading (callback and promise versions)
+5. **Relative imports must carry an explicit `.js` extension** — `from './teamHelper.js'`,
+   `from './types/index.js'` for a directory barrel. TypeScript maps these back to the
+   `.ts` sources at compile time. Extensionless specifiers are emitted verbatim and Node's
+   ESM resolver rejects them (`ERR_MODULE_NOT_FOUND`). `tests/esmBuild.spec.js` enforces this.
 
 ## Important Files
 

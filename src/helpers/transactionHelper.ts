@@ -1,6 +1,6 @@
-import type { MappedPlayer } from '../types/api-responses';
-import { mapPlayer } from './playerHelper';
-import { yahooArray } from './sharedHelper';
+import type { MappedPlayer } from '../types/api-responses.js';
+import { mapPlayer } from './playerHelper.js';
+import { yahooArray } from './sharedHelper.js';
 
 export function mapTransactionPlayers(ps: any): MappedPlayer[] {
   return yahooArray(ps).map((p: any) => {

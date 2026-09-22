@@ -5,9 +5,9 @@ import type {
   MappedPoints,
   MappedStats,
   MappedTeam,
-} from '../types/api-responses';
-import { mergeObjects, yahooArray } from './sharedHelper';
-import { mapTeam } from './teamHelper';
+} from '../types/api-responses.js';
+import { mergeObjects, yahooArray } from './sharedHelper.js';
+import { mapTeam } from './teamHelper.js';
 
 export function mapPlayer(p: any): MappedPlayer {
   const player = mergeObjects(p);

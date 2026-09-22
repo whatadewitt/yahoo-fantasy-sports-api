@@ -1,17 +1,17 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
-import { coverageFilter, resolveCoverage } from '../helpers/coverageHelper';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
+import { coverageFilter, resolveCoverage } from '../helpers/coverageHelper.js';
 import {
   buildRosterUrl,
   mapTeamWithRoster,
   parseRosterArgs,
-} from '../helpers/rosterHelper';
+} from '../helpers/rosterHelper.js';
 import {
   buildRosterPayload,
   type RosterCoverage,
   type RosterSlot,
-} from '../helpers/xmlHelper';
-import type { FantasyContent, MappedTeam } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../helpers/xmlHelper.js';
+import type { FantasyContent, MappedTeam } from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class RosterResource {
   constructor(private yf: YahooFantasyInstance) {}

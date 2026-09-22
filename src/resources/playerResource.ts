@@ -1,17 +1,21 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
 import {
   resolveCoverage,
   typedCoverageFilter,
-} from '../helpers/coverageHelper';
-import { mapDraftAnalysis, mapPlayer, mapStats } from '../helpers/playerHelper';
+} from '../helpers/coverageHelper.js';
+import {
+  mapDraftAnalysis,
+  mapPlayer,
+  mapStats,
+} from '../helpers/playerHelper.js';
 import type {
   FantasyContent,
   MappedDraftAnalysis,
   MappedPlayer,
   MappedStats,
   PlayerOwnership,
-} from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class PlayerResource {
   constructor(public yf: YahooFantasyInstance) {}

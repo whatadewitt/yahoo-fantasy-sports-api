@@ -1,13 +1,13 @@
-import { toCallbackOrPromise } from '../helpers/argsParser';
-import { mapPlayers } from '../helpers/gameHelper';
+import { toCallbackOrPromise } from '../helpers/argsParser.js';
+import { mapPlayers } from '../helpers/gameHelper.js';
 import {
   buildEditWaiverPayload,
   buildTradeResponsePayload,
   type EditWaiverOptions,
   type TradeResponseOptions,
-} from '../helpers/xmlHelper';
-import type { MappedPlayer, Transaction } from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../helpers/xmlHelper.js';
+import type { MappedPlayer, Transaction } from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class TransactionResource {
   constructor(private yf: YahooFantasyInstance) {}

@@ -1,6 +1,6 @@
 // Collection-specific type definitions
 
-import type { ProposeTrade, WaiverOptions } from '../helpers/xmlHelper';
+import type { ProposeTrade, WaiverOptions } from '../helpers/xmlHelper.js';
 
 import type {
   Game,
@@ -8,8 +8,8 @@ import type {
   MappedPlayer,
   MappedTeam,
   Transaction,
-} from './api-responses';
-import type { BaseResource, Callback } from './core';
+} from './api-responses.js';
+import type { BaseResource, Callback } from './core.js';
 
 // Base collection interface
 export interface BaseCollection extends BaseResource {

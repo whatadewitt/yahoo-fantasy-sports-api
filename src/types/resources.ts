@@ -4,7 +4,7 @@ import type {
   EditWaiverOptions,
   RosterCoverage,
   RosterSlot,
-} from '../helpers/xmlHelper';
+} from '../helpers/xmlHelper.js';
 import type {
   Game,
   GameDates,
@@ -21,8 +21,8 @@ import type {
   Transaction,
   UserGame,
   UserLeague,
-} from './api-responses';
-import type { BaseResource, Callback } from './core';
+} from './api-responses.js';
+import type { BaseResource, Callback } from './core.js';
 
 // Game Resource
 export interface GameResource extends BaseResource {

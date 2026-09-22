@@ -1,6 +1,6 @@
 // Args parser helper functions
 
-import type { Callback } from '../types/core';
+import type { Callback } from '../types/core.js';
 
 export function toCallbackOrPromise<T>(
   promise: Promise<T>,
