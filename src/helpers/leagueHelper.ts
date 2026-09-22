@@ -1,7 +1,7 @@
-import type { MappedTeam } from '../types/api-responses';
-import { mapDraft, yahooArray } from './sharedHelper';
-import { mapTeam, mapTeamPoints } from './teamHelper';
-import { mapTransactionPlayers } from './transactionHelper';
+import type { MappedTeam } from '../types/api-responses.js';
+import { mapDraft, yahooArray } from './sharedHelper.js';
+import { mapTeam, mapTeamPoints } from './teamHelper.js';
+import { mapTransactionPlayers } from './transactionHelper.js';
 
 export function mapSettings(settings: any): any {
   settings.stat_categories = settings.stat_categories.stats.map((s: any) => {
@@ -34,9 +34,8 @@ export function mapStandings(ts: any): MappedTeam[] {
 }
 
 export function mapScoreboard(sb: any): any {
-  const scoreboard = Object.values(sb);
+  const scoreboard = Object.values(sb[0]?.matchups ?? {});
 
-  // Process matchups following the original implementation
   const matchups = scoreboard.reduce((matchupsResult: any[], m: any) => {
     if (m.matchup) {
       m = m.matchup;
@@ -59,7 +58,6 @@ export function mapScoreboard(sb: any): any {
 
       const teams = Object.values(m[0].teams);
 
-      // Remove raw data entry from the matchup
       delete m[0];
 
       m.teams = teams.reduce((teamsResult: any[], t: any) => {
@@ -78,6 +76,7 @@ export function mapScoreboard(sb: any): any {
   }, []);
 
   return {
+    week: sb.week,
     matchups: matchups,
   };
 }
@@ -94,7 +93,7 @@ export function mapTeams(ts: any): MappedTeam[] {
   }, []);
 }
 
-export { mapDraft } from './sharedHelper';
+export { mapDraft } from './sharedHelper.js';
 
 export function mapTransactions(ts: any): any[] {
   return yahooArray(ts).map((t: any) => {
@@ -125,9 +124,7 @@ export function parseCollection(ls: any, subresources: string[] = []): any[] {
           break;
 
         case 'scoreboard':
-          league.scoreboard = mapScoreboard(
-            l.league[idx + 1].scoreboard[0].matchups,
-          );
+          league.scoreboard = mapScoreboard(l.league[idx + 1].scoreboard);
           break;
 
         case 'teams':

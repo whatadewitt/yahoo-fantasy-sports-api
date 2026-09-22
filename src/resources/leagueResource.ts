@@ -1,6 +1,6 @@
-import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser';
-import { parseWeek } from '../helpers/coverageHelper';
-import { mapPlayers } from '../helpers/gameHelper';
+import { extractCallback, toCallbackOrPromise } from '../helpers/argsParser.js';
+import { parseWeek } from '../helpers/coverageHelper.js';
+import { mapPlayers } from '../helpers/gameHelper.js';
 import {
   mapDraft,
   mapScoreboard,
@@ -8,7 +8,7 @@ import {
   mapStandings,
   mapTeams,
   mapTransactions,
-} from '../helpers/leagueHelper';
+} from '../helpers/leagueHelper.js';
 import type {
   FantasyContent,
   League,
@@ -16,8 +16,8 @@ import type {
   MappedPlayer,
   MappedTeam,
   Transaction,
-} from '../types/api-responses';
-import type { Callback, YahooFantasyInstance } from '../types/core';
+} from '../types/api-responses.js';
+import type { Callback, YahooFantasyInstance } from '../types/core.js';
 
 class LeagueResource {
   constructor(public yf: YahooFantasyInstance) {}
@@ -111,13 +111,12 @@ class LeagueResource {
 
     const resultPromise: Promise<any> = promise.then((data) => {
       const scoreboardData = data.fantasy_content.league[1].scoreboard;
-      const scoreboard = mapScoreboard(scoreboardData[0].matchups);
       const league = data.fantasy_content.league[0];
 
-      league.scoreboard = scoreboard;
-      // Use the requested week if provided, otherwise use the week from the scoreboard data
-      league.scoreboard.week =
-        requestedWeek !== undefined ? requestedWeek : scoreboardData.week;
+      league.scoreboard = mapScoreboard(scoreboardData);
+      if (requestedWeek !== undefined) {
+        league.scoreboard.week = String(requestedWeek);
+      }
       return league;
     });
 
