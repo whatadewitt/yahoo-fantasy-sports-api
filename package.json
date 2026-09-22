@@ -45,5 +45,10 @@
   },
   "directories": {
     "test": "tests"
+  },
+  "overrides": {
+    "oauth-signature": {
+      "crypto-js": "4.2.0"
+    }
   }
 }
