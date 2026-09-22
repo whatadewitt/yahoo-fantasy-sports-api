@@ -97,6 +97,16 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.4.0
+
+- `mapTeamPoints` now returns `team_remaining_games` when the Yahoo payload includes it, so head-to-head matchups expose remaining, live and completed game counts.
+- Fixed `roster.players(teamKey)` building a malformed url. With no date, week or subresource it produced `/roster;null=null` and Yahoo rejected the request. It now correctly requests `/roster`.
+- Fixed a crash when passing a week or date as a number. `roster.players(key, 5)`, `roster.fetch(key, 5)`, `team.stats(key, 5)` and `player.stats(key, 5)` all threw `date.indexOf is not a function`; only the string form worked. Numeric arguments now behave identically to strings.
+- Replaced the `oauth-signature` dependency with OAuth 1.0a signing built on node's own `crypto`. Signatures are unchanged, pinned by golden vectors captured from the old library and by the example published in RFC 5849. This removes `crypto-js`, which carried two critical advisories and could not be upgraded because `oauth-signature` was last released in 2016.
+- Removed the unused `uuid` and `follow-redirects` dependencies. `esm` is now the only runtime dependency.
+- Upgraded `nock` and `jasmine`, taking `npm audit` to zero vulnerabilities.
+- Added CI so the test suite runs on every pull request.
+
 ### 5.3.0
 
 - Split the roster resource into 2 functions (which was avoided in the past). `roster.fetch` will work the same as `roster.players` always has. `roster.players` will be backwards compatible but will now allow an optional additional "subresource" parameter that return additional information about the roster being queried.
