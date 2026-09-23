@@ -5,7 +5,8 @@ export function parseResourceArgs(args) {
     let date = "";
     let resource = "";
 
-    const arg = args.shift();
+    // coerce: a week may arrive as a number, and the checks below are string ops
+    const arg = `${args.shift()}`;
     if (!isNaN(parseInt(arg, 10)) || arg.indexOf("-") !== -1) {
       // this is the date
       date = arg;

@@ -30,3 +30,17 @@ node_modules
 .esm-cache
 .vs-code
 dump.rdb
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+
+# OS
+.DS_Store
+
+# Local agent working notes
+claude-tasks/

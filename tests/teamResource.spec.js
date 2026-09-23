@@ -68,6 +68,32 @@ describe("resource: teamResource", function() {
     );
   });
 
+  it("should build a proper url to retrieve team stats for a week", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/stats;type=week;week=5?format=json")
+      .reply(200, require("./nock-data/teamStats"));
+
+    team.stats("328.l.34014.t.1", "5", done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats;type=week;week=5"
+    );
+  });
+
+  it("should accept a numeric week for stats()", function(done) {
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/stats;type=week;week=5?format=json")
+      .reply(200, require("./nock-data/teamStats"));
+
+    team.stats("328.l.34014.t.1", 5, done);
+
+    expect(yf.api).toHaveBeenCalledWith(
+      "GET",
+      "https://fantasysports.yahooapis.com/fantasy/v2/team/328.l.34014.t.1/stats;type=week;week=5"
+    );
+  });
+
   // standings
   it("should build a proper url to retrieve team standings via a team key", function(done) {
     nock("https://fantasysports.yahooapis.com")

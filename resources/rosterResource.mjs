@@ -13,7 +13,7 @@ class RosterResource {
     const cb = extractCallback(args);
 
     if (args.length) {
-      let date = args.shift();
+      let date = `${args.shift()}`;
       if (date.indexOf("-") > 0) {
         // string is date, of format y-m-d
         url += `;date=${date}`;
@@ -54,7 +54,7 @@ class RosterResource {
       if (dateType !== "season") {
         url += `;${dateType}=${date}`;
       }
-    } else if (dateType !== "season") {
+    } else if (dateType && dateType !== "season") {
       url += `;${dateType}=${date}`;
     }
 

@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Pinned to 20 deliberately. The test harness preloads the esm
+          # package (node -r esm), last released in 2019, which crashes on
+          # Node 22 and above. Verified: 20 passes, 22/23/24 all fail.
+          # Raise this once the esm loader is gone.
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
