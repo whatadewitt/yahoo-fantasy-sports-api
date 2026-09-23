@@ -7,6 +7,13 @@
     "import": "./YahooFantasy.mjs",
     "require": "./index.js"
   },
+  "files": [
+    "index.js",
+    "YahooFantasy.mjs",
+    "collections/",
+    "helpers/",
+    "resources/"
+  ],
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests"

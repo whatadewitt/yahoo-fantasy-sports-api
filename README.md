@@ -100,12 +100,16 @@ This project is very much still a work in progress, please report any issues via
 ### 5.4.0
 
 - `mapTeamPoints` now returns `team_remaining_games` when available.
-- Fixed `roster.players(teamKey)` building a malformed url. With no date, week or subresource it produced `/roster;null=null` and would be rejected. It now correctly requests `/roster`.
-- Fixed a crash when passing a week or date as a number. `roster.players(key, 5)`, `roster.fetch(key, 5)`, `team.stats(key, 5)` and `player.stats(key, 5)` all threw `date.indexOf is not a function`.
-- Replaced the `oauth-signature` dependency with OAuth 1.0a signing built on node's own `crypto`. Signatures are unchanged, pinned by golden vectors captured from the old library. This removes `crypto-js`, which carried two critical advisories and could not be upgraded because `oauth-signature` was last released in 2016.
+- Fixed `roster.players(teamKey)` building a malformed url.
+- Fixed a crash when passing a week or date as a number.
+- Replaced the `oauth-signature` dependency with OAuth 1.0a signing built on node's own `crypto`.
 - Removed the unused `uuid` and `follow-redirects` dependencies. `esm` is now the only runtime dependency.
 - Upgraded `nock` and `jasmine`, taking `npm audit` to zero vulnerabilities.
 - Added CI so the test suite runs on every pull request.
+
+### 5.3.1
+
+- Fixed `league.scoreboard.week` coming back `undefined` when a scoreboard was fetched through the leagues collection. `mapScoreboard` now reads the week from the scoreboard itself, so the collection and resource paths both report it. Thanks @bensynapse (#136).
 
 ### 5.3.0
 
