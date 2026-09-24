@@ -52,6 +52,14 @@ class TeamResource {
         const team = mapTeam(data.fantasy_content.team[0]);
 
         team.stats = stats;
+
+        // Every other path that maps team stats also maps team_points, which is
+        // where the coverage of those stats lives. Without it a caller who did
+        // not request a week or date cannot tell what period they got back.
+        if (data.fantasy_content.team[1].team_points) {
+          team.points = data.fantasy_content.team[1].team_points;
+        }
+
         cb(null, team);
         return team;
       })
