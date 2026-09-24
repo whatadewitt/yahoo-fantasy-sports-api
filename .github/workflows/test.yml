@@ -24,3 +24,6 @@ jobs:
       - run: npm ci
 
       - run: npm test
+
+      # Guards what `npm publish` would ship. See the script for why.
+      - run: npm run check:package

@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "test": "node -r esm jasmine-runner.js",
+    "check:package": "node scripts/check-package-contents.mjs",
     "istanbul": "istanbul cover --include-all-sources jasmine-node tests"
   },
   "repository": {
