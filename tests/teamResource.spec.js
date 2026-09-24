@@ -68,6 +68,25 @@ describe("resource: teamResource", function() {
     );
   });
 
+  it("should return team points alongside stats, carrying the coverage", function(done) {
+    var mockTeamStats = require("./nock-data/teamStats");
+
+    nock("https://fantasysports.yahooapis.com")
+      .get("/fantasy/v2/team/328.l.34014.t.1/stats?format=json")
+      .reply(200, mockTeamStats);
+
+    team.stats("328.l.34014.t.1").then(function(data) {
+      // team_points is in the payload and carries the coverage of the stats,
+      // which is otherwise undiscoverable when no week or date was requested
+      expect(data.points).toEqual(
+        mockTeamStats.fantasy_content.team[1].team_points
+      );
+      expect(data.points.coverage_type).toBe("season");
+      expect(data.points.season).toBe("2014");
+      done();
+    });
+  });
+
   it("should build a proper url to retrieve team stats for a week", function(done) {
     nock("https://fantasysports.yahooapis.com")
       .get("/fantasy/v2/team/328.l.34014.t.1/stats;type=week;week=5?format=json")

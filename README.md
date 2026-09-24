@@ -97,6 +97,10 @@ This project is very much still a work in progress, please report any issues via
 
 ## Changelog
 
+### 5.4.1
+
+- `team.stats()` now returns `team.points` alongside `team.stats`, matching every other path that maps team stats. Yahoo includes it in the response and it carries the coverage of those stats, so a caller who did not ask for a specific week or date can now tell what period they were given.
+
 ### 5.4.0
 
 - `mapTeamPoints` now returns `team_remaining_games` when available.
